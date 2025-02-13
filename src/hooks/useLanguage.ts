@@ -1,7 +1,7 @@
 // @ts-nocheck
 // @ts-ignore
-import { Dates } from "@app/constants/Dates";
-import { LanguageType } from "@app/interfaces/interfaces";
+import { Dates } from "@/constants/Dates";
+import { LanguageType } from "@/interfaces/interfaces";
 import { useCallback, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
