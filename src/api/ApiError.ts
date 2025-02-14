@@ -1,5 +1,3 @@
-// @ts-nocheck 
-// @ts-ignore 
 export class ApiError<T> extends Error {
   options?: T;
 

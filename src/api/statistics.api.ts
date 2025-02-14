@@ -1,5 +1,3 @@
-// @ts-nocheck 
-// @ts-ignore 
 export interface Statistic {
   id: number;
   value: number;

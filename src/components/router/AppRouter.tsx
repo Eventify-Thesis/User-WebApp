@@ -1,46 +1,46 @@
 // @ts-nocheck
 // @ts-ignore
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // // no lazy loading for auth pages to avoid flickering
 // const AuthLayout = React.lazy(
-//   () => import("@app/components/layouts/AuthLayout/AuthLayout")
+//   () => import("@/components/layouts/AuthLayout/AuthLayout")
 // );
-// import LoginPage from "@app/pages/LoginPage";
-// import SignUpPage from "@app/pages/SignUpPage";
-// import ForgotPasswordPage from "@app/pages/ForgotPasswordPage";
-// import SecurityCodePage from "@app/pages/SecurityCodePage";
-// import NewPasswordPage from "@app/pages/NewPasswordPage";
-// import LockPage from "@app/pages/LockPage";
+// import LoginPage from "@/pages/LoginPage";
+// import SignUpPage from "@/pages/SignUpPage";
+// import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
+// import SecurityCodePage from "@/pages/SecurityCodePage";
+// import NewPasswordPage from "@/pages/NewPasswordPage";
+// import LockPage from "@/pages/LockPage";
 
-// import MainLayout from "@app/components/layouts/main/MainLayout/MainLayout";
+import MainLayout from '@/components/layouts/main/MainLayout/MainLayout';
 
-// import ProfileLayout from "@app/components/profile/ProfileLayout";
-// import RequireAuth from "@app/components/router/RequireAuth";
-// import { withLoading } from "@app/hocs/withLoading.hoc";
-// import NftDashboardPage from "@app/pages/DashboardPages/HomePage";
-// import MedicalDashboardPage from "@app/pages/DashboardPages/DashboardPage";
+// import ProfileLayout from "@/components/profile/ProfileLayout";
+import RequireAuth from '@/components/router/RequireAuth';
+// import { withLoading } from "@/hocs/withLoading.hoc";
+// import NftDashboardPage from "@/pages/DashboardPages/HomePage";
+// import MedicalDashboardPage from "@/pages/DashboardPages/DashboardPage";
 
-// const NewsFeedPage = React.lazy(() => import("@app/pages/NewsFeedPage"));
-// const ServerErrorPage = React.lazy(() => import("@app/pages/ServerErrorPage"));
-// const Error404Page = React.lazy(() => import("@app/pages/Error404Page"));
+// const NewsFeedPage = React.lazy(() => import("@/pages/NewsFeedPage"));
+// const ServerErrorPage = React.lazy(() => import("@/pages/ServerErrorPage"));
+// const Error404Page = React.lazy(() => import("@/pages/Error404Page"));
 // const SecuritySettingsPage = React.lazy(
-//   () => import("@app/pages/SecuritySettingsPage")
+//   () => import("@/pages/SecuritySettingsPage")
 // );
-// const UploadCVPage = React.lazy(() => import("@app/pages/UploadCVPage"));
+// const UploadCVPage = React.lazy(() => import("@/pages/UploadCVPage"));
 // const Logout = React.lazy(() => import("./Logout"));
 // const LandingPage = React.lazy(
-//   () => import("@app/components/landing/LandingMain/LandingMain")
+//   () => import("@/components/landing/LandingMain/LandingMain")
 // );
 // const JobsFeedPage = React.lazy(
-//   () => import("@app/components/apps/jobsFeed/JobsFeed")
+//   () => import("@/components/apps/jobsFeed/JobsFeed")
 // );
 // const HistoryJobsFeedPage = React.lazy(
-//   () => import("@app/components/historyJobsFeed/HistoryJobsFeed")
+//   () => import("@/components/historyJobsFeed/HistoryJobsFeed")
 // );
 // const PersonalInfoPage = React.lazy(
-//   () => import("@app/pages/PersonalInfoPage")
+//   () => import("@/pages/PersonalInfoPage")
 // );
 
 // export const NFT_DASHBOARD_PATH = "/";
@@ -61,7 +61,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // const AuthLayoutFallback = withLoading(AuthLayout);
 // const LogoutFallback = withLoading(Logout);
-export const HOME_PATH = "/";
+export const HOME_PATH = '/';
 
 export const AppRouter: React.FC = () => {
   const protectedLayout = (
@@ -72,7 +72,11 @@ export const AppRouter: React.FC = () => {
 
   return (
     <BrowserRouter>
-      <Routes>{/* Landing Page Route */}</Routes>
+      <Routes>
+        <Route path={HOME_PATH} element={<MainLayout />}>
+          <Route index element={<h1>Hello worlds</h1>} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 };

@@ -1,4 +1,4 @@
-import { httpApi } from '@app/api/http.api';
+import { httpApi } from "@/api/http.api";
 
 export interface UserInfo {
   birthday?: string;
@@ -19,9 +19,13 @@ export interface UserInfo {
 }
 
 export const updateUserAPI = async (data: UserInfo) => {
-  httpApi.post<undefined>('/user/update-info', { ...data }).then(({ data }) => data);
+  httpApi
+    .post<undefined>("/user/update-info", { ...data })
+    .then(({ data }) => data);
 };
 
 export const updateCVAPI = async (cvURL: string) => {
-  return httpApi.post<undefined>('/user/update-cv', { cvURL }).then(({ data }) => data);
+  return httpApi
+    .post<undefined>("/user/update-cv", { cvURL })
+    .then(({ data }) => data);
 };

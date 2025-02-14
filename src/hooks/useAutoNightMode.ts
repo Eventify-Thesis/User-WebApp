@@ -1,15 +1,15 @@
-// @ts-nocheck 
-// @ts-ignore 
-import { useEffect } from 'react';
-import { setTheme } from '@app/store/slices/themeSlice';
-import { useAppDispatch, useAppSelector } from '@app/hooks/reduxHooks';
-import { Dates } from '@app/constants/Dates';
-import { msToH } from '@app/utils/utils';
+// @ts-nocheck
+// @ts-ignore
+import { useEffect } from "react";
+import { setTheme } from "@/store/slices/themeSlice";
+import { useAppDispatch, useAppSelector } from "@/hooks/reduxHooks";
+import { Dates } from "@/constants/Dates";
+import { msToH } from "@/utils/utils";
 
 const getNextTime = (ms: number) => {
   const now = Date.now();
   const clearDate = Dates.getClearDate();
-  const nextTime = clearDate.add(ms, 'ms');
+  const nextTime = clearDate.add(ms, "ms");
 
   const delta = +nextTime - now;
 
@@ -22,14 +22,20 @@ const isNight = (nightTime: number[]) => {
   let now = Dates.getToday();
 
   if (nightTime[0] < nightTime[1]) {
-    return now.isBetween(clearDate.add(nightTime[0], 'ms'), clearDate.add(nightTime[1], 'ms'), null, '[)');
-  } else {
-    now = now.hour() < msToH(nightTime[0]) ? now.add(24 * 3600 * 1000, 'ms') : now;
     return now.isBetween(
-      clearDate.add(nightTime[0], 'ms'),
-      clearDate.add(nightTime[1] + 24 * 3600 * 1000, 'ms'),
+      clearDate.add(nightTime[0], "ms"),
+      clearDate.add(nightTime[1], "ms"),
       null,
-      '[)',
+      "[)"
+    );
+  } else {
+    now =
+      now.hour() < msToH(nightTime[0]) ? now.add(24 * 3600 * 1000, "ms") : now;
+    return now.isBetween(
+      clearDate.add(nightTime[0], "ms"),
+      clearDate.add(nightTime[1] + 24 * 3600 * 1000, "ms"),
+      null,
+      "[)"
     );
   }
 };
@@ -47,13 +53,13 @@ export const useAutoNightMode = (): void => {
 
     if (isNightMode) {
       if (isNight(nightTime)) {
-        dispatch(setTheme('dark'));
+        dispatch(setTheme("dark"));
       } else {
-        dispatch(setTheme('light'));
+        dispatch(setTheme("light"));
       }
 
       const runTimeoutStart = () => {
-        dispatch(setTheme('dark'));
+        dispatch(setTheme("dark"));
         timeoutNightStarts = setTimeout(runTimeoutStart, 24 * 3600 * 1000);
       };
 
@@ -62,12 +68,15 @@ export const useAutoNightMode = (): void => {
       timeoutNightStarts = setTimeout(runTimeoutStart, nextStartTime);
 
       const runTimeoutEnd = () => {
-        dispatch(setTheme('light'));
+        dispatch(setTheme("light"));
         timeoutNightEnds = setTimeout(runTimeoutEnd, 24 * 3600 * 1000);
       };
 
       let nextEndTime = getNextTime(nightTime[1]);
-      nextEndTime = nextStartTime > nextEndTime ? nextEndTime + 24 * 3600 * 1000 : nextEndTime;
+      nextEndTime =
+        nextStartTime > nextEndTime
+          ? nextEndTime + 24 * 3600 * 1000
+          : nextEndTime;
 
       timeoutNightEnds = setTimeout(runTimeoutEnd, nextEndTime);
     }

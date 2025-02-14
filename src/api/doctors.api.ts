@@ -1,5 +1,3 @@
-// @ts-nocheck 
-// @ts-ignore 
 export interface Doctor {
   id: number;
   name: string;
@@ -27,7 +25,8 @@ export const getDoctorsData = (): Promise<Doctor[]> => {
             latitude: 51.505,
             longitude: -0.09,
           },
-          imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/cameron-bell.webp',
+          imgUrl:
+            process.env.REACT_APP_ASSETS_BUCKET + '/doctors/cameron-bell.webp',
           phone: '+X-XXX-XXX-XXXX',
           address: '98 Santa Clara Court Cherry Hill, NJ 08003',
         },
@@ -40,7 +39,8 @@ export const getDoctorsData = (): Promise<Doctor[]> => {
             latitude: 41.732438,
             longitude: 44.7688134,
           },
-          imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/kayden-hunter.webp',
+          imgUrl:
+            process.env.REACT_APP_ASSETS_BUCKET + '/doctors/kayden-hunter.webp',
           phone: '+X-XXX-XXX-XXXX',
           address: '850 South Tunnel St. Newburgh, NY 12550',
         },
@@ -53,7 +53,9 @@ export const getDoctorsData = (): Promise<Doctor[]> => {
             latitude: 40.73061,
             longitude: -73.935242,
           },
-          imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/annabella-morton.webp',
+          imgUrl:
+            process.env.REACT_APP_ASSETS_BUCKET +
+            '/doctors/annabella-morton.webp',
           phone: '+X-XXX-XXX-XXXX',
           address: '111 Foxrun Street Conyers, GA 30012',
         },
@@ -75,7 +77,8 @@ export const getDoctorsData = (): Promise<Doctor[]> => {
             latitude: 59.334122,
             longitude: 18.071997,
           },
-          imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/james-moss.webp',
+          imgUrl:
+            process.env.REACT_APP_ASSETS_BUCKET + '/doctors/james-moss.webp',
           phone: '+X-XXX-XXX-XXXX',
           address: '9568 Tower St. Somerset, NJ 08873',
         },
@@ -88,7 +91,8 @@ export const getDoctorsData = (): Promise<Doctor[]> => {
             latitude: -26.195246,
             longitude: 28.034088,
           },
-          imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/sara-mills.webp',
+          imgUrl:
+            process.env.REACT_APP_ASSETS_BUCKET + '/doctors/sara-mills.webp',
           phone: '+X-XXX-XXX-XXXX',
           address: '850 South Tunnel St. Newburgh, NY 12550',
         },
@@ -101,7 +105,9 @@ export const getDoctorsData = (): Promise<Doctor[]> => {
             latitude: 55.17111,
             longitude: -118.796928,
           },
-          imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/francisco-venancio.webp',
+          imgUrl:
+            process.env.REACT_APP_ASSETS_BUCKET +
+            '/doctors/francisco-venancio.webp',
           phone: '+X-XXX-XXX-XXXX',
           address: '322 South Del Monte Rd. West Hempstead, NY 11552',
         },
@@ -114,7 +120,8 @@ export const getDoctorsData = (): Promise<Doctor[]> => {
             latitude: -22.908333,
             longitude: -43.196388,
           },
-          imgUrl: process.env.REACT_APP_ASSETS_BUCKET + '/doctors/jorden-cannon.webp',
+          imgUrl:
+            process.env.REACT_APP_ASSETS_BUCKET + '/doctors/jorden-cannon.webp',
           phone: '+X-XXX-XXX-XXXX',
           address: '7634 Taylor St. Boston, MA 02127',
         },

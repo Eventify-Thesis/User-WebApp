@@ -1,11 +1,11 @@
-// @ts-nocheck 
-// @ts-ignore 
-import { ThemeType } from '@app/interfaces/interfaces';
-import { hexToRGB } from '@app/utils/utils';
-import { css } from 'styled-components';
-import { BASE_COLORS } from './constants';
-import { darkColorsTheme, antDarkColorsTheme } from './dark/darkTheme';
-import { lightColorsTheme } from './light/lightTheme';
+// @ts-nocheck
+// @ts-ignore
+import { ThemeType } from "@/interfaces/interfaces";
+import { hexToRGB } from "@/utils/utils";
+import { css } from "styled-components";
+import { BASE_COLORS } from "./constants";
+import { darkColorsTheme, antDarkColorsTheme } from "./dark/darkTheme";
+import { lightColorsTheme } from "./light/lightTheme";
 
 export const themeObject = {
   light: lightColorsTheme,
@@ -29,7 +29,8 @@ const getThemeVariables = (theme: ThemeType) => css`
   --success-color: ${themeObject[theme].success};
   --background-color: ${themeObject[theme].background};
   --secondary-background-color: ${themeObject[theme].secondaryBackground};
-  --secondary-background-selected-color: ${themeObject[theme].secondaryBackgroundSelected};
+  --secondary-background-selected-color: ${themeObject[theme]
+    .secondaryBackgroundSelected};
   --additional-background-color: ${themeObject[theme].additionalBackground};
   --collapse-background-color: ${themeObject[theme].collapseBackground};
   --timeline-background-color: ${themeObject[theme].timelineBackground};
@@ -58,9 +59,11 @@ const getThemeVariables = (theme: ThemeType) => css`
   --text-sider-secondary-color: ${themeObject[theme].textSiderSecondary};
   --subtext-color: ${themeObject[theme].subText};
 
-  --dashboard-map-background-color: ${themeObject[theme].dashboardMapBackground};
+  --dashboard-map-background-color: ${themeObject[theme]
+    .dashboardMapBackground};
   --dashboard-map-circle-color: ${themeObject[theme].dashboardMapCircleColor};
-  --dashboard-map-control-disabled-background-color: ${themeObject[theme].dashboardMapControlDisabledBackground};
+  --dashboard-map-control-disabled-background-color: ${themeObject[theme]
+    .dashboardMapControlDisabledBackground};
 
   --chart-tooltip-label-color: ${themeObject[theme].chartTooltipLabel};
   --chart-color1: ${themeObject[theme].chartColor1};
@@ -104,13 +107,15 @@ const getThemeVariables = (theme: ThemeType) => css`
 `;
 
 export const lightThemeVariables = css`
-  ${getThemeVariables('light')}
+  ${getThemeVariables("light")}
 `;
 
 export const darkThemeVariables = css`
-  ${getThemeVariables('dark')}
-  --ant-success-color-deprecated-bg: ${antThemeObject['dark'].successBg} !important;
-  --ant-success-color-deprecated-border: ${antThemeObject['dark'].successBorder} !important;
+  ${getThemeVariables("dark")}
+  --ant-success-color-deprecated-bg: ${antThemeObject["dark"]
+    .successBg} !important;
+  --ant-success-color-deprecated-border: ${antThemeObject["dark"]
+    .successBorder} !important;
 `;
 
 export const commonThemeVariables = css`

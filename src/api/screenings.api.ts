@@ -1,5 +1,3 @@
-// @ts-nocheck 
-// @ts-ignore 
 export interface Screening {
   id: number;
   value: number;

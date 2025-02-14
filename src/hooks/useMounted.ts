@@ -1,5 +1,3 @@
-// @ts-nocheck 
-// @ts-ignore 
 import { MutableRefObject, useEffect, useRef } from 'react';
 
 interface UseMountedReturnVal {

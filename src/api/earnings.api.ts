@@ -1,6 +1,6 @@
-// @ts-nocheck 
-// @ts-ignore 
-import { CurrencyTypeEnum } from '@app/interfaces/interfaces';
+// @ts-nocheck
+// @ts-ignore
+import { CurrencyTypeEnum } from "@/interfaces/interfaces";
 
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export interface Balance {
@@ -33,7 +33,10 @@ export const getBalance = (id: number): Promise<Balance> => {
   });
 };
 
-export const getTotalEarning = (id: number, currency: CurrencyTypeEnum): Promise<TotalEarning> => {
+export const getTotalEarning = (
+  id: number,
+  currency: CurrencyTypeEnum
+): Promise<TotalEarning> => {
   return new Promise((res) => {
     setTimeout(() => {
       res({

@@ -1,5 +1,3 @@
-// @ts-nocheck 
-// @ts-ignore 
 import { RefObject, useEffect } from 'react';
 
 type AnyEvent = MouseEvent | TouchEvent;

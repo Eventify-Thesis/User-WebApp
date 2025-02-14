@@ -1,13 +1,15 @@
 // @ts-nocheck
 // @ts-ignore
-import { httpApi } from '@app/api/http.api';
+import { httpApi } from "@/api/http.api";
 
 export interface UpdateStatusRequest {
   status: string;
 }
 
-export const updateJobStatus = async (id: string, updateStatusRequest: UpdateStatusRequest) =>
-  httpApi.post(`/userJob/${id}/update-status`, updateStatusRequest);
+export const updateJobStatus = async (
+  id: string,
+  updateStatusRequest: UpdateStatusRequest
+) => httpApi.post(`/userJob/${id}/update-status`, updateStatusRequest);
 
 export const getJobStatusAPI = async (id: string) => {
   try {

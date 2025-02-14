@@ -1,9 +1,9 @@
 // @ts-nocheck
 // @ts-ignore
-import { newsTags } from 'constants/newsTags';
-import { httpApi } from '@app/api/http.api';
-import { QueryModel } from '@app/domain/QueryModel';
-import { readUser } from '@app/services/localStorage.service';
+import { newsTags } from "constants/newsTags";
+import { httpApi } from "@/api/http.api";
+import { QueryModel } from "@/domain/QueryModel";
+import { readUser } from "@/services/localStorage.service";
 
 export interface JobListResponse {
   id: string;
@@ -18,7 +18,7 @@ export interface JobListResponse {
   type?: string;
   workingMode?: string;
   industry?: [string];
-  platform: 'Linkedin' | 'Topcv' | 'Indeed' | 'Vietnamworks';
+  platform: "Linkedin" | "Topcv" | "Indeed" | "Vietnamworks";
 }
 
 export interface JobDetailResponse {
@@ -37,7 +37,7 @@ export interface JobDetailResponse {
   type?: string;
   workingMode?: string;
   industry?: [string];
-  platform: 'Linkedin' | 'Topcv' | 'Indeed' | 'Vietnamworks';
+  platform: "Linkedin" | "Topcv" | "Indeed" | "Vietnamworks";
   description: string;
 }
 
@@ -55,7 +55,7 @@ export interface HistoryJobListResponse {
   type?: string;
   workingMode?: string;
   industry?: [string];
-  platform: 'Linkedin' | 'Topcv' | 'Indeed' | 'Vietnamworks';
+  platform: "Linkedin" | "Topcv" | "Indeed" | "Vietnamworks";
   description: string;
 }
 
@@ -72,14 +72,20 @@ export interface PaginationResponse {
   docs: JobListResponse[];
 }
 
-export const getJobListAPI = async (getJobListReq: QueryModel): Promise<PaginationResponse | undefined> => {
+export const getJobListAPI = async (
+  getJobListReq: QueryModel
+): Promise<PaginationResponse | undefined> => {
   try {
     if (getJobListReq.isMatchingCV != null && getJobListReq.isMatchingCV) {
       const userId = readUser()?._id;
-      const response = await httpApi.get<PaginationResponse>('/job', { params: { ...getJobListReq, userId } });
+      const response = await httpApi.get<PaginationResponse>("/job", {
+        params: { ...getJobListReq, userId },
+      });
       return response.data;
     } else {
-      const response = await httpApi.get<PaginationResponse>('/job', { params: getJobListReq });
+      const response = await httpApi.get<PaginationResponse>("/job", {
+        params: getJobListReq,
+      });
       return response.data;
     }
   } catch (e: any) {
@@ -87,7 +93,9 @@ export const getJobListAPI = async (getJobListReq: QueryModel): Promise<Paginati
   }
 };
 
-export const getJobDetailAPI = async (id: string): Promise<JobDetailResponse | undefined> => {
+export const getJobDetailAPI = async (
+  id: string
+): Promise<JobDetailResponse | undefined> => {
   try {
     const response = await httpApi.get<JobDetailResponse>(`/job/${id}`);
     return response.data;
@@ -96,7 +104,9 @@ export const getJobDetailAPI = async (id: string): Promise<JobDetailResponse | u
   }
 };
 
-export const generateCoverLetterAPI = async (id: string): Promise<any | undefined> => {
+export const generateCoverLetterAPI = async (
+  id: string
+): Promise<any | undefined> => {
   try {
     const response = await httpApi.get(`/job/${id}/cover-letter`);
     return response.data;
@@ -105,9 +115,13 @@ export const generateCoverLetterAPI = async (id: string): Promise<any | undefine
   }
 };
 
-export const getHistoryJobListAPI = async (): Promise<HistoryJobListResponse[] | undefined> => {
+export const getHistoryJobListAPI = async (): Promise<
+  HistoryJobListResponse[] | undefined
+> => {
   try {
-    const response = await httpApi.get<HistoryJobListResponse[]>(`/userJob/history/`);
+    const response = await httpApi.get<HistoryJobListResponse[]>(
+      `/userJob/history/`
+    );
     return response.data;
   } catch (e: any) {
     throw new Error(e);

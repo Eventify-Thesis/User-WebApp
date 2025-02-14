@@ -1,5 +1,3 @@
-// @ts-nocheck 
-// @ts-ignore 
 import { css } from 'styled-components';
 
 export const resetCss = css`

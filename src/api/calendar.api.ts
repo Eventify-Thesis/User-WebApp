@@ -1,5 +1,3 @@
-// @ts-nocheck 
-// @ts-ignore 
 import { Dates } from 'constants/Dates';
 
 export interface CalendarEvent {

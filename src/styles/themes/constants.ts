@@ -1,5 +1,3 @@
-// @ts-nocheck 
-// @ts-ignore 
 export const BORDER_RADIUS = '7px';
 
 export const BASE_COLORS = {
@@ -68,7 +66,8 @@ export const BREAKPOINTS = {
   xxl: 1920,
 } as const;
 
-const getMedia = <T extends number>(breakpoint: T): `(min-width: ${T}px)` => `(min-width: ${breakpoint}px)`;
+const getMedia = <T extends number>(breakpoint: T): `(min-width: ${T}px)` =>
+  `(min-width: ${breakpoint}px)`;
 
 export const media = {
   xs: getMedia(BREAKPOINTS.xs),
