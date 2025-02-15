@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import { BREAKPOINTS, media } from '@/styles/themes/constants';
 import {
   MediaQueryAllQueryable,

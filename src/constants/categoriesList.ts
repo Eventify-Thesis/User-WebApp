@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 export type CategoryType =
   | 'apps'
   | 'forms'

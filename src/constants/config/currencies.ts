@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import { CurrencyTypeEnum } from '@/interfaces/interfaces';
 
 export const currencies = {

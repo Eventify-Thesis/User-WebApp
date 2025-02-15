@@ -1,11 +1,9 @@
-// @ts-nocheck
-// @ts-ignore
-import { ThemeType } from "@/interfaces/interfaces";
-import { hexToRGB } from "@/utils/utils";
-import { css } from "styled-components";
-import { BASE_COLORS } from "./constants";
-import { darkColorsTheme, antDarkColorsTheme } from "./dark/darkTheme";
-import { lightColorsTheme } from "./light/lightTheme";
+import { ThemeType } from '@/interfaces/interfaces';
+import { hexToRGB } from '@/utils/utils';
+import { css } from 'styled-components';
+import { BASE_COLORS } from './constants';
+import { darkColorsTheme, antDarkColorsTheme } from './dark/darkTheme';
+import { lightColorsTheme } from './light/lightTheme';
 
 export const themeObject = {
   light: lightColorsTheme,
@@ -107,14 +105,14 @@ const getThemeVariables = (theme: ThemeType) => css`
 `;
 
 export const lightThemeVariables = css`
-  ${getThemeVariables("light")}
+  ${getThemeVariables('light')}
 `;
 
 export const darkThemeVariables = css`
-  ${getThemeVariables("dark")}
-  --ant-success-color-deprecated-bg: ${antThemeObject["dark"]
+  ${getThemeVariables('dark')}
+  --ant-success-color-deprecated-bg: ${antThemeObject['dark']
     .successBg} !important;
-  --ant-success-color-deprecated-border: ${antThemeObject["dark"]
+  --ant-success-color-deprecated-border: ${antThemeObject['dark']
     .successBorder} !important;
 `;
 

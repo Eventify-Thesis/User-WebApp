@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import { LanguageType } from '@/interfaces/interfaces';
 
 interface Language {

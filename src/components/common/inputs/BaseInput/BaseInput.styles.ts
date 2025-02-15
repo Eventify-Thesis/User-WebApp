@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import styled from 'styled-components';
 import { Input as AntInput } from 'antd';
 import { FONT_WEIGHT, FONT_SIZE } from '@/styles/themes/constants';

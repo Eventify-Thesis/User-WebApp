@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import React from 'react';
 import { DollarOutlined, PlusOutlined, ReadOutlined } from '@ant-design/icons';
 import { ActivityStatusType } from '@/interfaces/interfaces';

@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import { configureStore } from '@reduxjs/toolkit';
 import { errorLoggingMiddleware } from '@/store/middlewares/errorLogging.middleware';
 import rootReducer from '@/store/slices';

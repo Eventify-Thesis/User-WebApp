@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import { FC } from 'react';
 import { ReactComponent as BonesIcon } from '@/assets/icons/bones.svg';
 import { ReactComponent as FatIcon } from '@/assets/icons/fat.svg';

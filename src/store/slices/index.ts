@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import userReducer from '@/store/slices/userSlice';
 import authReducer from '@/store/slices/authSlice';
 import nightModeReducer from '@/store/slices/nightModeSlice';

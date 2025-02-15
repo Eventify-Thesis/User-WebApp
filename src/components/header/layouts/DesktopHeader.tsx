@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import React from 'react';
 import { NotificationsDropdown } from '../components/notificationsDropdown/NotificationsDropdown';
 import { ProfileDropdown } from '../components/profileDropdown/ProfileDropdown/ProfileDropdown';
@@ -17,7 +15,7 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
     <S.SearchColumn xl={16} xxl={17}>
       <BaseRow justify="space-between">
         <BaseCol xl={15} xxl={12}>
-          {/* <HeaderSearch /> */}
+          <HeaderSearch />
         </BaseCol>
       </BaseRow>
     </S.SearchColumn>

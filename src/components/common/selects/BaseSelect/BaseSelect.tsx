@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import React, { ComponentProps } from 'react';
 import { Select as AntSelect } from 'antd';
 import { RefSelectProps } from 'antd/lib/select';

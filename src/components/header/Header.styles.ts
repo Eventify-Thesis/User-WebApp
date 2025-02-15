@@ -1,16 +1,14 @@
-// @ts-nocheck
-// @ts-ignore
-import styled, { css } from "styled-components";
-import { BurgerIcon } from "@/components/common/Burger/BurgerIcon";
-import { GitHubButton } from "@/components/header/components/GithubButton/GitHubButton";
-import { LAYOUT, media } from "@/styles/themes/constants";
-import { BaseCollapse } from "../common/BaseCollapse/BaseCollapse";
-import { BaseCol } from "../common/BaseCol/BaseCol";
+import styled, { css } from 'styled-components';
+import { BurgerIcon } from '@/components/common/Burger/BurgerIcon';
+import { GitHubButton } from '@/components/header/components/GithubButton/GitHubButton';
+import { LAYOUT, media } from '@/styles/themes/constants';
+import { BaseCollapse } from '../common/BaseCollapse/BaseCollapse';
+import { BaseCol } from '../common/BaseCol/BaseCol';
 
 export const HeaderActionWrapper = styled.div`
   cursor: pointer;
 
-  & > .ant-btn > span[role="img"],
+  & > .ant-btn > span[role='img'],
   .ant-badge {
     font-size: 1.25rem;
 
@@ -39,7 +37,7 @@ export const DropdownCollapse = styled(BaseCollapse)`
   & > .ant-collapse-item-disabled > .ant-collapse-header {
     cursor: default;
 
-    & > span[role="img"] {
+    & > span[role='img'] {
       display: none;
     }
   }

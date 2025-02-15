@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 export interface BloodTestResult {
   key: number;
   test: string;

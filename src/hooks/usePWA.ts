@@ -1,8 +1,6 @@
-// @ts-nocheck
-// @ts-ignore
-import { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { addDeferredPrompt } from "@/store/slices/pwaSlice";
+import { useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import { addDeferredPrompt } from '@/store/slices/pwaSlice';
 
 export const usePWA = (): void => {
   const dispatch = useDispatch();
@@ -13,6 +11,6 @@ export const usePWA = (): void => {
       dispatch(addDeferredPrompt(e));
     };
 
-    window.addEventListener("beforeinstallprompt", handler);
+    window.addEventListener('beforeinstallprompt', handler);
   }, [dispatch]);
 };

@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import { NotificationType } from '@/components/common/BaseNotification/BaseNotification';
 import { Priority } from '@//constants/enums/priorities';
 import { CurrencyTypeEnum, Severity } from '@/interfaces/interfaces';

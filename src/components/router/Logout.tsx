@@ -1,9 +1,7 @@
-// @ts-nocheck
-// @ts-ignore
-import React, { useEffect } from "react";
-import { useAppDispatch } from "@/hooks/reduxHooks";
-import { Navigate } from "react-router-dom";
-import { doLogout } from "@/store/slices/authSlice";
+import React, { useEffect } from 'react';
+import { useAppDispatch } from '@/hooks/reduxHooks';
+import { Navigate } from 'react-router-dom';
+import { doLogout } from '@/store/slices/authSlice';
 
 const Logout: React.FC = () => {
   const dispatch = useAppDispatch();

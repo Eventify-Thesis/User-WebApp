@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import {
   createAction,
   createSlice,

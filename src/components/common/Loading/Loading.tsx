@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import React from 'react';
 import styled from 'styled-components';
 import { GlobalSpinner } from '@/components/common/GlobalSpinner/GlobalSpinner';

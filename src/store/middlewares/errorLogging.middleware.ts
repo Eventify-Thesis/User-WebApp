@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import { isRejectedWithValue, Middleware } from '@reduxjs/toolkit';
 import { notificationController } from '@/controllers/notificationController';
 

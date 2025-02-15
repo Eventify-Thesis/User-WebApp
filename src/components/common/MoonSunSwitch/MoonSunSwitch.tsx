@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import React from 'react';
 import * as S from './MoonSunSwitch.styles';
 import { MoonIcon } from '@/components/common/icons/MoonIcon';
