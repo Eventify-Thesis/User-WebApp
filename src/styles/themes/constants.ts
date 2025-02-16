@@ -23,9 +23,9 @@ export const LAYOUT = {
     headerPadding: '1rem',
   },
   desktop: {
-    paddingVertical: '1.25rem',
+    paddingVertical: '0.55rem',
     paddingHorizontal: '2.25rem',
-    headerHeight: '5.625rem',
+    headerHeight: '3.65rem',
   },
 } as const;
 

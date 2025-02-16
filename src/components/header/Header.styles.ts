@@ -66,13 +66,12 @@ export const SearchColumn = styled(BaseCol)`
 `;
 
 interface ProfileColumn {
-  $isTwoColumnsLayout: boolean;
+  // $isTwoColumnsLayout: boolean;
 }
 
 export const ProfileColumn = styled(BaseCol)<ProfileColumn>`
   @media only screen and ${media.md} {
     ${(props) =>
-      props?.$isTwoColumnsLayout &&
       css`
         background-color: var(--sider-background-color);
         padding: ${LAYOUT.desktop.paddingVertical}

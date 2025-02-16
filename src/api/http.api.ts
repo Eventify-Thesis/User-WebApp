@@ -1,11 +1,10 @@
-// @ts-nocheck
-// @ts-ignore
-import axios from "axios";
-import { AxiosError } from "axios";
-import { ApiError } from "@/api/ApiError";
-import { readToken } from "@/services/localStorage.service";
+import axios from 'axios';
+import { AxiosError } from 'axios';
+import { ApiError } from '@/api/ApiError';
+import { readToken } from '@/services/localStorage.service';
+
 export const httpApi = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: import.meta.env.BASE_URL,
   withCredentials: true,
 });
 
@@ -21,7 +20,7 @@ httpApi.interceptors.request.use((config) => {
 httpApi.interceptors.response.use(undefined, (error: AxiosError) => {
   throw new ApiError<ApiErrorData>(
     error.response?.data.message || error.message,
-    error.response?.data
+    error.response?.data,
   );
 });
 

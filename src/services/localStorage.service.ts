@@ -1,5 +1,5 @@
-const avatarImg = process.env.REACT_APP_ASSETS_BUCKET + '/avatars/avatar5.webp';
-
+import { QueryModel } from '@/domain/QueryModel';
+import { UserModel } from '@/domain/UserModel';
 import Cookies from 'js-cookie';
 
 export const persistToken = (token: string): void => {
@@ -11,14 +11,24 @@ export const readToken = (): string | null => {
   return Cookies.get('access_token') || null;
 };
 
-// export const persistUser = (user: UserModel): void => {
-//   localStorage.setItem('user', JSON.stringify(user));
-// };
+export const persistQuery = (query: QueryModel): void => {
+  localStorage.setItem('query', JSON.stringify(query));
+};
 
-// export const readUser = (): UserModel | null => {
-//   const userStr = localStorage.getItem('user');
-//   return userStr ? JSON.parse(userStr) : testUser;
-// };
+export const readQuery = (): QueryModel | null => {
+  const queryStr = localStorage.getItem('query');
+  return queryStr ? JSON.parse(queryStr) : null;
+};
+
+export const persistUser = (user: UserModel): void => {
+  // localStorage.setItem('user', JSON.stringify(user));
+};
+
+export const readUser = (): UserModel | null => {
+  // const userStr = localStorage.getItem('user');
+  // return userStr ? JSON.parse(userStr) : testUser;
+  return null;
+};
 
 export const deleteToken = (): void => {
   Cookies.remove('access_token');

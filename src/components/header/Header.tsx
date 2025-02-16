@@ -8,7 +8,10 @@ interface HeaderProps {
   isSiderOpened: boolean;
 }
 
-export const Header: React.FC<HeaderProps> = ({ toggleSider }) => {
+export const Header: React.FC<HeaderProps> = ({
+  toggleSider,
+  isSiderOpened,
+}) => {
   const { isTablet } = useResponsive();
 
   return isTablet ? (

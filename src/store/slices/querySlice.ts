@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import { createAction, createSlice, PrepareAction } from '@reduxjs/toolkit';
 import { QueryModel } from '@/domain/QueryModel';
 import { persistQuery } from '@/services/localStorage.service';

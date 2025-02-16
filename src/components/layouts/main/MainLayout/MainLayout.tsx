@@ -12,10 +12,10 @@ const MainLayout: React.FC = () => {
 
   return (
     <S.LayoutMaster>
-      <MainSider
+      {/* <MainSider
         isCollapsed={siderCollapsed}
         setCollapsed={setSiderCollapsed}
-      />
+      /> */}
       <S.LayoutMain>
         <MainHeader>
           <Header toggleSider={toggleSider} isSiderOpened={!siderCollapsed} />

@@ -29,6 +29,10 @@ export const InputSearch = styled(SearchInput)`
       border: 0;
       padding: 0.5625rem 1.25rem;
     }
+
+    .ant-input-affix-wrapper {
+      font-size: 1rem;
+    }
   }
 `;
 

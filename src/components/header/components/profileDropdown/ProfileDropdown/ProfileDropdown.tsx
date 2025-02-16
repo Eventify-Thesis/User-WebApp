@@ -26,7 +26,7 @@ export const ProfileDropdown: React.FC = () => {
             src="https://cdn-icons-png.freepik.com/512/219/219964.png"
             alt="User"
             shape="circle"
-            size={40}
+            size={30}
           />
         </BaseCol>
         {isTablet && (

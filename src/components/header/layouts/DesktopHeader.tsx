@@ -12,7 +12,7 @@ interface DesktopHeaderProps {}
 
 export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
   const leftSide = (
-    <S.SearchColumn xl={16} xxl={17}>
+    <S.SearchColumn xl={12} xxl={14}>
       <BaseRow justify="space-between">
         <BaseCol xl={15} xxl={12}>
           <HeaderSearch />
