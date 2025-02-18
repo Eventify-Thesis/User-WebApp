@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components';
 import { BurgerIcon } from '@/components/common/Burger/BurgerIcon';
-import { GitHubButton } from '@/components/header/components/GithubButton/GitHubButton';
+import { GitHubButton } from '@/components/header/components/CreateEventButton/CreateEventButton';
 import { LAYOUT, media } from '@/styles/themes/constants';
 import { BaseCollapse } from '../common/BaseCollapse/BaseCollapse';
 import { BaseCol } from '../common/BaseCol/BaseCol';

@@ -29,6 +29,10 @@ export default createGlobalStyle`
   [data-no-transition] * {
     transition: none !important;
   }
+
+  :root {
+    font-family: 'Open Sans', sans-serif;
+  }
   
   .range-picker {
     & .ant-picker-panels {

@@ -1,9 +1,11 @@
 import styled, { css } from 'styled-components';
 import { BurgerIcon } from '@/components/common/Burger/BurgerIcon';
-import { GitHubButton } from '@/components/header/components/GithubButton/GitHubButton';
+import { CreateEventButton } from '@/components/header/components/CreateEventButton/CreateEventButton';
 import { LAYOUT, media } from '@/styles/themes/constants';
 import { BaseCollapse } from '../common/BaseCollapse/BaseCollapse';
 import { BaseCol } from '../common/BaseCol/BaseCol';
+import { BaseRow } from '../common/BaseRow/BaseRow';
+import { Icon } from '@iconify/react/dist/iconify.js';
 
 export const HeaderActionWrapper = styled.div`
   cursor: pointer;
@@ -74,16 +76,42 @@ export const ProfileColumn = styled(BaseCol)<ProfileColumn>`
     ${(props) =>
       css`
         background-color: var(--sider-background-color);
-        padding: ${LAYOUT.desktop.paddingVertical}
-          ${LAYOUT.desktop.paddingHorizontal};
+        padding: 0 ${LAYOUT.desktop.paddingHorizontal};
       `}
   }
 `;
 
-export const GHButton = styled(GitHubButton)`
+export const NavRow = styled(BaseRow)``;
+export const NavItem = styled(BaseCol)`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #010101;
+  font-family: Montserrat, sans-serif;
+  font-size: 12px;
+  font-weight: 600;
+`;
+
+export const NavIcon = styled(Icon)`
+  color: black;
+  width: 24px;
+  height: 24px;
+  margin-bottom: 5px;
+`;
+export const LogoWrapper = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+export const LogoImage = styled.img`
+  width: 6rem;
+  height: 2.5rem;
+`;
+
+export const CEButton = styled(CreateEventButton)`
   display: none;
 
   @media only screen and ${media.lg} {
-    display: block;
+    display: flex;
   }
 `;
