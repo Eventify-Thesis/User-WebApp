@@ -1,60 +1,62 @@
-import React from "react";
-import { ProfileDropdown } from "../components/profileDropdown/ProfileDropdown/ProfileDropdown";
-import { SettingsDropdown } from "../components/settingsDropdown/SettingsDropdown";
-import { HeaderFullscreen } from "../components/HeaderFullscreen/HeaderFullscreen";
-import * as S from "../UnauthHeader.styles";
-import { BaseRow } from "@/components/common/BaseRow/BaseRow";
-import { BaseCol } from "@/components/common/BaseCol/BaseCol";
-import { BaseButton } from "@/components/common/BaseButton/BaseButton";
+import React from 'react';
+import { SettingsDropdown } from '../components/settingsDropdown/SettingsDropdown';
+import * as S from '../UnauthHeader.styles';
+import { BaseRow } from '@/components/common/BaseRow/BaseRow';
+import { BaseCol } from '@/components/common/BaseCol/BaseCol';
+import { BaseButton } from '@/components/common/BaseButton/BaseButton';
+import { Logo } from '../components/Logo/Logo';
+import { HeaderSearch } from '../components/HeaderSearch/HeaderSearch';
+import { BASE_COLORS } from '@/styles/themes/constants';
 
-interface DesktopUnauthHeaderProps {
-  isTwoColumnsLayout: boolean;
-}
+interface DesktopUnauthHeaderProps {}
 
-export const DesktopUnauthHeader: React.FC<DesktopUnauthHeaderProps> = ({
-  isTwoColumnsLayout,
-}) => {
-  const leftSide = isTwoColumnsLayout ? (
-    <S.SearchColumn xl={16} xxl={17}>
+export const DesktopUnauthHeader: React.FC<DesktopUnauthHeaderProps> = ({}) => {
+  const leftSide = (
+    <S.SearchColumn xl={12} xxl={14}>
       <BaseRow justify="space-between">
+        <BaseCol xl={9} xxl={12}>
+          <Logo />
+        </BaseCol>
         <BaseCol xl={15} xxl={12}>
-          {/* <UnauthHeaderSearch /> */}
+          <HeaderSearch />
         </BaseCol>
       </BaseRow>
     </S.SearchColumn>
-  ) : (
-    <>
-      <BaseCol lg={10} xxl={8}>
-        {/* <UnauthHeaderSearch /> */}
-      </BaseCol>
-    </>
   );
 
   return (
     <BaseRow justify="space-between" align="middle">
-      <S.NavLogo>
-        <a href="/">Emploi</a>
-      </S.NavLogo>
+      {leftSide}
+      <BaseCol>
+        <S.CEButton />
+      </BaseCol>
 
-      <S.ProfileColumn xl={8} xxl={7} $isTwoColumnsLayout={isTwoColumnsLayout}>
+      <S.ProfileColumn xl={8} xxl={7}>
         <BaseRow align="middle" justify="end" gutter={[5, 5]}>
           <BaseCol>
-            <BaseRow gutter={[{ xxl: 5 }, { xxl: 5 }]}>
+            <BaseRow gutter={[10, 10]}>
               <BaseCol>
-                <BaseButton type="link" href="auth/login">
-                  Log in
-                </BaseButton>
+                <S.LinkButton type="link" href="auth/login">
+                  Login
+                </S.LinkButton>
               </BaseCol>
               <BaseCol>
-                <BaseButton type="link" href="auth/sign-up">
+                <BaseButton
+                  variant="solid"
+                  href="auth/sign-up"
+                  style={{
+                    borderColor: 'transparent',
+                    fontFamily: 'Montserrat',
+                    backgroundColor: BASE_COLORS.yellow,
+                  }}
+                >
                   Sign Up
                 </BaseButton>
               </BaseCol>
             </BaseRow>
           </BaseCol>
-
           <BaseCol>
-            <ProfileDropdown />
+            <SettingsDropdown />
           </BaseCol>
         </BaseRow>
       </S.ProfileColumn>

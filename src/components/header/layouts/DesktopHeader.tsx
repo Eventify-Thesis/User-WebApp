@@ -5,16 +5,8 @@ import { SettingsDropdown } from '../components/settingsDropdown/SettingsDropdow
 import * as S from '../Header.styles';
 import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@/components/common/BaseCol/BaseCol';
-import logo from '@/assets/logo.png';
+import { Logo } from '../components/Logo/Logo';
 interface DesktopHeaderProps {}
-
-export const Logo: React.FC = () => {
-  return (
-    <S.LogoWrapper>
-      <S.LogoImage src={logo} alt="logo" />
-    </S.LogoWrapper>
-  );
-};
 
 export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
   const leftSide = (
