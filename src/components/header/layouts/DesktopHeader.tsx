@@ -1,19 +1,20 @@
 import React from 'react';
-import { NotificationsDropdown } from '../components/notificationsDropdown/NotificationsDropdown';
 import { ProfileDropdown } from '../components/profileDropdown/ProfileDropdown/ProfileDropdown';
 import { HeaderSearch } from '../components/HeaderSearch/HeaderSearch';
 import { SettingsDropdown } from '../components/settingsDropdown/SettingsDropdown';
-import { HeaderFullscreen } from '../components/HeaderFullscreen/HeaderFullscreen';
 import * as S from '../Header.styles';
 import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@/components/common/BaseCol/BaseCol';
-
+import { Logo } from '../components/Logo/Logo';
 interface DesktopHeaderProps {}
 
 export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
   const leftSide = (
     <S.SearchColumn xl={12} xxl={14}>
       <BaseRow justify="space-between">
+        <BaseCol xl={9} xxl={12}>
+          <Logo />
+        </BaseCol>
         <BaseCol xl={15} xxl={12}>
           <HeaderSearch />
         </BaseCol>
@@ -24,23 +25,31 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
   return (
     <BaseRow justify="space-between" align="middle">
       {leftSide}
+      <BaseCol>
+        <S.CEButton />
+      </BaseCol>
 
       <S.ProfileColumn xl={8} xxl={7}>
-        <BaseRow align="middle" justify="end" gutter={[5, 5]}>
+        <BaseRow align="middle" justify="end" gutter={[4, 4]}>
+          <S.NavRow gutter={[12, 0]} align="middle">
+            <S.NavItem>
+              <S.NavIcon icon="ion:ticket-outline" />
+              Tickets
+            </S.NavItem>
+            <S.NavItem>
+              <S.NavIcon icon="teenyicons:star-outline" />
+              Interested
+            </S.NavItem>
+            <BaseCol>
+              <ProfileDropdown />
+            </BaseCol>
+          </S.NavRow>
           <BaseCol>
             <BaseRow gutter={[{ xxl: 5 }, { xxl: 5 }]}>
-              <BaseCol>
-                <HeaderFullscreen />
-              </BaseCol>
-
               <BaseCol>
                 <SettingsDropdown />
               </BaseCol>
             </BaseRow>
-          </BaseCol>
-
-          <BaseCol>
-            <ProfileDropdown />
           </BaseCol>
         </BaseRow>
       </S.ProfileColumn>

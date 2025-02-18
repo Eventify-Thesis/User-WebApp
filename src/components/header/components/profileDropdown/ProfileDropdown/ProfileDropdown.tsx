@@ -20,7 +20,7 @@ export const ProfileDropdown: React.FC = () => {
 
   return user ? (
     <BasePopover content={<ProfileOverlay />} trigger="click">
-      <S.ProfileDropdownHeader as={BaseRow} gutter={[10, 10]} align="middle">
+      <S.ProfileDropdownHeader as={BaseRow} align="middle">
         <BaseCol>
           <BaseAvatar
             src="https://cdn-icons-png.freepik.com/512/219/219964.png"
@@ -30,9 +30,14 @@ export const ProfileDropdown: React.FC = () => {
           />
         </BaseCol>
         {isTablet && (
-          <BaseCol>
-            <span>{`${user.username}`}</span>
-          </BaseCol>
+          <span
+            style={{
+              fontFamily: 'Montserrat',
+              fontSize: 12,
+              fontWeight: 600,
+              lineHeight: 1.2,
+            }}
+          >{`${user.username}`}</span>
         )}
       </S.ProfileDropdownHeader>
     </BasePopover>

@@ -1,19 +1,10 @@
 import styled, { css } from 'styled-components';
 import { BurgerIcon } from '@/components/common/Burger/BurgerIcon';
-import { GitHubButton } from '@/components/header/components/GithubButton/GitHubButton';
+import { CreateEventButton } from '@/components/header/components/CreateEventButton/CreateEventButton';
 import { LAYOUT, media } from '@/styles/themes/constants';
 import { BaseCollapse } from '../common/BaseCollapse/BaseCollapse';
 import { BaseCol } from '../common/BaseCol/BaseCol';
-
-export const NavLogo = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.25rem;
-  font-weight: 800;
-  color: var(--primary-color);
-  cursor: pointer;
-`;
+import { BaseButton } from '../common/BaseButton/BaseButton';
 
 export const UnauthHeaderActionWrapper = styled.div`
   cursor: pointer;
@@ -75,23 +66,28 @@ export const SearchColumn = styled(BaseCol)`
   padding: ${LAYOUT.desktop.paddingVertical} ${LAYOUT.desktop.paddingHorizontal};
 `;
 
-interface ProfileColumn {
-  $isTwoColumnsLayout: boolean;
-}
+interface ProfileColumn {}
 
 export const ProfileColumn = styled(BaseCol)<ProfileColumn>`
   @media only screen and ${media.md} {
     ${(props) =>
-      props?.$isTwoColumnsLayout &&
       css`
         background-color: var(--sider-background-color);
-        padding: ${LAYOUT.desktop.paddingVertical}
-          ${LAYOUT.desktop.paddingHorizontal};
+        padding: 0 ${LAYOUT.desktop.paddingHorizontal};
       `}
   }
 `;
 
-export const GHButton = styled(GitHubButton)`
+export const LinkButton = styled(BaseButton)`
+  & > span,
+  & > a {
+    text-decoration: none;
+  }
+  color: white;
+  font-family: 'Montserrat';
+`;
+
+export const CEButton = styled(CreateEventButton)`
   display: none;
 
   @media only screen and ${media.lg} {
