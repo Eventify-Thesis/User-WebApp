@@ -1,4 +1,11 @@
 {
+  "eventDetailPage": {
+    "buyTicket": "Buy Ticket",
+    "priceFrom": "Price from",
+    "organizer": "Organizer",
+    "description": "Description",
+    "ticketInfo": "Ticket Info"
+  },
   "alerts": {
     "accept": "Accept",
     "basic": "Basic alert",

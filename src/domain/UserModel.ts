@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 export interface UserModel {
   username: string;
   fullName?: string;
