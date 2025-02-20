@@ -91,6 +91,6 @@ export const CEButton = styled(CreateEventButton)`
   display: none;
 
   @media only screen and ${media.lg} {
-    display: block;
+    display: flex;
   }
 `;

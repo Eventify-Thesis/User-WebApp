@@ -8,6 +8,8 @@ import GlobalStyle from './styles/GlobalStyle';
 import { useThemeWatcher } from './hooks/useThemeWatcher';
 import { useAppSelector } from './hooks/reduxHooks';
 import { themeObject } from './styles/themes/themeVariables';
+import { HelmetProvider } from 'react-helmet-async';
+import { Helmet } from 'react-helmet';
 
 function App() {
   const { language } = useLanguage();
@@ -20,9 +22,19 @@ function App() {
     <>
       <meta name="theme-color" content={themeObject[theme].primary} />
       <GlobalStyle />
-      <ConfigProvider locale={language === 'en' ? enUS : vnVN}>
-        <AppRouter />
-      </ConfigProvider>
+      <HelmetProvider>
+        <Helmet>
+          <meta name="theme-color" content={themeObject[theme].primary} />
+          <meta
+            http-equiv="Content-Security-Policy"
+            content="upgrade-insecure-requests"
+          />
+        </Helmet>
+
+        <ConfigProvider locale={language === 'en' ? enUS : vnVN}>
+          <AppRouter />
+        </ConfigProvider>
+      </HelmetProvider>
     </>
   );
 }
