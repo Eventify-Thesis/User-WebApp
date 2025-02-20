@@ -75,7 +75,6 @@ export const ProfileColumn = styled(BaseCol)<ProfileColumn>`
   @media only screen and ${media.md} {
     ${(props) =>
       css`
-        background-color: var(--sider-background-color);
         padding: 0 ${LAYOUT.desktop.paddingHorizontal};
       `}
   }
