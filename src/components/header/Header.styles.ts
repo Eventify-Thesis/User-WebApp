@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components';
 import { BurgerIcon } from '@/components/common/Burger/BurgerIcon';
 import { CreateEventButton } from '@/components/header/components/CreateEventButton/CreateEventButton';
-import { LAYOUT, media } from '@/styles/themes/constants';
+import { FONT_SIZE, LAYOUT, media } from '@/styles/themes/constants';
 import { BaseCollapse } from '../common/BaseCollapse/BaseCollapse';
 import { BaseCol } from '../common/BaseCol/BaseCol';
 import { BaseRow } from '../common/BaseRow/BaseRow';
@@ -88,7 +88,7 @@ export const NavItem = styled(BaseCol)`
   align-items: center;
   color: #010101;
   font-family: Montserrat, sans-serif;
-  font-size: 12px;
+  font-size: ${FONT_SIZE.md};
   font-weight: 600;
 `;
 

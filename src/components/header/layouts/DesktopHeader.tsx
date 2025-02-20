@@ -6,6 +6,7 @@ import * as S from '../Header.styles';
 import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@/components/common/BaseCol/BaseCol';
 import { Logo } from '../components/Logo/Logo';
+import { UserButton } from '@clerk/clerk-react';
 interface DesktopHeaderProps {}
 
 export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
@@ -23,13 +24,27 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
   );
 
   return (
-    <BaseRow justify="space-between" align="middle">
+    <BaseRow
+      justify="space-between"
+      align="middle"
+      style={{
+        height: '100%',
+      }}
+    >
       {leftSide}
       <BaseCol>
         <S.CEButton />
       </BaseCol>
 
-      <S.ProfileColumn xl={8} xxl={7}>
+      <S.ProfileColumn
+        xl={8}
+        xxl={7}
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          height: '100%',
+        }}
+      >
         <BaseRow align="middle" justify="end" gutter={[4, 4]}>
           <S.NavRow gutter={[12, 0]} align="middle">
             <S.NavItem>
@@ -41,7 +56,7 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
               Interested
             </S.NavItem>
             <BaseCol>
-              <ProfileDropdown />
+              <UserButton showName={true} appearance={{}} />
             </BaseCol>
           </S.NavRow>
           <BaseCol>

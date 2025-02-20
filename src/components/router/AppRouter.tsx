@@ -2,9 +2,9 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // // no lazy loading for auth pages to avoid flickering
-// const AuthLayout = React.lazy(
-//   () => import("@/components/layouts/AuthLayout/AuthLayout")
-// );
+const AuthLayout = React.lazy(
+  () => import('@/components/layouts/AuthLayout/AuthLayout'),
+);
 // import LoginPage from "@/pages/LoginPage";
 // import SignUpPage from "@/pages/SignUpPage";
 // import ForgotPasswordPage from "@/pages/ForgotPasswordPage";
@@ -19,7 +19,8 @@ import RequireAuth from '@/components/router/RequireAuth';
 const EventDetailPage = React.lazy(() => import('@/pages/EventDetailPage'));
 const CheckoutPage = React.lazy(() => import('@/pages/CheckoutPage'));
 
-// import { withLoading } from "@/hocs/withLoading.hoc";
+import { withLoading } from '@/hocs/withLoading.hoc';
+import { SignIn, SignUp } from '@clerk/clerk-react';
 // import NftDashboardPage from "@/pages/DashboardPages/HomePage";
 // import MedicalDashboardPage from "@/pages/DashboardPages/DashboardPage";
 
@@ -60,7 +61,7 @@ const CheckoutPage = React.lazy(() => import('@/pages/CheckoutPage'));
 // const SecuritySettings = withLoading(SecuritySettingsPage);
 // const UploadCV = withLoading(UploadCVPage);
 
-// const AuthLayoutFallback = withLoading(AuthLayout);
+const AuthLayoutFallback = withLoading(AuthLayout);
 // const LogoutFallback = withLoading(Logout);
 export const HOME_PATH = '/';
 
@@ -76,8 +77,16 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path={HOME_PATH} element={<MainLayout />}>
           <Route index element={<h1>Hello worlds</h1>} />
+        </Route>
+
+        <Route path={HOME_PATH} element={protectedLayout}>
           <Route path="event-detail" element={<EventDetailPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
+        </Route>
+
+        <Route path="/auth" element={<AuthLayoutFallback />}>
+          <Route path="login" element={<SignIn />} />
+          <Route path="sign-up" element={<SignUp />} />
         </Route>
       </Routes>
     </BrowserRouter>
