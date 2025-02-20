@@ -202,4 +202,22 @@ export default createGlobalStyle`
     border-right: 0;
   }
   // notifications end
-`;
+
+  // Clerk start
+  .cl-userButtonBox {
+    display: flex;
+    align-items: center;
+    flex-direction: column-reverse; 
+    gap: 0rem;
+    height: 100%;
+  }
+
+  .cl-userButtonOuterIdentifier {
+    font-size: ${FONT_SIZE.md};
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+  }
+  // Clerk end
+
+
+  `;

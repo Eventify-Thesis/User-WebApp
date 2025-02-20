@@ -25,7 +25,13 @@ export const DesktopUnauthHeader: React.FC<DesktopUnauthHeaderProps> = ({}) => {
   );
 
   return (
-    <BaseRow justify="space-between" align="middle">
+    <BaseRow
+      justify="space-between"
+      align="middle"
+      style={{
+        height: '100%',
+      }}
+    >
       {leftSide}
       <BaseCol>
         <S.CEButton />
