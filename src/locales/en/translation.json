@@ -6,6 +6,20 @@
     "description": "Description",
     "ticketInfo": "Ticket Info"
   },
+  "checkout": {
+    "finishOrderIn": "Finish order in",
+    "chooseTicket": "Choose ticket",
+    "payment": "Payment",
+    "questionnaire": "Questionnaire",
+    "questionnaireForm": "Questionnaire form",
+    "orderInformation": "Order information",
+    "chooseTicketAgain": "Choose ticket again",
+    "pleaseFill": "Please fill in the questionnaire form to continue",
+    "temporaryCalculate": "Temporary calculate",
+    "ticketType": "Ticket type",
+    "quantity": "Quantity",
+    "continue": "Continue"
+  },
   "alerts": {
     "accept": "Accept",
     "basic": "Basic alert",

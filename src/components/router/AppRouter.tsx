@@ -17,6 +17,7 @@ import MainLayout from '@/components/layouts/main/MainLayout/MainLayout';
 // import ProfileLayout from "@/components/profile/ProfileLayout";
 import RequireAuth from '@/components/router/RequireAuth';
 const EventDetailPage = React.lazy(() => import('@/pages/EventDetailPage'));
+const CheckoutPage = React.lazy(() => import('@/pages/CheckoutPage'));
 
 // import { withLoading } from "@/hocs/withLoading.hoc";
 // import NftDashboardPage from "@/pages/DashboardPages/HomePage";
@@ -76,6 +77,7 @@ export const AppRouter: React.FC = () => {
         <Route path={HOME_PATH} element={<MainLayout />}>
           <Route index element={<h1>Hello worlds</h1>} />
           <Route path="event-detail" element={<EventDetailPage />} />
+          <Route path="checkout" element={<CheckoutPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

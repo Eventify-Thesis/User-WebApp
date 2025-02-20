@@ -31,8 +31,8 @@ export default createGlobalStyle`
   }
 
   :root {
-    font-family: 'Open Sans', sans-serif;
-  }
+    font-family: 'Montserrat', sans-serif;
+    }
   
   .range-picker {
     & .ant-picker-panels {
