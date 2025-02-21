@@ -213,6 +213,7 @@ export default createGlobalStyle`
   }
 
   .cl-userButtonOuterIdentifier {
+    color: white;
     font-size: ${FONT_SIZE.md};
     font-weight: 600;
     font-family: 'Montserrat', sans-serif;

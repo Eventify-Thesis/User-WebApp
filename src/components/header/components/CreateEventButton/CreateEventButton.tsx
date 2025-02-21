@@ -31,8 +31,8 @@ const Button = styled(BaseButton)<{ $isDark: boolean }>`
   color: ${(props) => BASE_COLORS[props.$isDark ? 'white' : 'black']};
   background: ${(props) => BASE_COLORS[props.$isDark ? 'yellow' : 'yellow']};
   border-radius: 5px;
-  padding-top: 0;
-  padding-bottom: 0;
+  padding-block: 0.5rem;
+  height: max-content;
   display: flex;
   align-items: center;
   border: 1px solid transparent;
