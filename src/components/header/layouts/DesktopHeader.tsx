@@ -16,7 +16,13 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
         <BaseCol xl={9} xxl={12}>
           <Logo />
         </BaseCol>
-        <BaseCol xl={15} xxl={12}>
+        <BaseCol
+          xl={15}
+          xxl={12}
+          style={{
+            paddingBlock: '0.5rem',
+          }}
+        >
           <HeaderSearch />
         </BaseCol>
       </BaseRow>

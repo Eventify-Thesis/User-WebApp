@@ -85,14 +85,14 @@ export const NavItem = styled(BaseCol)`
   display: flex;
   flex-direction: column;
   align-items: center;
-  color: #010101;
+  color: white;
   font-family: Montserrat, sans-serif;
   font-size: ${FONT_SIZE.md};
   font-weight: 600;
 `;
 
 export const NavIcon = styled(Icon)`
-  color: black;
+  color: white;
   width: 24px;
   height: 24px;
   margin-bottom: 5px;
