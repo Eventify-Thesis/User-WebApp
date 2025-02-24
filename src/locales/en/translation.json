@@ -1,4 +1,17 @@
 {
+  "homePage": {
+    "title": "Eventify",
+    "popularEvents": "Discover Popular Events",
+    "onlineEvents": "Discover Best of Online Events",
+    "latestEvents": "Latest Events",
+    "seeMore": "See More",
+    "entertainment": "Entertainment",
+    "education": "Education & Business",
+    "cultural": "Cultural & Arts",
+    "sport": "Sports & Fitness",
+    "technology": "Technology & Innovation",
+    "travel": "Travel & Adventure"
+  },
   "eventDetailPage": {
     "buyTicket": "Buy Ticket",
     "priceFrom": "Price from",
