@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Banner } from '@/components/homepage/Banner/Banner';
-import { CategorySection } from '@/components/homepage/CategorySection/CategorySection';
-import { EventCardGrid } from '@/components/homepage/EventCardGrid/EventCardGrid';
+import { Banner } from '@/components/home/Banner/Banner';
+import { CategorySection } from '@/components/home/CategorySection/CategorySection';
+import { EventCardGrid } from '@/components/home/EventCardGrid/EventCardGrid';
 import { useTranslation } from 'react-i18next';
 import { useResponsive } from '@/hooks/useResponsive';
 import { PageTitle } from '@/components/common/PageTitle/PageTitle';
