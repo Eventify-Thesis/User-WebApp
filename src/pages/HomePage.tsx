@@ -5,7 +5,8 @@ import { EventCardGrid } from '@/components/home/EventCardGrid/EventCardGrid';
 import { useTranslation } from 'react-i18next';
 import { useResponsive } from '@/hooks/useResponsive';
 import { PageTitle } from '@/components/common/PageTitle/PageTitle';
-
+import { LocationSection } from '@/components/home/LocationSection/LocationSection';
+import { Footer } from '@/components/home/Footer/Footer';
 const categories = [
   { name: "entertainment"},
   { name: "education" },
@@ -24,29 +25,23 @@ const eventInfo = {
   eventCategory: "Upcoming Events", events: [
     {
       title: "The Road to Jobs and Internships: Starting with LinkedIn",
-      date: { month: "JAN", day: "13" }, // ✅ Correct type
-      time: "6 PM - 7:30 PM",
-      category: "Educational & Business",
-      price: "INR 49",
+      date: new Date(Date.parse("2023-01-13")),
+      price: "499,000 VND",
       interestedCount: 21,
       venue: "Online",
       image: "https://salt.tkbcdn.com/ts/ds/44/e2/90/76fb84dbfdcd86e99f720aca467ffd04.png",
     },
     {
       title: "Online Zumba Dance Fitness Class over Zoom",
-      date: { month: "NOV", day: "29" }, // ✅ Correct type
-      time: "7 PM - 8 PM",
-      category: "Sports & Fitness",
-      price: "CAD 7",
+      date: new Date(Date.parse("2023-01-13")),
+      price: "70,000 VND",
       interestedCount: 10,
       venue: "Zoom",
       image: "https://salt.tkbcdn.com/ts/ds/44/e2/90/76fb84dbfdcd86e99f720aca467ffd04.png",
     },
     {
       title: "Easy Book Folding: Christmas Edition",
-      date: { month: "DEC", day: "12" }, // ✅ Correct type
-      time: "4 PM - 5:30 PM",
-      category: "Cultural & Arts",
+      date: new Date(Date.parse("2023-01-13")), 
       price: "FREE",
       interestedCount: 10,
       venue: "Community Library",
@@ -64,22 +59,20 @@ const HomePage: React.FC = () => {
 
   const newCategory = categories.map(category => ({
     name: (t('homePage.' + category.name)),
-    imageUrl: 'https://www.mancecreative.com/wp-content/uploads/2022/05/Integra-conf-logo.jpg'
+    imageUrl: 'https://img.freepik.com/free-photo/black-silhouettes-music-concert-poster-concept_1194-617147.jpg?t=st=1740554758~exp=1740558358~hmac=2531f930e011ee92729f45a071e833c0772c9cd7cab164a553ecb14aa05b3d25&w=1800'
   }));
   const desktopLayout = (
     <>
-      <div>
-        <Banner images={images} />
-      </div>
+      <Banner images={images} />
       <CategorySection categories={newCategory} />
       <EventCardGrid eventCategory={eventInfo.eventCategory} events={eventInfo.events} />
+      <LocationSection/>
+      <Footer/>
     </>
   );
   
   const mobileAndTabletLayout = <>
-      <div>
-        <Banner images={images} />
-      </div>
+      <Banner images={images} />
       <EventCardGrid eventCategory={eventInfo.eventCategory} events={eventInfo.events} />
   </>;
   

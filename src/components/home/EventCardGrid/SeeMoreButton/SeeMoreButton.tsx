@@ -1,7 +1,11 @@
 import React from 'react';
 import * as S from './SeeMoreButton.styles';
 
-export const SeeMoreButton: React.FC<S.ViewAllProps> = ({ buttonName }) => {
+interface ViewAllProps{
+  buttonName: string;
+}
+
+export const SeeMoreButton: React.FC<ViewAllProps> = ({ buttonName }) => {
   return (
     <S.SeeMoreButton>{buttonName}</S.SeeMoreButton>
   );

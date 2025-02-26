@@ -1,16 +1,24 @@
 "use client";
 import React from "react";
-import styled from "styled-components";
-import { CategoryProps } from "./CategorySection.styles";
 import { useTranslation } from 'react-i18next';
 import * as s from "./CategorySection.styles";
 
-export const CategorySection: React.FC<s.CategorySectionProps> = ({
+interface CategoryProps {
+  name: string;
+  imageUrl?: string;
+}
+
+interface CategorySectionProps {
+  categories: CategoryProps[];
+}
+
+export const CategorySection: React.FC<CategorySectionProps> = ({
   categories,
-}) => {  
+}) => {
+  const { t } = useTranslation();
   return (
     <s.Section>
-      <s.Title>Explore Categories</s.Title>
+      <s.Title>{t('homePage.exploreCategories')}</s.Title>
       <s.CategoriesGrid>
         {categories.map((category, index) => (
           <s.CategoryCard key={index}>

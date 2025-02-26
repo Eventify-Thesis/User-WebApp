@@ -1,64 +1,88 @@
+"use client";
+
 import React from "react";
-import styled from "styled-components";
 import * as s from "./EventCard.styles"
 
-export const EventCard: React.FC<s.EventCardProps> = ({
+export interface EventCardProps {
+  image: string;
+  date: Date;
+  title: string;
+  venue: string;
+  time?: string; // Made optional
+  price: string;
+  interestedCount: number;
+  isOnline?: boolean;
+}
+
+
+export const EventCard: React.FC<EventCardProps> = ({
   image,
-  category,
   date,
   title,
   venue,
   time,
   price,
   interestedCount,
-  isOnline,
+  isOnline
 }) => {
+  
+  // Format Date
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const formattedMonth = monthNames[date.getMonth()]; // Convert zero-based month to string
+  const formattedDay = date.getDate().toString(); // Get day
+  const formattedYear = date.getFullYear().toString(); // Get day
+  
   return (
     <s.CardWrapper>
       <s.ImageSection>
-        <s.EventImage src={image} alt={title} />
-        <s.IconsWrapper>
-          <s.LikeIcon
-            loading="lazy"
-            src="https://cdn.builder.io/api/v1/image/assets/TEMP/dd0228e7335be2719c173e6ec897a6265ae0169d5a0cd4a92797d2ff2b201599"
-            alt="Share"
+  <s.EventImage src={image} alt={title} />
+
+  {/* Interest Count Badge */}
+  {interestedCount > 0 && (
+    <s.InterestBadge>
+      <s.InterestCount>{interestedCount} interested </s.InterestCount>
+    </s.InterestBadge>
+
+  )}
+
+  {/* Bookmark Icon */}
+  <s.BookmarkIcon
+    src="https://cdn.builder.io/api/v1/image/assets/TEMP/9c1046de208fdc3515ce14eddbcf778ad27b67628f7ecbfaa210063a9427c5c9?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
+    alt="Bookmark"
+  />
+</s.ImageSection>
+
+
+      <s.ContentSection>
+  <s.EventDetails>
+    <s.Title>{title}</s.Title>
+    <s.Venue>{isOnline ? "Online" : venue}</s.Venue>
+    <s.Time>{formattedDay + " " + formattedMonth + " " + formattedYear}</s.Time>
+
+    <s.MetaInfo>
+      {price && (
+        <s.PriceSection>
+          <s.PriceIcon
+            src={
+              price === "FREE"
+                ? "https://cdn.builder.io/api/v1/image/assets/TEMP/75e267775796d2beb53e040c1b6a4e1b918da2c64177d75c54600544babd7cbb"
+                : "https://cdn.builder.io/api/v1/image/assets/TEMP/46afa3da8da98074863d3982465257407b626e287c2afa9b610f7bfd1843fc34"
+            }
           />
-        </s.IconsWrapper>
-        <s.CategoryBadge>{category}</s.CategoryBadge>
-      </s.ImageSection>
+          <s.Price>{price}</s.Price>
+        </s.PriceSection>
+      )}
 
-      <s.ContentWrapper>
-        <s.DateSection>
-          <s.Month>{date.month}</s.Month>
-          <s.Day>{date.day}</s.Day>
-        </s.DateSection>
+      {/* Moved InterestBadge here */}
+      {interestedCount > 0 && (
+        <s.InterestBadge>
+          <s.InterestCount>{interestedCount} interested </s.InterestCount>
+        </s.InterestBadge>
+      )}
+    </s.MetaInfo>
+  </s.EventDetails>
+</s.ContentSection>
 
-        <s.EventDetails>
-          <s.Title>{title}</s.Title>
-          <s.Location>{isOnline ? "Online" : venue}</s.Location>
-          <s.Time>{time}</s.Time>
-
-          <s.MetaInfo>
-            <s.PriceSection>
-              <s.PriceIcon
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/d198ef5003a289d349feddc2bc0bee4f964a18a43808d66ec3799b06d8c33806"
-                alt="Price"
-              />
-              <s.Price>{price}</s.Price>
-            </s.PriceSection>
-
-            <s.InterestedSection>
-              <s.InterestedIcon
-                loading="lazy"
-                src="https://cdn.builder.io/api/v1/image/assets/TEMP/0652e1d7fb40fc37b6a2cdc0af2f3f40dda735dfda3afea7ff55ead5950cc291"
-                alt="Interested"
-              />
-              <s.InterestedCount>{interestedCount} interested</s.InterestedCount>
-            </s.InterestedSection>
-          </s.MetaInfo>
-        </s.EventDetails>
-      </s.ContentWrapper>
     </s.CardWrapper>
   );
 };

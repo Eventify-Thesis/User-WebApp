@@ -10,7 +10,9 @@
     "cultural": "Cultural & Arts",
     "sport": "Sports & Fitness",
     "technology": "Technology & Innovation",
-    "travel": "Travel & Adventure"
+    "travel": "Travel & Adventure",
+    "upcomingEvents": "Upcoming Events",
+    "exploreCategories": "Explore Categories"
   },
   "eventDetailPage": {
     "buyTicket": "Buy Ticket",

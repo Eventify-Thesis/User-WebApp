@@ -77,13 +77,12 @@ export const AppRouter: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path={HOME_PATH} element={<MainLayout />}>
-          <Route index element={<h1>Hello worlds</h1>} />
+          <Route index element={<HomePage />} />
         </Route>
 
         <Route path={HOME_PATH} element={protectedLayout}>
           <Route path="event-detail" element={<EventDetailPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
-          <Route path="homepage" element={<HomePage />} />
         </Route>
 
         <Route path="/auth" element={<AuthLayoutFallback />}>

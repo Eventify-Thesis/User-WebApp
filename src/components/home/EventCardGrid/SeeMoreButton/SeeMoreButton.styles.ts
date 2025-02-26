@@ -1,8 +1,4 @@
-import styled, { css } from 'styled-components';
-
-export interface ViewAllProps{
-  buttonName: string;
-}
+import styled from 'styled-components';
 
 export const SeeMoreButton = styled.button`
   border-radius: 8px;
@@ -24,6 +20,12 @@ export const SeeMoreButton = styled.button`
   font-weight: 600;
   text-align: center;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+
+  &:hover {
+    background-color: #2b293d; /* Change background on hover */
+    color: #fff; /* Change text color on hover */
+  }
 
   @media (max-width: 991px) {
     padding: 19px 20px;

@@ -1,10 +1,6 @@
 import styled from "styled-components";
 import { Carousel } from "antd";
 
-export interface BannerProps {
-  images: string[];
-}
-
 export const StyledCarousel = styled(Carousel)`
   width: 80%;
   margin: 0 auto;

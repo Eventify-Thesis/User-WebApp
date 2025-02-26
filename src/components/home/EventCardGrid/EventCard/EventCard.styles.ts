@@ -1,103 +1,92 @@
 import styled from 'styled-components';
 
-export interface EventCardProps {
-  image: string;
-  category: string;
-  date: {
-    month: string;
-    day: string;
-  };
-  title: string;
-  venue: string;
-  time: string;
-  price: string;
-  interestedCount: number;
-  isOnline?: boolean;
-}
+export const Time = styled.time`
+  font-weight: 600; /* Slightly bolder */
+  font-size: 20px; /* Bigger size */
+  color: #007bff; /* Eye-catching blue */
+  text-transform: uppercase;
+  font-family: Montserrat, sans-serif;
+  margin-top: 10px;
+  background-color: rgba(0, 123, 255, 0.1); /* Light blue background for contrast */
+  padding: 4px 8px; /* Adds some spacing */
+  border-radius: 4px; /* Slightly rounded corners */
+`;
 
 export const CardWrapper = styled.article`
   border-radius: 10px;
   background-color: #fff;
+  overflow: hidden;
+  width: 100%;
+  max-width: 450px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
-  flex-grow: 1;
-  flex-shrink: 1;
-  width: 300px; /* Make the card smaller */
-  max-width: 100%;
-  padding-bottom: 18px;
-  padding: 0 10px;
+  transition:
+    transform 0.2s ease-in-out,
+    box-shadow 0.2s ease-in-out;
+  cursor: pointer;
 
-  @media (max-width: 1480px) {
-    width: 260px; /* Adjust for smaller screens */
-  }
-
-  @media (max-width: 991px) {
-    width: 100%; /* Full width on mobile */
-    max-width: 80%;
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
 `;
-
 
 export const ImageSection = styled.div`
   position: relative;
-  width: 100%;
-  padding-top: 56.25%; /* 16:9 Aspect Ratio */
-  overflow: hidden;
+  min-height: 254px;
 `;
 
 export const EventImage = styled.img`
-  position: absolute;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
+  position: absolute;
   object-fit: cover;
-  background-color: rgba(185, 185, 185, 1);
 `;
 
-export const IconsWrapper = styled.div`
+export const BookmarkIcon = styled.img`
   position: absolute;
   top: 14px;
   right: 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  z-index: 1;
-`;
-
-export const LikeIcon = styled.img`
-  aspect-ratio: 1.36;
-  object-fit: contain;
   width: 48px;
-  fill: #fff;
+  height: 48px;
+  transition: transform 0.2s ease;
+  cursor: pointer;
+
+  &:hover {
+    transform: scale(1.1);
+  }
 `;
 
-export const CategoryBadge = styled.span`
+export const LocationBadge = styled.div`
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  background-color: #2b293d;
+  color: #fff;
+  padding: 2px 10px;
+  border-radius: 5px;
+  font-size: 20px;
+`;
+
+export const CategoryBadge = styled.div`
   position: absolute;
   bottom: 0;
   left: 0;
-  border-radius: 0px 6px 0px 0px;
   background-color: #ffe047;
+  color: #2d2c3c;
   padding: 5px 10px;
-  font-family:
-    Open Sans,
-    sans-serif;
+  border-radius: 0 6px 0 0;
   font-size: 18px;
-  color: #000000;
   font-weight: 600;
-  z-index: 1;
 `;
 
-export const ContentWrapper = styled.div`
-  align-self: center;
+export const ContentSection = styled.div`
   display: flex;
-  margin-top: 18px;
-  width: 453px;
-  max-width: 100%;
-  align-items: stretch;
-  gap: 31px;
+  justify-content: space-between; /* Push elements to edges */
+  align-items: center; /* Align items vertically */
+  padding: 18px;
 `;
+
 
 export const DateSection = styled.div`
   display: flex;
@@ -107,54 +96,64 @@ export const DateSection = styled.div`
   text-align: center;
 `;
 
-export const Month = styled.span`
-  color: #000001;
+export const Month = styled.div`
+  color: rgba(69, 57, 180, 1);
   font-size: 24px;
   font-weight: 600;
 `;
 
-export const Day = styled.span`
-  color: #000000;
-  font-size: 26px;
-  font-weight: 700;
+export const DateDisplay = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 4px;
   margin-top: 6px;
 `;
 
+export const Day = styled.div`
+  color: #2d2c3c;
+  font-size: 26px;
+  font-weight: 700;
+`;
+
+export const Separator = styled.div`
+  color: #2d2c3c;
+  font-size: 26px;
+  font-weight: 700;
+`;
+
 export const EventDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  font-family:
-    Open Sans,
-    sans-serif;
-  font-size: 18px;
-  color: #000000;
-  font-weight: 600;
-  flex-grow: 1;
+  flex: 1;
+  font-family: "Open Sans", sans-serif;
 `;
 
 export const Title = styled.h3`
+  color: #2d2c3c;
   font-size: 24px;
+  font-weight: 600;
+  margin: 0;
   -webkit-line-clamp: 2;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   overflow: hidden;
 `;
 
-export const Location = styled.p`
-  margin-top: 10px;
-`;
-
-export const Time = styled.time`
-  font-weight: 400;
-  text-transform: uppercase;
-  margin-top: 10px;
+export const Venue = styled.p`
+  color: #5a5a5a;
+  font-size: 18px;
+  font-weight: 600;
+  margin: 10px 0;
 `;
 
 export const MetaInfo = styled.div`
   display: flex;
-  margin-top: 10px;
-  align-items: center;
   gap: 9px;
+  margin-top: 10px;
+  opacity: 0.9;
+  transition: opacity 0.2s ease;
+
+  ${CardWrapper}:hover & {
+    opacity: 1;
+  }
 `;
 
 export const PriceSection = styled.div`
@@ -164,28 +163,58 @@ export const PriceSection = styled.div`
 `;
 
 export const PriceIcon = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
   width: 22px;
+  height: 22px;
 `;
 
 export const Price = styled.span`
-  white-space: nowrap;
+  color: #ff5722; /* Brighter color for emphasis */
+  font-size: 22px; /* Increased font size */
+  font-weight: 700; /* Bolder font */
+  background-color: rgba(255, 87, 34, 0.1); /* Light background for contrast */
+  padding: 4px 8px; /* Padding for better visibility */
+  border-radius: 4px; /* Rounded corners */
 `;
 
-export const InterestedSection = styled.div`
+
+export const InterestSection = styled.div`
   display: flex;
   align-items: center;
   gap: 4px;
 `;
 
-export const InterestedIcon = styled.img`
-  aspect-ratio: 1;
-  object-fit: contain;
+export const InterestIcon = styled.img`
   width: 21px;
+  height: 21px;
   border-radius: 1px;
 `;
 
-export const InterestedCount = styled.span`
-  white-space: nowrap;
+export const InterestBadge = styled.div`
+  background-color: rgba(255, 224, 71, 0.2); /* Light yellow background */
+  color: #FFC107; /* Bold yellow text */
+  font-size: 20px; /* Same size as Price */
+  font-weight: 700;
+  padding: 4px 12px; /* Similar padding to Price */
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  height: 40px; /* Match PriceSection */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
 `;
+
+
+
+export const InterestCount = styled.span`
+  font-size: 20px; /* Bigger size for emphasis */
+  font-weight: 500; /* Extra bold */
+  color: #FFC107; /* Bold yellow text */
+`;
+
+
+
+export const InterestIconSmall = styled.img`
+  width: 22px;
+  height: 22px;
+`;
+
+
