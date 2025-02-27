@@ -44,7 +44,7 @@ export const CategoriesGrid = styled.div`
   justify-content: center;
   text-align: center;
   margin-top: 50px;
-  max-width: 80%;
+  max-width: 100%;
   
   @media (max-width: 991px) {
     grid-template-columns: repeat(2, 1fr);

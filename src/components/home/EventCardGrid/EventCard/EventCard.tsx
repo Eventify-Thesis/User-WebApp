@@ -8,7 +8,6 @@ export interface EventCardProps {
   date: Date;
   title: string;
   venue: string;
-  time?: string; // Made optional
   price: string;
   interestedCount: number;
   isOnline?: boolean;
@@ -20,7 +19,6 @@ export const EventCard: React.FC<EventCardProps> = ({
   date,
   title,
   venue,
-  time,
   price,
   interestedCount,
   isOnline
@@ -35,22 +33,14 @@ export const EventCard: React.FC<EventCardProps> = ({
   return (
     <s.CardWrapper>
       <s.ImageSection>
-  <s.EventImage src={image} alt={title} />
+        <s.EventImage src={image} alt={title} />
 
-  {/* Interest Count Badge */}
-  {interestedCount > 0 && (
-    <s.InterestBadge>
-      <s.InterestCount>{interestedCount} interested </s.InterestCount>
-    </s.InterestBadge>
-
-  )}
-
-  {/* Bookmark Icon */}
-  <s.BookmarkIcon
-    src="https://cdn.builder.io/api/v1/image/assets/TEMP/9c1046de208fdc3515ce14eddbcf778ad27b67628f7ecbfaa210063a9427c5c9?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-    alt="Bookmark"
-  />
-</s.ImageSection>
+        {/* Bookmark Icon */}
+        <s.BookmarkIcon
+          src="https://cdn.builder.io/api/v1/image/assets/TEMP/9c1046de208fdc3515ce14eddbcf778ad27b67628f7ecbfaa210063a9427c5c9?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
+          alt="Bookmark"
+        />
+      </s.ImageSection>
 
 
       <s.ContentSection>
@@ -60,28 +50,31 @@ export const EventCard: React.FC<EventCardProps> = ({
     <s.Time>{formattedDay + " " + formattedMonth + " " + formattedYear}</s.Time>
 
     <s.MetaInfo>
-      {price && (
-        <s.PriceSection>
-          <s.PriceIcon
-            src={
-              price === "FREE"
-                ? "https://cdn.builder.io/api/v1/image/assets/TEMP/75e267775796d2beb53e040c1b6a4e1b918da2c64177d75c54600544babd7cbb"
-                : "https://cdn.builder.io/api/v1/image/assets/TEMP/46afa3da8da98074863d3982465257407b626e287c2afa9b610f7bfd1843fc34"
-            }
-          />
-          <s.Price>{price}</s.Price>
-        </s.PriceSection>
-      )}
+  {/* Price on the left */}
+  {price && (
+    <s.PriceSection>
+      <s.PriceIcon
+        src={
+          price === "FREE"
+            ? "https://cdn.builder.io/api/v1/image/assets/TEMP/75e267775796d2beb53e040c1b6a4e1b918da2c64177d75c54600544babd7cbb"
+            : "https://cdn.builder.io/api/v1/image/assets/TEMP/46afa3da8da98074863d3982465257407b626e287c2afa9b610f7bfd1843fc34"
+        }
+      />
+      <s.Price> {price != "FREE" ? "From " + price : "FREE TICKET"}</s.Price>
+    </s.PriceSection>
+  )}
 
-      {/* Moved InterestBadge here */}
-      {interestedCount > 0 && (
-        <s.InterestBadge>
-          <s.InterestCount>{interestedCount} interested </s.InterestCount>
-        </s.InterestBadge>
-      )}
-    </s.MetaInfo>
+  {/* InterestBadge on the right */}
+  {interestedCount > 0 && (
+    <s.InterestBadge>
+      <s.InterestCount>{interestedCount} interested </s.InterestCount>
+    </s.InterestBadge>
+  )}
+</s.MetaInfo>
+
   </s.EventDetails>
 </s.ContentSection>
+
 
     </s.CardWrapper>
   );

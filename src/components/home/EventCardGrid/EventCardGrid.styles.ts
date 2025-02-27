@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 export const Section = styled.section`
   margin: 60px auto 0; /* Center the section */
-  padding: 0 50px;
+  padding: 50px 50px;
   width: 100%;
-  max-width: 1926px;
+  background-color: rgb(225, 226, 227);
   display: flex;
   flex-direction: column;
   align-items: center; /* Center content inside */
@@ -19,7 +19,7 @@ export const Section = styled.section`
 export const Title = styled.h2`
   color: #000000;
   font-family: Montserrat, sans-serif;
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 700;
   align-self: flex-start; /* Aligns the title to the left */
   margin-left: 10px; /* Adjust as needed for alignment */
@@ -32,7 +32,7 @@ export const Title = styled.h2`
 export const EventsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(280px, 1fr));
-  gap: 16px;
+  gap: 20px;
   margin-top: 40px;
 
   @media (max-width: 991px) {

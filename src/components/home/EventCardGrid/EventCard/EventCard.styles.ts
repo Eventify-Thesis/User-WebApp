@@ -82,11 +82,18 @@ export const CategoryBadge = styled.div`
 
 export const ContentSection = styled.div`
   display: flex;
-  justify-content: space-between; /* Push elements to edges */
-  align-items: center; /* Align items vertically */
+  justify-content: space-between; /* Ensures left and right alignment */
+  align-items: center;
   padding: 18px;
+  position: relative; /* Allows absolute positioning inside */
 `;
 
+export const PriceAndInterestWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 12px; /* Adds space between Price and InterestBadge */
+  margin-left: auto; /* Pushes it to the right */
+`;
 
 export const DateSection = styled.div`
   display: flex;
@@ -146,15 +153,27 @@ export const Venue = styled.p`
 
 export const MetaInfo = styled.div`
   display: flex;
-  gap: 9px;
+  justify-content: space-between; /* Default: Pushes left and right apart */
+  align-items: center;
   margin-top: 10px;
   opacity: 0.9;
   transition: opacity 0.2s ease;
+  width: 100%;
 
   ${CardWrapper}:hover & {
     opacity: 1;
   }
+
+  /* Make InterestBadge take a new row for specific widths */
+  @media (max-width: 1475px) and (min-width: 991px),
+         (max-width: 500px) {
+    flex-direction: column;
+    align-items: flex-start; /* Align content to the left */
+    gap: 8px; /* Adds spacing between rows */
+  }
 `;
+
+
 
 export const PriceSection = styled.div`
   display: flex;
@@ -190,23 +209,31 @@ export const InterestIcon = styled.img`
 `;
 
 export const InterestBadge = styled.div`
-  background-color: rgba(255, 224, 71, 0.2); /* Light yellow background */
-  color: #FFC107; /* Bold yellow text */
-  font-size: 20px; /* Same size as Price */
+  background-color: rgba(255, 224, 71, 0.2);
+  color: #FFC107;
+  font-size: 20px;
   font-weight: 700;
-  padding: 4px 12px; /* Similar padding to Price */
+  padding: 4px 12px;
   border-radius: 5px;
   display: flex;
   align-items: center;
-  height: 40px; /* Match PriceSection */
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  height: 40px;
+  white-space: nowrap;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+
+  /* When in column mode, make it full-width */
+  @media (max-width: 1475px) and (min-width: 991px),
+         (max-width: 500px) {
+    align-self: flex-start; /* Align it to the left */
+  }
 `;
+
 
 
 
 export const InterestCount = styled.span`
   font-size: 20px; /* Bigger size for emphasis */
-  font-weight: 500; /* Extra bold */
+  font-weight: 700; /* Extra bold */
   color: #FFC107; /* Bold yellow text */
 `;
 

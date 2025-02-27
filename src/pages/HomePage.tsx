@@ -7,6 +7,7 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { LocationSection } from '@/components/home/LocationSection/LocationSection';
 import { Footer } from '@/components/home/Footer/Footer';
+import { Hero } from '@/components/home/Hero/Hero';
 const categories = [
   { name: "entertainment"},
   { name: "education" },
@@ -63,6 +64,7 @@ const HomePage: React.FC = () => {
   }));
   const desktopLayout = (
     <>
+      <Hero/>
       <Banner images={images} />
       <CategorySection categories={newCategory} />
       <EventCardGrid eventCategory={eventInfo.eventCategory} events={eventInfo.events} />
@@ -72,8 +74,10 @@ const HomePage: React.FC = () => {
   );
   
   const mobileAndTabletLayout = <>
+      <Hero/>
       <Banner images={images} />
       <EventCardGrid eventCategory={eventInfo.eventCategory} events={eventInfo.events} />
+      <LocationSection/>
   </>;
   
   return (
