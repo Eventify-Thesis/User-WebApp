@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ProfileDropdown } from '../components/profileDropdown/ProfileDropdown/ProfileDropdown';
 import { HeaderSearch } from '../components/HeaderSearch/HeaderSearch';
 import { SettingsDropdown } from '../components/settingsDropdown/SettingsDropdown';
@@ -10,6 +10,16 @@ import { UserButton } from '@clerk/clerk-react';
 interface DesktopHeaderProps {}
 
 export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
+  const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1050);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsLargeScreen(window.innerWidth > 1050);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+  
   const leftSide = (
     <S.SearchColumn xl={12} xxl={14}>
       <BaseRow justify="space-between">
@@ -62,7 +72,7 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
               Interested
             </S.NavItem>
             <BaseCol>
-              <UserButton showName={true} appearance={{}} />
+              <UserButton showName={isLargeScreen} appearance={{}} />
             </BaseCol>
           </S.NavRow>
           <BaseCol>

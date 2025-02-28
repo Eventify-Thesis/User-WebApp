@@ -6,6 +6,7 @@ import { BaseCollapse } from '../common/BaseCollapse/BaseCollapse';
 import { BaseCol } from '../common/BaseCol/BaseCol';
 import { BaseRow } from '../common/BaseRow/BaseRow';
 import { Icon } from '@iconify/react/dist/iconify.js';
+import { Drawer } from 'antd';
 
 export const HeaderActionWrapper = styled.div`
   cursor: pointer;
@@ -54,7 +55,7 @@ export const MobileBurger = styled(BurgerIcon)`
   width: 1.75rem;
   height: 1.75rem;
   margin-right: -0.5rem;
-  color: var(--text-main-color);
+  color: var(--text-secondary-color);
 
   ${(props) =>
     props.isCross &&
@@ -80,7 +81,9 @@ export const ProfileColumn = styled(BaseCol)<ProfileColumn>`
   }
 `;
 
-export const NavRow = styled(BaseRow)``;
+export const NavRow = styled(BaseRow)`
+`;
+
 export const NavItem = styled(BaseCol)`
   display: flex;
   flex-direction: column;
@@ -89,6 +92,17 @@ export const NavItem = styled(BaseCol)`
   font-family: Montserrat, sans-serif;
   font-size: ${FONT_SIZE.md};
   font-weight: 600;
+  white-space: nowrap;
+
+  @media (max-width: 1050px) {
+    font-size: 0; /* Hide text on desktop */
+  }
+
+  @media (max-width: 767px) {
+    font-size: ${FONT_SIZE.xl}; /* Show text beside icon */
+    gap: 0.5rem; /* Space between icon and text */
+    flex-direction: row; /* Align icon and text in a row */
+  }
 `;
 
 export const NavIcon = styled(Icon)`
@@ -99,9 +113,30 @@ export const NavIcon = styled(Icon)`
 `;
 
 export const CEButton = styled(CreateEventButton)`
-  display: none;
+  display: flex
+`;
+export const StyledDrawer = styled(Drawer)`
+  .ant-drawer-content {
+    background-color: #111827; /* Dark background */
+    color: white;
+  }
 
-  @media only screen and ${media.lg} {
-    display: flex;
+  .ant-drawer-header {
+    background-color: #1f2937; /* Slightly lighter dark for contrast */
+    border-bottom: 1px solid #374151; /* Subtle border */
+  }
+
+  .ant-drawer-title {
+    color: white;
+  }
+
+  .ant-drawer-close {
+    color: white;
+  }
+
+  /* Force dark background for the drawer body */
+  .ant-drawer-body {
+    background-color: #111827 !important;
+    color: white;
   }
 `;

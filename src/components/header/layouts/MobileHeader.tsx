@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import React from "react";
 import { NotificationsDropdown } from "../components/notificationsDropdown/NotificationsDropdown";
 import { ProfileDropdown } from "../components/profileDropdown/ProfileDropdown/ProfileDropdown";
@@ -8,37 +6,54 @@ import { SettingsDropdown } from "../components/settingsDropdown/SettingsDropdow
 import * as S from "../Header.styles";
 import { BaseRow } from "@/components/common/BaseRow/BaseRow";
 import { BaseCol } from "@/components/common/BaseCol/BaseCol";
+import { UserButton } from '@clerk/clerk-react';
+import { useState } from "react";
 
-interface MobileHeaderProps {
-  toggleSider: () => void;
-  isSiderOpened: boolean;
-}
+export const MobileHeader: React.FC = () => {
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
 
-export const MobileHeader: React.FC<MobileHeaderProps> = ({
-  toggleSider,
-  isSiderOpened,
-}) => {
   return (
-    <BaseRow justify="space-between" align="middle">
-      <BaseCol>
-        <ProfileDropdown />
-      </BaseCol>
+    <>
+      <BaseRow justify="space-between" align="middle" style={{ height: "100%" }}>
+        <BaseCol>
+          <BaseRow align="middle">
+            <BaseCol>
+              <HeaderSearch />
+            </BaseCol>
+          </BaseRow>
+        </BaseCol>
 
-      <BaseCol>
-        <BaseRow align="middle">
+        <S.BurgerCol>
+          <S.MobileBurger onClick={() => setDrawerOpen(true)} isCross={isDrawerOpen} />
+        </S.BurgerCol>
+
+        <BaseRow>
           <BaseCol>
-            <HeaderSearch />
+            <UserButton />
           </BaseCol>
-
           <BaseCol>
             <SettingsDropdown />
           </BaseCol>
         </BaseRow>
-      </BaseCol>
+      </BaseRow>
 
-      <S.BurgerCol>
-        <S.MobileBurger onClick={toggleSider} isCross={isSiderOpened} />
-      </S.BurgerCol>
-    </BaseRow>
+      {/* Styled Hamburger Menu Expansion */}
+      <S.StyledDrawer
+        title="Menu"
+        placement="right"
+        onClose={() => setDrawerOpen(false)}
+        open={isDrawerOpen}
+      >
+        <S.NavItem>
+          <S.NavIcon icon="ion:ticket-outline" />
+          Tickets
+        </S.NavItem>
+        <S.NavItem>
+          <S.NavIcon icon="teenyicons:star-outline" />
+          Interested
+        </S.NavItem>
+        <S.CEButton />
+      </S.StyledDrawer>
+    </>
   );
 };

@@ -19,10 +19,6 @@ export const MobileUnauthHeader: React.FC<MobileUnauthHeaderProps> = ({
   return (
     <BaseRow justify="space-between" align="middle">
       <BaseCol>
-        <ProfileDropdown />
-      </BaseCol>
-
-      <BaseCol>
         <BaseRow align="middle">
           <BaseCol>{/* <UnauthHeaderSearch /> */}</BaseCol>
 
@@ -33,6 +29,15 @@ export const MobileUnauthHeader: React.FC<MobileUnauthHeaderProps> = ({
       <S.BurgerCol>
         <S.MobileBurger onClick={toggleSider} isCross={isSiderOpened} />
       </S.BurgerCol>
+
+      <BaseRow>
+        <BaseCol>
+          <UserButton />
+        </BaseCol>
+        <BaseCol>
+          <SettingsDropdown />
+        </BaseCol>
+      </BaseRow>
     </BaseRow>
   );
 };

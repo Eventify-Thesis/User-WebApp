@@ -6,6 +6,13 @@ export const LogoWrapper = styled.div`
 `;
 
 export const LogoImage = styled.img`
-  width: 6rem;
-  height: 2.5rem;
+  height: 40px; /* Default size */
+
+  @media (max-width: 768px) {
+    height: 28px; /* Smaller on tablets */
+  }
+
+  @media (max-width: 521px) {
+    display: none; /* Hide logo on small screens */
+  }
 `;

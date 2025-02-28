@@ -28,14 +28,16 @@ export const DesktopUnauthHeader: React.FC<DesktopUnauthHeaderProps> = ({}) => {
     <BaseRow
       justify="space-between"
       align="middle"
+      wrap={false} // Prevent wrapping
       style={{
         height: '100%',
+        flexWrap: 'nowrap', // Ensure everything stays in one row
+        gap: '5px', // Reduce space between elements
       }}
     >
+
+
       {leftSide}
-      <BaseCol>
-        <S.CEButton />
-      </BaseCol>
 
       <S.ProfileColumn xl={8} xxl={7}>
         <BaseRow align="middle" justify="end" gutter={[5, 5]}>

@@ -21,6 +21,7 @@ const CheckoutPage = React.lazy(() => import('@/pages/CheckoutPage'));
 
 import { withLoading } from '@/hocs/withLoading.hoc';
 import { SignIn, SignUp } from '@clerk/clerk-react';
+import HomePage from '@/pages/HomePage';
 // import NftDashboardPage from "@/pages/DashboardPages/HomePage";
 // import MedicalDashboardPage from "@/pages/DashboardPages/DashboardPage";
 
@@ -76,7 +77,7 @@ export const AppRouter: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path={HOME_PATH} element={<MainLayout />}>
-          <Route index element={<h1>Hello worlds</h1>} />
+          <Route index element={<HomePage />} />
         </Route>
 
         <Route path={HOME_PATH} element={protectedLayout}>
