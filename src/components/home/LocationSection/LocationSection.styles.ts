@@ -17,7 +17,7 @@ export const SectionTitle = styled.h2`
     Roboto,
     Helvetica,
     sans-serif; 
-  font-size: 20px;
+  font-size: 30px;
   font-weight: 700;
   align-self: flex-start; /* Aligns the title to the left */
   margin-left: 10px; /* Adjust as needed for alignment */

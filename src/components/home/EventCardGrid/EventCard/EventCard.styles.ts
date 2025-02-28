@@ -24,23 +24,62 @@ export const CardWrapper = styled.article`
     transform 0.2s ease-in-out,
     box-shadow 0.2s ease-in-out;
   cursor: pointer;
+  box-shadow: 0 10px 12px rgba(255, 255, 255, 0.5); /* Lighter shadow */
 
   &:hover {
     transform: translateY(-4px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 6px 18px rgba(255, 255, 255, 0.3); /* Stronger shadow on hover */
   }
 `;
 
-export const ImageSection = styled.div`
-  position: relative;
-  min-height: 254px;
-`;
+
+
 
 export const EventImage = styled.img`
   width: 100%;
   height: 100%;
   position: absolute;
   object-fit: cover;
+  transition: transform 0.5s ease-in-out;
+`;
+
+
+export const ImageSection = styled.div`
+  position: relative;
+  min-height: 254px;
+  overflow: hidden; /* Prevents overflow */
+  
+  &:hover ${EventImage} {
+    transform: scale(1.1);
+  }
+
+  &:hover::after {
+    animation: shine 0.8s ease-in-out forwards;
+  }
+
+  &::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+      120deg,
+      rgba(255, 255, 255, 0) 30%,
+      rgba(255, 255, 255, 0.6) 50%,
+      rgba(255, 255, 255, 0) 70%
+    );
+  }
+
+  @keyframes shine {
+    from {
+      left: -100%;
+    }
+    to {
+      left: 120%;
+    }
+  }
 `;
 
 export const BookmarkIcon = styled.img`
@@ -190,7 +229,6 @@ export const Price = styled.span`
   color: #ff5722; /* Brighter color for emphasis */
   font-size: 22px; /* Increased font size */
   font-weight: 700; /* Bolder font */
-  background-color: rgba(255, 87, 34, 0.1); /* Light background for contrast */
   padding: 4px 8px; /* Padding for better visibility */
   border-radius: 4px; /* Rounded corners */
 `;
@@ -209,7 +247,6 @@ export const InterestIcon = styled.img`
 `;
 
 export const InterestBadge = styled.div`
-  background-color: rgba(255, 224, 71, 0.2);
   color: #FFC107;
   font-size: 20px;
   font-weight: 700;
@@ -219,7 +256,6 @@ export const InterestBadge = styled.div`
   align-items: center;
   height: 40px;
   white-space: nowrap;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 
   /* When in column mode, make it full-width */
   @media (max-width: 1475px) and (min-width: 991px),

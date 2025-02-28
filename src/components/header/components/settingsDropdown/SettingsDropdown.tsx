@@ -19,7 +19,11 @@ export const SettingsDropdown: React.FC = () => {
       <HeaderActionWrapper>
         <BaseButton
           type={isOpened ? "ghost" : "text"}
-          icon={<SettingOutlined />}
+          icon={<SettingOutlined style={{
+            color: "#fff",
+            fontSize: "30px",
+            paddingLeft: "10px"
+          }} />}
         />
       </HeaderActionWrapper>
     </BasePopover>

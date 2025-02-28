@@ -63,7 +63,11 @@ export const MobileBurger = styled(BurgerIcon)`
 `;
 
 export const SearchColumn = styled(BaseCol)`
-  padding: ${LAYOUT.desktop.paddingVertical} ${LAYOUT.desktop.paddingHorizontal};
+  padding: 0 10px; /* Default padding */
+
+  @media (max-width: 420px) {
+    padding: 0; /* Remove padding when screen is smaller than 420px */
+  }
 `;
 
 interface ProfileColumn {}

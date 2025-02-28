@@ -1,10 +1,10 @@
 import styled from "styled-components";
 
 export const Section = styled.section`
-  margin: 60px auto 0; /* Center the section */
+  margin: 0 auto 0; /* Center the section */
   padding: 50px 50px;
   width: 100%;
-  background-color: rgb(225, 226, 227);
+  background-color: black;
   display: flex;
   flex-direction: column;
   align-items: center; /* Center content inside */
@@ -17,10 +17,11 @@ export const Section = styled.section`
 
 
 export const Title = styled.h2`
-  color: #000000;
+  color: #FFFFFF;
   font-family: Montserrat, sans-serif;
   font-size: 30px;
   font-weight: 700;
+  padding: 20px 0;
   align-self: flex-start; /* Aligns the title to the left */
   margin-left: 10px; /* Adjust as needed for alignment */
 
@@ -32,8 +33,7 @@ export const Title = styled.h2`
 export const EventsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, minmax(280px, 1fr));
-  gap: 20px;
-  margin-top: 40px;
+  gap: 30px;
 
   @media (max-width: 991px) {
     grid-template-columns: repeat(1, 1fr); /* Stack on small screens */

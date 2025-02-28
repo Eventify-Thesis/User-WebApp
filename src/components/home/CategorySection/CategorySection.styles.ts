@@ -43,7 +43,7 @@ export const CategoriesGrid = styled.div`
   gap: 30px;
   justify-content: center;
   text-align: center;
-  margin-top: 50px;
+  margin: 50px 0;
   max-width: 100%;
   
   @media (max-width: 991px) {

@@ -11,9 +11,15 @@ export const SearchIcon = styled(SearchOutlined)`
   &.anticon.anticon-search {
     display: block;
     font-size: 1.25rem;
+    color: white; // Default color
 
     @media only screen and ${media.md} {
       font-size: 1.625rem;
+      color: inherit;
+    }
+
+    @media (max-width: 1020px) {
+      font-size: 1rem; /* Shrink icon on smaller screens */
     }
   }
 `;
@@ -32,6 +38,18 @@ export const InputSearch = styled(SearchInput)`
 
     .ant-input-affix-wrapper {
       font-size: 1rem;
+    }
+  }
+
+  /* Add shrinking effect for screens below 1020px */
+  @media (max-width: 1020px) {
+    .ant-input-group .ant-input-affix-wrapper:not(:last-child) {
+      padding: 0.4rem 0.5rem; /* Reduce padding */
+      font-size: 0.875rem; /* Decrease font size */
+    }
+
+    .ant-input-affix-wrapper {
+      font-size: 0.875rem; /* Smaller font */
     }
   }
 `;

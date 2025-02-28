@@ -17,10 +17,10 @@ const categories = [
   { name: "travel" },
 ];
 const images = [
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxBjQ6cacjUhWGAxXt_j-UgOdQhDAo3ce9Eg&s",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgrIRhLAtatO1uBu28Gf98B84CqDnZC5SUrA&s",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSgrIRhLAtatO1uBu28Gf98B84CqDnZC5SUrA&s",
-  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSxBjQ6cacjUhWGAxXt_j-UgOdQhDAo3ce9Eg&s",
+  "https://salt.tkbcdn.com/ts/ds/6e/0c/af/7d24dc88c6955aa0caeca421046956ad.jpg",
+  "https://salt.tkbcdn.com/ts/ds/99/38/15/19919dffe776b8990327c2c461750391.jpg",
+  "https://www.mancity.com/meta/media/m1hfn5z1/landscape_hospitality.jpg",
+  "https://vnmedia.vn/file/8a10a0d36ccebc89016ce0c6fa3e1b83/042024/1._poster_30_anh_trai_say_hi_20240426164638.jpg",
 ];
 const eventInfo = {
   eventCategory: "Upcoming Events", events: [
@@ -68,6 +68,10 @@ const HomePage: React.FC = () => {
       <Banner images={images} />
       <CategorySection categories={newCategory} />
       <EventCardGrid eventCategory={eventInfo.eventCategory} events={eventInfo.events} />
+      
+      <EventCardGrid eventCategory={eventInfo.eventCategory} events={eventInfo.events} />
+      
+      <EventCardGrid eventCategory={eventInfo.eventCategory} events={eventInfo.events} />
       <LocationSection/>
       <Footer/>
     </>
@@ -78,6 +82,7 @@ const HomePage: React.FC = () => {
       <Banner images={images} />
       <EventCardGrid eventCategory={eventInfo.eventCategory} events={eventInfo.events} />
       <LocationSection/>
+      <Footer/>
   </>;
   
   return (
