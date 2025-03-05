@@ -2,6 +2,7 @@
 
 import React from "react";
 import * as s from "./EventCard.styles"
+import { useTranslation } from "react-i18next";
 
 export interface EventCardProps {
   image: string;
@@ -29,7 +30,7 @@ export const EventCard: React.FC<EventCardProps> = ({
   const formattedMonth = monthNames[date.getMonth()]; // Convert zero-based month to string
   const formattedDay = date.getDate().toString(); // Get day
   const formattedYear = date.getFullYear().toString(); // Get day
-  
+  const { t } = useTranslation();
   return (
     <s.CardWrapper>
       <s.ImageSection>
@@ -60,7 +61,7 @@ export const EventCard: React.FC<EventCardProps> = ({
             : "https://cdn.builder.io/api/v1/image/assets/TEMP/46afa3da8da98074863d3982465257407b626e287c2afa9b610f7bfd1843fc34"
         }
       />
-      <s.Price> {price != "FREE" ? "From " + price : "FREE TICKET"}</s.Price>
+                <s.Price> {price != "FREE" ?  t('homePage.from') + " " + price : t('homePage.free')}</s.Price>
     </s.PriceSection>
   )}
 

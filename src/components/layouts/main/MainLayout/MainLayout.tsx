@@ -22,7 +22,7 @@ const MainLayout: React.FC = () => {
       <S.LayoutMain>
         {isSignedIn ? (
           <MainHeader>
-            <Header toggleSider={toggleSider} isSiderOpened={!siderCollapsed} />
+            <Header/>
           </MainHeader>
         ) : (
           <MainHeader>

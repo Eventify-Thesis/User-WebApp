@@ -86,11 +86,11 @@ export const Footer: React.FC = () => {
             <s.FooterTitle>Ứng dụng Ticketbox</s.FooterTitle>
             <s.AppImage
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/df22944cb23a2c8a14c0addc0d3c857ef07a6226175ffcd61f5e94ac16d8896e?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-              alt="App Store"
+              alt="Google Play"
             />
             <s.AppImage
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/ee3ee32f3ca1ab56a5b4ba1c68543c22352b87fdfbfd8c02457449366a05df62?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-              alt="Google Play"
+              alt="App Store"
             />
           </s.AppColumn>
 
@@ -98,11 +98,11 @@ export const Footer: React.FC = () => {
             <s.FooterTitle>Ứng dụng check-in cho Ban tổ chức</s.FooterTitle>
             <s.AppImage
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/1fd155cf674d152660be5c9a81cb899a1bcde9d5bf68052832ea70223a34e133?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-              alt="App Store"
+              alt="Google Play"
             />
             <s.AppImage
               src="https://cdn.builder.io/api/v1/image/assets/TEMP/ded55bee2327d1c9a21f9074198cec3ffce9ab2564bf132ca932dac047bac3c9?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-              alt="Google Play"
+              alt="App Store"
             />
           </s.AppColumn>
 
@@ -111,19 +111,19 @@ export const Footer: React.FC = () => {
             <s.SocialIcons>
               <s.SocialIcon
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/5db95312c2ecbeb4ef383a24b742d40d4d014775748e90f25bee0d4ba28df707?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-                alt="Social"
+                alt="Facebook"
               />
               <s.SocialIcon
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/1f581e374eb9c8612a81c7c089c860f5eeaa37e4da2cce46024fc53f5f6135e2?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-                alt="Social"
+                alt="Instagram"
               />
               <s.SocialIcon
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/a6eb57d77e90e34965ff4536dd2cc1e9918223c6f025092faf6bdfd0853f90a8?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-                alt="Social"
+                alt="Tiktok"
               />
               <s.SocialIcon
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/617708c3418020b6cd254efd4f50348819a9e39910d6ee8eddd13739dd2ed7fd?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-                alt="Social"
+                alt="Threads"
               />
             </s.SocialIcons>
 
@@ -131,11 +131,11 @@ export const Footer: React.FC = () => {
             <s.LanguageSelector>
               <s.LanguageIcon
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/10b997aea9824fbb5575e28d0189411c55dba07f8129e28c0665aa671f2ccf9d?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-                alt="Language"
+                alt="Vietnamese"
               />
               <s.LanguageIcon
                 src="https://cdn.builder.io/api/v1/image/assets/TEMP/312c0c11b042597aed948738169756b9920defdcd3088e4825e5de35096e1815?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-                alt="Language"
+                alt="English"
               />
             </s.LanguageSelector>
           </s.SocialColumn>
@@ -170,10 +170,6 @@ export const Footer: React.FC = () => {
                 ngày 07/01/2016 bởi Sở Kế Hoạch và Đầu Tư TP. Hồ Chí Minh
               </div>
             </s.CompanyDetails>
-            <s.CertImage
-              src="https://cdn.builder.io/api/v1/image/assets/TEMP/5e8040b415ce5ea29448e5936324cc2b17741b94fc35d40c658bca2f29ddd8f2?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-              alt="Certification"
-            />
           </s.InfoColumn>
         </s.BottomGrid>
       </s.BottomFooter>
