@@ -2,8 +2,8 @@ import { useState } from "react";
 import styled from "styled-components";
 import { Button } from "antd";
 import { FilterOutlined, CalendarOutlined } from "@ant-design/icons";
-import CalendarModal from "./CalendarModal/CalendarModal";
-import FilterModal from "./FilterModal/FilterModal";
+import CalendarDropdown from "./CalendarDropdown/CalendarDropdown";
+import FilterDropdown from "./FilterDropdown/FilterDropdown";
 import type { Dayjs } from "dayjs";
 
 const FilterContainer = styled.div`
@@ -18,10 +18,14 @@ const FilterContainer = styled.div`
   }
 `;
 
-const FilterButton = styled(Button)`
+const StyledButton = styled(Button)`
   display: flex;
   align-items: center;
   gap: 5px;
+  background: white;
+  border: 1px solid #d9d9d9;
+  padding: 4px 12px;
+  height: auto;
 `;
 
 interface EventFiltersProps {
@@ -37,8 +41,6 @@ const EventFilters: React.FC<EventFiltersProps> = ({
   filterData,
   setFilterData,
 }) => {
-  const [isFilterModalVisible, setFilterModalVisible] = useState(false);
-  const [isCalendarVisible, setCalendarVisible] = useState(false);
 
   // Function to format the date label for the button
   const formatDateLabel = () => {
@@ -55,26 +57,20 @@ const EventFilters: React.FC<EventFiltersProps> = ({
   return (
     <FilterContainer>
       <span>Kết quả tìm kiếm:</span>
-      <FilterButton onClick={() => setCalendarVisible(true)}>
-        <CalendarOutlined /> {formatDateLabel()}
-      </FilterButton>
-      <FilterButton onClick={() => setFilterModalVisible(true)}>
-        <FilterOutlined /> Bộ lọc
-      </FilterButton>
-
-      <CalendarModal
-        visible={isCalendarVisible}
-        onClose={() => setCalendarVisible(false)}
+      
+      <CalendarDropdown
         selectedDates={selectedDates}
         setSelectedDates={setSelectedDates}
-      />
+      >
+        <StyledButton><CalendarOutlined /> {formatDateLabel()}</StyledButton>
+      </CalendarDropdown>
 
-      <FilterModal
-        visible={isFilterModalVisible}
-        onClose={() => setFilterModalVisible(false)}
+      <FilterDropdown
         filterData={filterData}
         setFilterData={setFilterData}
-      />
+      >
+        <StyledButton><FilterOutlined /> Bộ lọc</StyledButton>
+      </FilterDropdown>
     </FilterContainer>
   );
 };

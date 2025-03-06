@@ -21,14 +21,14 @@ const events = [
     image: "https://cdn.builder.io/api/v1/image/assets/TEMP/8b8cf454f031702a8ed64cffc36975443f3d9097",
   },
   {
-    id: 1,
+    id: 3,
     title: "ART WORKSHOP 'UJI MATCHA CHEESECAKE TARTE'",
     price: "420.000đ",
     date: "04 tháng 03, 2025",
     image: "https://cdn.builder.io/api/v1/image/assets/TEMP/49e4c3587b8fbaa866ba74be4007470e57f89267",
   },
   {
-    id: 2,
+    id: 4,
     title: "[GARDEN ART] - ART WORKSHOP 'TIRAMISU MOUSSE CAKE'",
     price: "390.000đ",
     date: "04 tháng 03, 2025",
