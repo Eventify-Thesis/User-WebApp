@@ -1,22 +1,43 @@
 import * as s from './EventCard.styles';
 import { useTranslation } from 'react-i18next';
-const EventCard: React.FC<s.EventProps> = ({ id, title, price, date, image }) => {
+import { useState } from 'react';
+import { StarOutlined, StarFilled } from '@ant-design/icons';
+import { FilterOutlined, CalendarOutlined } from "@ant-design/icons";
+
+const EventCard: React.FC<s.EventProps> = ({
+  id,
+  eventName,
+  eventLogoURL,
+  eventBannerURL,
+  price,
+  date,
+  isFavorited: initialFavorited = false,
+}) => {
   const { t } = useTranslation();
+  const [isFavorited, setIsFavorited] = useState(initialFavorited);
+
+  const toggleFavorite = () => {
+    setIsFavorited((prev) => !prev);
+  };
 
   return (
     <s.Card>
       <s.ImageWrapper>
-        <s.EventImage src={image} alt={title} />
+        <s.EventImage src={eventBannerURL} alt={eventName} />
 
-        <s.BookmarkIcon
-                  src="https://cdn.builder.io/api/v1/image/assets/TEMP/9c1046de208fdc3515ce14eddbcf778ad27b67628f7ecbfaa210063a9427c5c9?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-                  alt="Bookmark"
-                />
+        {/* Bookmark/Favorite Icon */}
+        <s.BookmarkIcon onClick={toggleFavorite}>
+          {isFavorited ? (
+            <StarFilled style={{ fontSize: '24px', color: '#FFD700' }} />
+          ) : (
+            <StarOutlined style={{ fontSize: '24px', color: 'white' }} />
+          )}
+        </s.BookmarkIcon>
       </s.ImageWrapper>
 
-      <s.EventTitle>{title}</s.EventTitle>
-      <s.EventPrice>{t('homePage.from')} {price}</s.EventPrice>
-      <s.EventDate>📅 {date}</s.EventDate>
+      <s.EventTitle>{eventName}</s.EventTitle>
+      {price && <s.EventPrice>{t('homePage.from')} {price}</s.EventPrice>}
+      <s.EventDate>📅 {date.toDateString()}</s.EventDate>
     </s.Card>
   );
 };

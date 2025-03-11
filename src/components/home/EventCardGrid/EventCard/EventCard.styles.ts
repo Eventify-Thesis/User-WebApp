@@ -1,4 +1,33 @@
 import styled from 'styled-components';
+import { Types } from 'mongoose';
+
+export interface EventProps {
+  id: string; // Matches MongoDB ObjectId
+  paymentInfo?: Types.ObjectId;
+  setting?: Types.ObjectId;
+  show?: Types.ObjectId;
+  organizationId?: string;
+  eventName: string;
+  eventDescription?: string;
+  eventType?: string;
+  status?: string;
+  orgName?: string;
+  orgDescription?: string;
+  orgLogoURL?: string;
+  eventLogoURL?: string;
+  eventBannerURL?: string;
+  venueName?: string;
+  cityId?: string;
+  districtId?: string;
+  wardId?: string;
+  street?: string;
+  categories?: string[];
+  categoriesIds?: string[];
+  price?: string; // Not in schema, but kept for display purposes
+  date: Date; // Not in schema, but kept for display purposes
+  isInterested?: boolean; // Added for UI state
+  interestedCount?: number; //TODO: Add to schema
+}
 
 export const Time = styled.time`
   font-weight: 600; /* Slightly bolder */
@@ -82,12 +111,17 @@ export const ImageSection = styled.div`
   }
 `;
 
-export const BookmarkIcon = styled.img`
+export const BookmarkIcon = styled.div`
   position: absolute;
   top: 14px;
   right: 14px;
   width: 48px;
   height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
   transition: transform 0.2s ease;
   cursor: pointer;
 

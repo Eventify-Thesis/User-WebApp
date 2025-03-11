@@ -1,10 +1,10 @@
-import { useState } from "react";
 import styled from "styled-components";
 import { Button } from "antd";
 import { FilterOutlined, CalendarOutlined } from "@ant-design/icons";
 import CalendarDropdown from "./CalendarDropdown/CalendarDropdown";
 import FilterDropdown from "./FilterDropdown/FilterDropdown";
 import type { Dayjs } from "dayjs";
+import { useTranslation } from "react-i18next";
 
 const FilterContainer = styled.div`
   display: flex;
@@ -42,21 +42,26 @@ const EventFilters: React.FC<EventFiltersProps> = ({
   setFilterData,
 }) => {
 
+  const { t, i18n } = useTranslation();
+  const currentLocale = i18n.language === "vi" ? "vi" : "en";  // Default to "en" if not Vietnamese
+  
   // Function to format the date label for the button
   const formatDateLabel = () => {
-    if (!selectedDates || !selectedDates[0] || !selectedDates[1]) {
-      return "Tất cả các ngày";
-    }
-     return `${selectedDates[0]
-    .locale("vi")
-    .format("DD [tháng] MM, YYYY")} - ${selectedDates[1]
-    .locale("vi")
-    .format("DD [tháng] MM, YYYY")}`;
-  };
+  if (!selectedDates || !selectedDates[0] || !selectedDates[1]) {
+    return t('filters.allDays');
+  }
+
+  return `${selectedDates[0]
+    .locale(currentLocale)  // Use the detected language
+    .format(currentLocale === "vi" ? "DD [tháng] MM, YYYY" : "MMMM DD, YYYY")} - 
+    ${selectedDates[1]
+    .locale(currentLocale)
+    .format(currentLocale === "vi" ? "DD [tháng] MM, YYYY" : "MMMM DD, YYYY")}`;
+};
 
   return (
     <FilterContainer>
-      <span>Kết quả tìm kiếm:</span>
+      <span>{t('filters.searchResult')}:</span>
       
       <CalendarDropdown
         selectedDates={selectedDates}
@@ -69,7 +74,7 @@ const EventFilters: React.FC<EventFiltersProps> = ({
         filterData={filterData}
         setFilterData={setFilterData}
       >
-        <StyledButton><FilterOutlined /> Bộ lọc</StyledButton>
+        <StyledButton><FilterOutlined /> {t('filters.filter')}</StyledButton>
       </FilterDropdown>
     </FilterContainer>
   );

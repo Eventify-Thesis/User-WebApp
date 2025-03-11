@@ -1,24 +1,14 @@
 import React, { useState } from "react";
-import { Dropdown, Button, Radio, Switch, Checkbox, Input } from "antd";
-import styled from "styled-components";
-
-interface FilterData {
-  location: string;
-  isFree: boolean;
-  categories: string[];
-}
-
-interface FilterDropdownProps {
-  filterData: FilterData;
-  setFilterData: (data: FilterData) => void;
-  children: React.ReactNode;
-}
+import { Dropdown, Radio, Switch, Checkbox } from "antd";
+import { useTranslation } from "react-i18next";
+import { FilterDropdownProps, DropdownContent, Section, SectionTitle, StyledRadio, StyledInput, ButtonContainer, StyledButton, StyledPrimaryButton } from "./FilterDropdown.styles";
 
 const FilterDropdown: React.FC<FilterDropdownProps> = ({
   filterData,
   setFilterData,
   children,
 }) => {
+  const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [tempData, setTempData] = useState(filterData);
   const [customLocation, setCustomLocation] = useState(
@@ -26,14 +16,11 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   );
 
   const handleApply = () => {
-    // Update location with custom input if "Vị trí khác" is selected
     const updatedLocation =
       tempData.location === "Vị trí khác" ? customLocation : tempData.location;
 
     setFilterData({ ...tempData, location: updatedLocation });
     setVisible(false);
-    console.log(tempData);
-    console.log(customLocation)
   };
 
   const handleReset = () => {
@@ -48,8 +35,8 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
       trigger={["click"]}
       dropdownRender={() => (
         <DropdownContent>
-          <div>
-            <h4>Vị trí</h4>
+          <Section>
+            <SectionTitle>{t("filters.location")}</SectionTitle>
             <Radio.Group
               value={tempData.location}
               onChange={(e) => {
@@ -57,55 +44,59 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
                 setTempData({ ...tempData, location: newLocation });
 
                 if (newLocation !== "Vị trí khác") {
-                  setCustomLocation(""); // Clear custom location if switching away
+                  setCustomLocation("");
                 }
               }}
             >
-              <Radio value="Toàn quốc">Toàn quốc</Radio>
-              <Radio value="Hồ Chí Minh">Hồ Chí Minh</Radio>
-              <Radio value="Hà Nội">Hà Nội</Radio>
-              <Radio value="Đà Lạt">Đà Lạt</Radio>
-              <Radio value="Vị trí khác">Vị trí khác</Radio>
+              <StyledRadio value="Toàn quốc">{t("filters.nationwide")}</StyledRadio>
+              <StyledRadio value="Hồ Chí Minh">{t("filters.hcm")}</StyledRadio>
+              <StyledRadio value="Hà Nội">{t("filters.hanoi")}</StyledRadio>
+              <StyledRadio value="Đà Lạt">{t("filters.dalat")}</StyledRadio>
+              <StyledRadio value="Vị trí khác">{t("filters.otherLocation")}</StyledRadio>
             </Radio.Group>
 
-            {/* Show input field only if "Vị trí khác" is selected */}
             {tempData.location === "Vị trí khác" && (
               <StyledInput
-                placeholder="Nhập vị trí mong muốn"
+                placeholder={t("filters.enterLocation")}
                 value={customLocation}
                 onChange={(e) => setCustomLocation(e.target.value)}
                 autoFocus
               />
             )}
-          </div>
+          </Section>
 
-          <div style={{ marginTop: 10 }}>
-            <h4>Giá tiền</h4>
+          <Section>
+            <SectionTitle>{t("filters.price")}</SectionTitle>
             <Switch
               checked={tempData.isFree}
               onChange={(checked) =>
                 setTempData({ ...tempData, isFree: checked })
               }
             />{" "}
-            Miễn phí
-          </div>
+            {t("filters.free")}
+          </Section>
 
-          <div style={{ marginTop: 10 }}>
-            <h4>Thể loại</h4>
+          <Section>
+            <SectionTitle>{t("filters.category")}</SectionTitle>
             <Checkbox.Group
               value={tempData.categories}
               onChange={(values) =>
                 setTempData({ ...tempData, categories: values as string[] })
               }
-              options={["Nhạc sống", "Sân khấu & Nghệ thuật", "Thể Thao", "Khác"]}
+              options={[
+                t("filters.liveMusic"),
+                t("filters.theaterArts"),
+                t("filters.sports"),
+                t("filters.other"),
+              ]}
             />
-          </div>
+          </Section>
 
           <ButtonContainer>
-            <Button onClick={handleReset}>Thiết lập lại</Button>
-            <Button type="primary" onClick={handleApply}>
-              Áp dụng
-            </Button>
+            <StyledButton onClick={handleReset}>{t("filters.reset")}</StyledButton>
+            <StyledPrimaryButton type="primary" onClick={handleApply}>
+              {t("filters.apply")}
+            </StyledPrimaryButton>
           </ButtonContainer>
         </DropdownContent>
       )}
@@ -115,26 +106,5 @@ const FilterDropdown: React.FC<FilterDropdownProps> = ({
   );
 };
 
-// Styled components
-const DropdownContent = styled.div`
-  background: white;
-  padding: 12px;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  display: flex;
-  flex-direction: column;
-  width: 280px;
-`;
-
-const StyledInput = styled(Input)`
-  margin-top: 10px;
-  width: 100%;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 10px;
-`;
 
 export default FilterDropdown;

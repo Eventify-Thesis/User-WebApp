@@ -13,6 +13,6 @@ export const LogoImage = styled.img`
   }
 
   @media (max-width: 521px) {
-    display: none; /* Hide logo on small screens */
+    flex: 1; /* Hide logo on small screens */
   }
 `;

@@ -1,13 +1,14 @@
 "use client";
 import React from "react";
-import { EventCardProps, EventCard } from "./EventCard/EventCard.tsx";
+import { EventProps } from "./EventCard/EventCard.styles";
+import { EventCard } from "./EventCard/EventCard.tsx";
 import { SeeMoreButton } from "./SeeMoreButton/SeeMoreButton.styles";
 import { Section, Title, EventsGrid } from "./EventCardGrid.styles";
 
 
 interface EventCardGridProps {
     eventCategory: string,
-    events: EventCardProps[];
+    events: EventProps[];
 }
 
 export const EventCardGrid: React.FC<EventCardGridProps> = ({eventCategory, events }) => {

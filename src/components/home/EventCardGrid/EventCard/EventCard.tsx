@@ -1,28 +1,19 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import * as s from "./EventCard.styles"
 import { useTranslation } from "react-i18next";
-
-export interface EventCardProps {
-  image: string;
-  date: Date;
-  title: string;
-  venue: string;
-  price: string;
-  interestedCount: number;
-  isOnline?: boolean;
-}
+import { StarOutlined, StarFilled } from '@ant-design/icons';
 
 
-export const EventCard: React.FC<EventCardProps> = ({
-  image,
+export const EventCard: React.FC<s.EventProps> = ({
+  eventBannerURL,
   date,
-  title,
-  venue,
+  eventName,
+  venueName,
   price,
+  isInterested,
   interestedCount,
-  isOnline
 }) => {
   
   // Format Date
@@ -31,23 +22,32 @@ export const EventCard: React.FC<EventCardProps> = ({
   const formattedDay = date.getDate().toString(); // Get day
   const formattedYear = date.getFullYear().toString(); // Get day
   const { t } = useTranslation();
+  const [isFa, setIsFavorited] = useState(false);
+  
+  const toggleFavorite = () => {
+    setIsFavorited((prev) => !prev);
+  };
+  
   return (
     <s.CardWrapper>
       <s.ImageSection>
-        <s.EventImage src={image} alt={title} />
+        <s.EventImage src={eventBannerURL} alt={eventName} />
 
         {/* Bookmark Icon */}
-        <s.BookmarkIcon
-          src="https://cdn.builder.io/api/v1/image/assets/TEMP/9c1046de208fdc3515ce14eddbcf778ad27b67628f7ecbfaa210063a9427c5c9?placeholderIfAbsent=true&apiKey=f27513fe563744688c43a7d8191d48a6"
-          alt="Bookmark"
-        />
+        <s.BookmarkIcon onClick={toggleFavorite}>
+                  {isInterested ? (
+                    <StarFilled style={{ fontSize: '38px', color: '#FFD700' }} />
+                  ) : (
+                    <StarOutlined style={{ fontSize: '38px', color: 'white' }} />
+                  )}
+        </s.BookmarkIcon>
       </s.ImageSection>
 
 
       <s.ContentSection>
   <s.EventDetails>
-    <s.Title>{title}</s.Title>
-    <s.Venue>{isOnline ? "Online" : venue}</s.Venue>
+    <s.Title>{eventName}</s.Title>
+    <s.Venue>{venueName}</s.Venue>
     <s.Time>{formattedDay + " " + formattedMonth + " " + formattedYear}</s.Time>
 
     <s.MetaInfo>
@@ -55,22 +55,17 @@ export const EventCard: React.FC<EventCardProps> = ({
   {price && (
     <s.PriceSection>
       <s.PriceIcon
-        src={
-          price === "FREE"
-            ? "https://cdn.builder.io/api/v1/image/assets/TEMP/75e267775796d2beb53e040c1b6a4e1b918da2c64177d75c54600544babd7cbb"
-            : "https://cdn.builder.io/api/v1/image/assets/TEMP/46afa3da8da98074863d3982465257407b626e287c2afa9b610f7bfd1843fc34"
-        }
+        src={"https://cdn.builder.io/api/v1/image/assets/TEMP/75e267775796d2beb53e040c1b6a4e1b918da2c64177d75c54600544babd7cbb"}
       />
                 <s.Price> {price != "FREE" ?  t('homePage.from') + " " + price : t('homePage.free')}</s.Price>
     </s.PriceSection>
   )}
 
   {/* InterestBadge on the right */}
-  {interestedCount > 0 && (
-    <s.InterestBadge>
-      <s.InterestCount>{interestedCount} interested </s.InterestCount>
-    </s.InterestBadge>
-  )}
+  <s.InterestBadge>
+    <s.InterestCount>{interestedCount ?? 0} interested</s.InterestCount>
+  </s.InterestBadge>
+
 </s.MetaInfo>
 
   </s.EventDetails>
