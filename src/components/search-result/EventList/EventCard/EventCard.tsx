@@ -11,7 +11,7 @@ const EventCard: React.FC<s.EventProps> = ({
   eventBannerURL,
   price,
   date,
-  isFavorited: initialFavorited = false,
+  isInterested: initialFavorited = false,
 }) => {
   const { t } = useTranslation();
   const [isFavorited, setIsFavorited] = useState(initialFavorited);

@@ -1,11 +1,65 @@
 import styled from 'styled-components';
-import { Types } from 'mongoose';
+
+
+
+export interface PaymentInfo {
+  id: string;
+  eventId: string;
+  bankAccount: string;
+  bankAccountName: string;
+  bankAccountNumber: string;
+  bankOffice: string;
+  businessType: string;
+  companyName?: string;
+  companyAddress?: string;
+  taxNumber?: string;
+}
+
+export interface Setting {
+  id: string;
+  eventId: string;
+  url: string;
+  maximumAttendees?: number;
+  ageRestriction?: string;
+  messageAttendees?: string;
+  isPrivate?: boolean;
+  eventDescription?: string;
+  isEnableQuestionForm?: boolean;
+}
+
+export interface TicketType {
+  id: string;
+  name: string;
+  price: number;
+  isFree: boolean;
+  quantity: number;
+  minTicketPurchase: number;
+  maxTicketPurchase: number;
+  startTime: Date;
+  endTime: Date;
+  description: string;
+  imageURL: string;
+  isDisabled?: boolean;
+  position: number;
+}
+
+export interface Showing {
+  ticketTypes: TicketType[];
+  startTime: Date;
+  endTime: Date;
+}
+
+export interface Show {
+  id: string;
+  eventId: string;
+  showings: Showing[];
+}
 
 export interface EventProps {
   id: string; // Matches MongoDB ObjectId
-  paymentInfo?: Types.ObjectId;
-  setting?: Types.ObjectId;
-  show?: Types.ObjectId;
+  paymentInfo?: PaymentInfo;
+  setting?: Setting;
+  show?: Show;
   organizationId?: string;
   eventName: string;
   eventDescription?: string;
