@@ -23,7 +23,7 @@ export const EventCard: React.FC<EventModel> = ({
   const formattedDay = date.getDate().toString(); // Get day
   const formattedYear = date.getFullYear().toString(); // Get day
   const { t } = useTranslation();
-  const [isFa, setIsFavorited] = useState(false);
+  const [isFavorited, setIsFavorited] = useState( isInterested ?? false );
   
   const toggleFavorite = () => {
     setIsFavorited((prev) => !prev);
@@ -36,7 +36,7 @@ export const EventCard: React.FC<EventModel> = ({
 
         {/* Bookmark Icon */}
         <s.BookmarkIcon onClick={toggleFavorite}>
-                  {isInterested ? (
+                  {isFavorited ? (
                     <StarFilled style={{ fontSize: '38px', color: '#FFD700' }} />
                   ) : (
                     <StarOutlined style={{ fontSize: '38px', color: 'white' }} />
