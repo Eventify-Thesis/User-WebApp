@@ -4,9 +4,10 @@ import React, { useState } from "react";
 import * as s from "./EventCard.styles"
 import { useTranslation } from "react-i18next";
 import { StarOutlined, StarFilled } from '@ant-design/icons';
+import EventModel from "@/domain/EventModel";
 
 
-export const EventCard: React.FC<s.EventProps> = ({
+export const EventCard: React.FC<EventModel> = ({
   eventBannerURL,
   date,
   eventName,
