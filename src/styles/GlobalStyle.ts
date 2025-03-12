@@ -45,6 +45,21 @@ export default createGlobalStyle`
     }
   }
 
+  @media (max-width: 480px) {
+    .ant-picker-panel-container {
+      width: 280px !important;
+      /* Adjust width to fit mobile screens */
+    }
+
+    .ant-picker-panels {
+      flex-direction: column !important;
+    }
+
+    .ant-picker-panel {
+      width: 100% !important;
+    }
+  }
+
   .search-overlay {
     box-shadow: var(--box-shadow);
 

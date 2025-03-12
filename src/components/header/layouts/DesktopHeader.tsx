@@ -22,8 +22,8 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
   
   const leftSide = (
     <S.SearchColumn xl={12} xxl={14}>
-      <BaseRow justify="space-between">
-        <BaseCol xl={9} xxl={12}>
+      <BaseRow justify="center" align="middle" wrap={false} style={{ width: '100%' }}>
+        <BaseCol xl={9} xxl={12} style={{ display: 'flex', justifyContent: 'center' }}>
           <Logo />
         </BaseCol>
         <BaseCol
@@ -41,7 +41,7 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
 
   return (
     <BaseRow
-      justify="space-between"
+      justify="center"
       align="middle"
       style={{
         height: '100%',

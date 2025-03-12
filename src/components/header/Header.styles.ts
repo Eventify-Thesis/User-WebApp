@@ -65,6 +65,7 @@ export const MobileBurger = styled(BurgerIcon)`
 `;
 
 export const SearchColumn = styled(BaseCol)`
+  flex: 1; /* Allows it to take remaining space */
   padding: ${LAYOUT.desktop.paddingVertical} ${LAYOUT.desktop.paddingHorizontal};
 `;
 
@@ -72,12 +73,14 @@ interface ProfileColumn {
   // $isTwoColumnsLayout: boolean;
 }
 
-export const ProfileColumn = styled(BaseCol)<ProfileColumn>`
+export const ProfileColumn = styled(BaseCol)`
+  display: flex;
+  justify-content: flex-end;
+  flex: 0 1 auto;
+  min-width: 250px;
+
   @media only screen and ${media.md} {
-    ${(props) =>
-      css`
-        padding: 0 ${LAYOUT.desktop.paddingHorizontal};
-      `}
+    padding: 0 ${LAYOUT.desktop.paddingHorizontal};
   }
 `;
 
@@ -98,7 +101,7 @@ export const NavItem = styled(BaseCol)`
     font-size: 0; /* Hide text on desktop */
   }
 
-  @media (max-width: 767px) {
+  @media (max-width: 766px) {
     font-size: ${FONT_SIZE.xl}; /* Show text beside icon */
     gap: 0.5rem; /* Space between icon and text */
     flex-direction: row; /* Align icon and text in a row */
@@ -113,8 +116,11 @@ export const NavIcon = styled(Icon)`
 `;
 
 export const CEButton = styled(CreateEventButton)`
-  display: flex
+  display: flex;
+  min-width: 120px;
+  justify-content: center;
 `;
+
 export const StyledDrawer = styled(Drawer)`
   .ant-drawer-content {
     background-color: #111827; /* Dark background */

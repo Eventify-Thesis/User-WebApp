@@ -25,28 +25,28 @@ const images = [
 const eventInfo = {
   eventCategory: "Upcoming Events", events: [
     {
-      title: "The Road to Jobs and Internships: Starting with LinkedIn",
+      eventName: "The Road to Jobs and Internships: Starting with LinkedIn",
       date: new Date(Date.parse("2023-01-13")),
       price: "499,000 VND",
       interestedCount: 21,
-      venue: "Online",
-      image: "https://salt.tkbcdn.com/ts/ds/44/e2/90/76fb84dbfdcd86e99f720aca467ffd04.png",
+      venueName: "Online",
+      eventBannerURL: "https://salt.tkbcdn.com/ts/ds/44/e2/90/76fb84dbfdcd86e99f720aca467ffd04.png",
     },
     {
-      title: "Online Zumba Dance Fitness Class over Zoom",
+      eventName: "Online Zumba Dance Fitness Class over Zoom",
       date: new Date(Date.parse("2023-01-13")),
       price: "70,000 VND",
       interestedCount: 10,
-      venue: "Zoom",
-      image: "https://salt.tkbcdn.com/ts/ds/44/e2/90/76fb84dbfdcd86e99f720aca467ffd04.png",
+      venueName: "Zoom",
+      eventBannerURL: "https://salt.tkbcdn.com/ts/ds/44/e2/90/76fb84dbfdcd86e99f720aca467ffd04.png",
     },
     {
-      title: "Easy Book Folding: Christmas Edition",
+      eventName: "Easy Book Folding: Christmas Edition",
       date: new Date(Date.parse("2023-01-13")), 
       price: "FREE",
       interestedCount: 10,
-      venue: "Community Library",
-      image: "https://salt.tkbcdn.com/ts/ds/44/e2/90/76fb84dbfdcd86e99f720aca467ffd04.png",
+      venueName: "Community Library",
+      eventBannerURL: "https://salt.tkbcdn.com/ts/ds/44/e2/90/76fb84dbfdcd86e99f720aca467ffd04.png",
     },
   ]
 };

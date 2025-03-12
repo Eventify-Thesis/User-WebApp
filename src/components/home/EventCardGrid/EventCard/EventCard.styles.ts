@@ -82,12 +82,17 @@ export const ImageSection = styled.div`
   }
 `;
 
-export const BookmarkIcon = styled.img`
+export const BookmarkIcon = styled.div`
   position: absolute;
   top: 14px;
   right: 14px;
   width: 48px;
   height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.5);
   transition: transform 0.2s ease;
   cursor: pointer;
 

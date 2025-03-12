@@ -18,10 +18,12 @@ import MainLayout from '@/components/layouts/main/MainLayout/MainLayout';
 import RequireAuth from '@/components/router/RequireAuth';
 const EventDetailPage = React.lazy(() => import('@/pages/EventDetailPage'));
 const CheckoutPage = React.lazy(() => import('@/pages/CheckoutPage'));
+const HomePage = React.lazy(() => import('@/pages/HomePage'));
+const SearchResult = React.lazy(() => import('@/pages/SearchResult'));
 
 import { withLoading } from '@/hocs/withLoading.hoc';
 import { SignIn, SignUp } from '@clerk/clerk-react';
-import HomePage from '@/pages/HomePage';
+
 // import NftDashboardPage from "@/pages/DashboardPages/HomePage";
 // import MedicalDashboardPage from "@/pages/DashboardPages/DashboardPage";
 
@@ -78,6 +80,7 @@ export const AppRouter: React.FC = () => {
       <Routes>
         <Route path={HOME_PATH} element={<MainLayout />}>
           <Route index element={<HomePage />} />
+          <Route path="search-result" element={<SearchResult />} />
         </Route>
 
         <Route path={HOME_PATH} element={protectedLayout}>
