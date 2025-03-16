@@ -19,15 +19,15 @@ const TrendingItem = styled.div`
     background: rgba(255, 255, 255, 0.1);
     border-radius: 4px;
   }
-
-  span {
-    font-weight: 600;
-  }
 `;
 
 const TrendingIcon = styled(RiseOutlined)`
   color: #27ae60; // Green trending icon
   font-size: 16px;
+`;
+
+const TrendingText = styled.span`
+  font-weight: 600;
 `;
 
 const trendingKeywords = ['ntpmm', '8wonder', 'keshi'];
@@ -43,7 +43,7 @@ export const TrendingSearches: React.FC = () => {
       {trendingKeywords.map((keyword, index) => (
         <TrendingItem key={index} onClick={() => handleClick(keyword)}>
           <TrendingIcon />
-          <span>{keyword}</span>
+          <TrendingText>{keyword}</TrendingText>
         </TrendingItem>
       ))}
     </TrendingWrapper>
