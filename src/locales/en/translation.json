@@ -1,4 +1,18 @@
 {
+  "searchBar":{
+    "browseByCategory": "Browse by Category",
+    "browseByLocation": "Browse by City",
+    "music": "Music",
+    "theaterArts": "Theater & Arts",
+    "sports": "Sports",
+    "others": "Others",
+    "hcm": "Ho Chi Minh",
+    "hanoi": "Hanoi",
+    "dalat": "Da Lat",
+    "otherLocations": "Other location",
+    "recommendations": "Recommend events for you",
+    "viewMore": "View more events"
+  },
   "filters": {
     "filter": "Filter",
     "searchResult": "Search result",
