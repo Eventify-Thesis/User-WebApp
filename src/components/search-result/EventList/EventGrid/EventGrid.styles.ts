@@ -1,8 +1,7 @@
 import styled from "styled-components";
-import { EventProps } from "../EventCard/EventCard.styles";
-
+import EventModel from "@/domain/EventModel";
 export interface EventGridProps {
-    events: EventProps[];
+    events: EventModel[];
 }
 
 export const EventGrid = styled.div`

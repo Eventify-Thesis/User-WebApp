@@ -1,4 +1,18 @@
 {
+  "searchBar": {
+    "browseByCategory": "Khám phá theo Thể loại",
+    "browseByLocation": "Khám phá theo Thành phố",
+    "music": "Âm nhạc",
+    "theaterArts": "Sân khấu & Nghệ thuật",
+    "sports": "Thể thao",
+    "others": "Khác",
+    "hcm": "Hồ Chí Minh",
+    "hanoi": "Hà Nội",
+    "dalat": "Đà Lạt",
+    "otherLocations": "Địa điểm khác",
+    "recommendations": "Gợi ý dành cho bạn",
+    "viewMore": "Xem thêm sự kiện"
+  },
   "filters": {
     "location": "Vị trí",
     "nationwide": "Toàn quốc",
