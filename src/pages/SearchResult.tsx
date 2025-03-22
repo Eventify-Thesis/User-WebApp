@@ -3,7 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import type { Dayjs } from "dayjs";
 import EventFilters from "@/components/search-result/FilterContainer/FilterContainer";
-import { EventGrid } from "@/components/search-result/EventList/EventGrid/EventGrid";
+import { EventGrid } from "@/components/EventList/EventGrid/EventGrid";
 
 const events = [
   {
