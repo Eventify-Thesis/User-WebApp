@@ -1,4 +1,43 @@
 {
+  "orderHistory": {
+    "title": "Purchased Tickets",
+    "loading": "🔄 Loading tickets...",
+    "error": "Unable to load tickets. Please try again.",
+    "noTickets": "No tickets available",
+    "recommended": "You may also like",
+    "all": "All",
+    "finished": "Finished",
+    "processing": "Processing",
+    "canceled": "Cancelled",
+    "upcoming": "Upcoming",
+    "past": "Past"
+  },
+  "ticketSection": {
+    "ticketType": "Ticket Type",
+    "area": "Area",
+    "row": "Row",
+    "seat": "Seat",
+    "time": "Time",
+    "qrPrompt": "Tap to view QR code",
+    "eTicket": "E-ticket",
+    "physicalTicket": "Physical ticket"
+  },
+  "orderSection": {
+    "order": "Order",
+    "orderDate": "Order Date",
+    "paymentMethod": "Payment Method",
+    "orderStatus": "Order Status",
+    "buyerInfo": "Buyer Information",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "orderSummary": "Order Summary",
+    "ticketType": "Ticket Type",
+    "quantity": "Quantity",
+    "totalPrice": "Total Price",
+    "totalAmount": "Total Amount"
+  },
   "filters": {
     "filter": "Filter",
     "searchResult": "Search result",

@@ -4,7 +4,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
+    "dev": "concurrently \"npm run json-server\" \"vite\"",
+    "json-server": "json-server --watch db.json --port 5000",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview"
@@ -48,9 +49,11 @@
     "@types/react-helmet": "^6.1.11",
     "@vitejs/plugin-react": "^4.3.4",
     "autoprefixer": "^10.4.20",
+    "concurrently": "^9.1.2",
     "eslint": "^9.19.0",
     "eslint-plugin-react-hooks": "^5.0.0",
     "eslint-plugin-react-refresh": "^0.4.18",
+    "fast-average-color": "^9.4.0",
     "globals": "^15.14.0",
     "postcss": "^8.5.2",
     "tailwindcss": "^4.0.6",
