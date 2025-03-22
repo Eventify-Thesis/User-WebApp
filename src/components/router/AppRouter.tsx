@@ -20,6 +20,8 @@ const EventDetailPage = React.lazy(() => import('@/pages/EventDetailPage'));
 const CheckoutPage = React.lazy(() => import('@/pages/CheckoutPage'));
 const HomePage = React.lazy(() => import('@/pages/HomePage'));
 const SearchResult = React.lazy(() => import('@/pages/SearchResult'));
+const OrderHistory = React.lazy(() => import('@/pages/OrderHistory'));
+const TicketOrder = React.lazy(() => import('@/pages/TicketOrder'));
 
 import { withLoading } from '@/hocs/withLoading.hoc';
 import { SignIn, SignUp } from '@clerk/clerk-react';
@@ -81,6 +83,8 @@ export const AppRouter: React.FC = () => {
         <Route path={HOME_PATH} element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="search-result" element={<SearchResult />} />
+          <Route path="order-history" element={<OrderHistory />} />
+          <Route path="ticket-order" element={<TicketOrder />} />
         </Route>
 
         <Route path={HOME_PATH} element={protectedLayout}>

@@ -1,4 +1,43 @@
 {
+  "orderHistory": {
+    "title": "Vé đã mua",
+    "loading": "🔄 Đang tải vé...",
+    "error": "Không thể tải vé. Vui lòng thử lại.",
+    "noTickets": "Không có vé nào",
+    "recommended": "Có thể bạn cũng thích",
+    "all": "Tất cả",
+    "finished": "Hoàn thành",
+    "processing": "Đang xử lý",
+    "canceled": "Đã hủy",
+    "upcoming": "Sắp diễn ra",
+    "past": "Đã kết thúc"
+  },
+  "ticketSection": {
+    "ticketType": "Loại vé",
+    "area": "Khu vực",
+    "row": "Hàng",
+    "seat": "Ghế",
+    "time": "Thời gian",
+    "qrPrompt": "Nhấn vào để xem mã QR",
+    "eTicket": "Vé điện tử",
+    "physicalTicket": "Vé cứng"
+  },
+  "orderSection": {
+      "order": "Đơn hàng",
+      "orderDate": "Ngày đặt hàng",
+      "paymentMethod": "Phương thức thanh toán",
+      "orderStatus": "Tình trạng đơn hàng",
+      "buyerInfo": "Thông tin người mua",
+      "name": "Tên",
+      "email": "Email",
+      "phone": "Số điện thoại",
+      "address": "Địa chỉ",
+      "orderSummary": "Thông tin đơn hàng",
+      "ticketType": "Loại vé",
+      "quantity": "Số lượng",
+      "totalPrice": "Thành tiền",
+      "totalAmount": "Tổng tiền"
+  },
   "filters": {
     "location": "Vị trí",
     "nationwide": "Toàn quốc",
