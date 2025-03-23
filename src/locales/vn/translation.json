@@ -1,4 +1,9 @@
 {
+  "favourited": {
+    "title": "Sự kiện yêu thích",
+    "searchPlaceholder": "Tìm kiếm sự kiện...",
+    "noFavourited": "Bạn chưa có sự kiện yêu thích nào."
+  },
   "filters": {
     "location": "Vị trí",
     "nationwide": "Toàn quốc",

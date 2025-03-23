@@ -1,4 +1,9 @@
 {
+  "favourited": {
+    "title": "Favourited Events",
+    "searchPlaceholder": "Search for an event...",
+    "noFavourited": "You have no favourited events yet."
+  },
   "filters": {
     "filter": "Filter",
     "searchResult": "Search result",
