@@ -4,13 +4,18 @@ import { EventGrid } from "@/components/interested/EventGrid/EventGrid";
 import EventModel from "@/domain/EventModel";
 import * as s from "@/components/interested/InterestedPage.styles";
 import { useGetInterestedEvents } from "@/queries/useGetInterestedEvents";
-import { useUnbookmarkEvent } from "@/mutations/useUnbookmarkEvent";
+import { useUpdateInterestedEvent } from "@/mutations/useUnbookmarkEvent";
 
 export default function InterestedPage() {
   const { t } = useTranslation();
   const [searchQuery, setSearchQuery] = useState("");
   const { data: interestEvents = [], isLoading, error } = useGetInterestedEvents();
-  const { unbookmarkEvent, fadingEvents } = useUnbookmarkEvent();
+  const { mutate: updateInterestedEvent, fadingEvents  } = useUpdateInterestedEvent();
+
+  // Function to handle unbookmarking
+  const handleUnbookmark = (eventId: string) => {
+    updateInterestedEvent({ eventId, isInterested: false }); // Call the mutation with false
+  };
 
   // Filter events based on search query
   const filteredEvents = interestEvents.filter((event: EventModel) =>
@@ -36,7 +41,11 @@ export default function InterestedPage() {
           <s.NoEventsText>{t("error.loadingEvents")}</s.NoEventsText>
         </s.NoEventsContainer>
       ) : filteredEvents.length > 0 ? (
-        <EventGrid events={filteredEvents} onUnbookmark={unbookmarkEvent} fadingEvents={fadingEvents} />
+        <EventGrid
+          events={filteredEvents}
+          onUnbookmark={handleUnbookmark}
+          fadingEvents={fadingEvents}
+        />
       ) : (
         <s.NoEventsContainer>
           <s.SadIcon />
