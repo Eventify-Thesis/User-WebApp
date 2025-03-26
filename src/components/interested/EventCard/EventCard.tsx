@@ -11,15 +11,15 @@ const EventCard: React.FC<EventModel & { onUnbookmark: (id: string) => void; isF
   eventBannerURL,
   price,
   date,
-  isInterested: initialFavorited = false,
+  isInterested: initialInterested = false,
   onUnbookmark,
   isFading,
 }) => {
   const { t } = useTranslation();
-  const [isFavorited, setIsFavorited] = useState(initialFavorited);
+  const [isInterested, setIsInterested] = useState(initialInterested);
 
-  const toggleFavorite = () => {
-    setIsFavorited(false);
+  const toggleInterest = () => {
+    setIsInterested(false);
     onUnbookmark(id);
   };
 
@@ -28,9 +28,9 @@ const EventCard: React.FC<EventModel & { onUnbookmark: (id: string) => void; isF
       <s.ImageWrapper>
         <s.EventImage src={eventBannerURL} alt={eventName} />
 
-        {/* Bookmark/Favorite Icon */}
-        <s.BookmarkIcon onClick={toggleFavorite}>
-          {isFavorited ? (
+        {/* Bookmark/Interest Icon */}
+        <s.BookmarkIcon onClick={toggleInterest}>
+          {isInterested ? (
             <StarFilled style={{ fontSize: '24px', color: '#FFD700' }} />
           ) : (
             <StarOutlined style={{ fontSize: '24px', color: 'white' }} />

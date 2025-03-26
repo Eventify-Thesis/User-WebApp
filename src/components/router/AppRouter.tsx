@@ -20,7 +20,7 @@ const EventDetailPage = React.lazy(() => import('@/pages/EventDetailPage'));
 const CheckoutPage = React.lazy(() => import('@/pages/CheckoutPage'));
 const HomePage = React.lazy(() => import('@/pages/HomePage'));
 const SearchResult = React.lazy(() => import('@/pages/SearchResult'));
-const FavouritedPage = React.lazy(() => import('@/pages/FavouritedPage'));
+const InterestedPage = React.lazy(() => import('@/pages/InterestedPage'));
 
 import { withLoading } from '@/hocs/withLoading.hoc';
 import { SignIn, SignUp } from '@clerk/clerk-react';
@@ -82,7 +82,7 @@ export const AppRouter: React.FC = () => {
         <Route path={HOME_PATH} element={<MainLayout />}>
           <Route index element={<HomePage />} />
           <Route path="search-result" element={<SearchResult />} />
-          <Route path="favourited" element={<FavouritedPage />} />
+          <Route path="interested" element={<InterestedPage />} />
         </Route>
 
         <Route path={HOME_PATH} element={protectedLayout}>
