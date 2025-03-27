@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ConfigProvider } from 'antd/lib';
 import './App.css';
 import { AppRouter } from './components/router/AppRouter';
@@ -21,6 +22,9 @@ if (!PUBLISHABLE_KEY) {
   throw new Error('Add your Clerk Publishable Key to the .env.local file');
 }
 
+// Create a QueryClient instance
+const queryClient = new QueryClient();
+
 function App() {
   const { language } = useLanguage();
 
@@ -29,7 +33,7 @@ function App() {
   useThemeWatcher();
 
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
       <ClerkProvider
         publishableKey={PUBLISHABLE_KEY}
         afterSignOutUrl="/"
@@ -51,7 +55,7 @@ function App() {
           </ConfigProvider>
         </HelmetProvider>
       </ClerkProvider>
-    </>
+    </QueryClientProvider>
   );
 }
 
