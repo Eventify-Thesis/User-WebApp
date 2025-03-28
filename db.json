@@ -1,0 +1,156 @@
+{
+  "tickets": [
+  {
+    "id": 1,
+    "date": "2024-03-10",
+    "title": "Nhà Hát Kịch IDECAF: THUỐC ĐẮNG GIÃ TẬT",
+    "status": "success",
+    "ticketType": "Vé điện tử",
+    "time": "18:00 - 21:00, 10 tháng 03, 2024",
+    "location": "Sân khấu kịch Idecaf, TP. Hồ Chí Minh",
+    "timeframe": "ended",
+    "imageUrl": "https://salt.tkbcdn.com/ts/ds/21/5f/d7/92e9981cc46850451627316bfea4abd5.jpg"
+  },
+  {
+    "id": 2,
+    "date": "2024-03-15",
+    "title": "Live Concert: Sơn Tùng M-TP",
+    "status": "success",
+    "ticketType": "Vé cứng",
+    "time": "19:00 - 22:00, 15 tháng 03, 2024",
+    "location": "Sân vận động Mỹ Đình, Hà Nội",
+    "timeframe": "upcoming",
+    "imageUrl": "https://images.tkbcdn.com/1/1560/600/Upload/eventcover/2024/03/28/B13FAE.jpg"
+  },
+  {
+    "id": 3,
+    "date": "2024-03-22",
+    "title": "Rap Việt All Stars 2024",
+    "status": "processing",
+    "ticketType": "Vé điện tử",
+    "time": "20:00 - 23:30, 22 tháng 03, 2024",
+    "location": "Nhà thi đấu Phú Thọ, TP. Hồ Chí Minh",
+    "timeframe": "upcoming",
+    "imageUrl": "https://images.tkbcdn.com/1/1560/600/Upload/eventcover/2024/03/28/B13FAE.jpg"
+  },
+  {
+    "id": 4,
+    "date": "2024-03-30",
+    "title": "Đêm nhạc Trịnh Công Sơn",
+    "status": "success",
+    "ticketType": "Vé cứng",
+    "time": "18:30 - 21:30, 30 tháng 03, 2024",
+    "location": "Nhà hát lớn Hà Nội",
+    "timeframe": "upcoming",
+    "imageUrl": "https://images.tkbcdn.com/1/1560/600/Upload/eventcover/2023/06/20/AEC3ED.jpg"
+  },
+  {
+    "id": 5,
+    "date": "2024-04-05",
+    "title": "Hòa nhạc giao hưởng mùa xuân",
+    "status": "canceled",
+    "ticketType": "Vé điện tử",
+    "time": "19:00 - 22:00, 05 tháng 04, 2024",
+    "location": "Nhà hát TP. Hồ Chí Minh",
+    "timeframe": "upcoming",
+    "imageUrl": "https://govindesign.com/wp-content/uploads/2022/02/Slide-1.jpg"
+  },
+  {
+    "id": 6,
+    "date": "2024-04-12",
+    "title": "Hoàng Thùy Linh: THE BEST SHOW",
+    "status": "success",
+    "ticketType": "Vé cứng",
+    "time": "20:00 - 23:00, 12 tháng 04, 2024",
+    "location": "Sân vận động Quân khu 7, TP. Hồ Chí Minh",
+    "timeframe": "upcoming",
+    "imageUrl": "https://image.sggp.org.vn/w1000/Uploaded/2025/xddwbpiu/2022_10_04/banner_jque.png.webp"
+  },
+  {
+    "id": 7,
+    "date": "2024-04-18",
+    "title": "Hài kịch: Trấn Thành & Friends",
+    "status": "processing",
+    "ticketType": "Vé điện tử",
+    "time": "19:30 - 22:30, 18 tháng 04, 2024",
+    "location": "Sân khấu kịch Hồng Vân, TP. Hồ Chí Minh",
+    "timeframe": "upcoming",
+    "imageUrl": "https://salt.tkbcdn.com/ts/ds/55/66/1b/bd504bcc4965ecd06e773f0f75c99fd7.jpg"
+  },
+  {
+    "id": 8,
+    "date": "2024-04-25",
+    "title": "KPOP FEST 2024",
+    "status": "success",
+    "ticketType": "Vé cứng",
+    "time": "17:00 - 22:00, 25 tháng 04, 2024",
+    "location": "Sân vận động Mỹ Đình, Hà Nội",
+    "timeframe": "upcoming",
+    "imageUrl": "https://kenh14cdn.com/203336854389633024/2024/10/19/123-17293243083261562516534.png"
+  },
+  {
+    "id": 9,
+    "date": "2024-05-02",
+    "title": "Bức Tường - Rock Show",
+    "status": "canceled",
+    "ticketType": "Vé điện tử",
+    "time": "19:00 - 22:00, 02 tháng 05, 2024",
+    "location": "Sân khấu 126, TP. Hồ Chí Minh",
+    "timeframe": "upcoming",
+    "imageUrl": "https://salt.tkbcdn.com/ts/ds/55/66/1b/bd504bcc4965ecd06e773f0f75c99fd7.jpg"
+  },
+  {
+    "id": 10,
+    "date": "2024-05-10",
+    "title": "Gala Nhạc Việt 2024",
+    "status": "success",
+    "ticketType": "Vé cứng",
+    "time": "18:00 - 21:00, 10 tháng 05, 2024",
+    "location": "Nhà hát lớn TP. Hồ Chí Minh",
+    "timeframe": "upcoming",
+    "imageUrl": "https://salt.tkbcdn.com/ts/ds/55/66/1b/bd504bcc4965ecd06e773f0f75c99fd7.jpg"
+  }
+  ],
+   "order": {
+    "id": "VH20240310",
+    "createdAt": "25/02/2024 18:29",
+    "paymentMethod": "Momo",
+    "orderStatus": "Thành công",
+    "totalAmount": 810000,
+    "tickets": [
+      {
+        "id": "TKT-001",
+        "eventName": "Nhà Hát Kịch IDECAF: THUỐC ĐẮNG GIÃ TẬT",
+        "imageUrl": "https://salt.tkbcdn.com/ts/ds/21/5f/d7/92e9981cc46850451627316bfea4abd5.jpg",
+        "ticketType": "Vé điện tử",
+        "area": "VIP_Left",
+        "row": "C",
+        "seat": "6",
+        "time": "18:00 - 21:00, 10 tháng 03, 2024",
+        "qrCode": "https://example.com/qr1.png"
+      },
+      {
+        "id": "TKT-002",
+        "eventName": "Nhà Hát Kịch IDECAF: THUỐC ĐẮNG GIÃ TẬT",
+        "imageUrl": "https://salt.tkbcdn.com/ts/ds/21/5f/d7/92e9981cc46850451627316bfea4abd5.jpg",
+        "ticketType": "Vé điện tử",
+        "area": "VIP_Left",
+        "row": "C",
+        "seat": "7",
+        "time": "18:00 - 21:00, 10 tháng 03, 2024",
+        "qrCode": "https://example.com/qr2.png"
+      },
+      {
+        "id": "TKT-003",
+        "eventName": "Live Concert: Sơn Tùng M-TP",
+        "imageUrl": "https://images.tkbcdn.com/1/1560/600/Upload/eventcover/2024/03/28/B13FAE.jpg",
+        "ticketType": "Vé cứng",
+        "area": "VIP_Center",
+        "row": "A",
+        "seat": "15",
+        "time": "19:00 - 22:00, 15 tháng 03, 2024",
+        "qrCode": "https://example.com/qr3.png"
+      }
+    ]
+  }
+}
