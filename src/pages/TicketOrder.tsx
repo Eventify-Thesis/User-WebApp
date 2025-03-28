@@ -52,4 +52,3 @@ const TicketOrder: React.FC = () => {
 };
 
 export default TicketOrder;
-

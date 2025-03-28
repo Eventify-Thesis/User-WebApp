@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import EventModel from '@/domain/EventModel';
+import EventModel from "@/domain/EventModel";
 
 export interface EventGridProps {
     events: EventModel[];
