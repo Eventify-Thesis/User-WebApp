@@ -2,7 +2,7 @@
 import React from "react";
 import { List } from "antd";
 import styled from "styled-components";
-import { EventCard } from "./EventCard";
+import { EventCard } from "./EventCard/EventCard";
 import { useTranslation } from "react-i18next";
 
 const events = [

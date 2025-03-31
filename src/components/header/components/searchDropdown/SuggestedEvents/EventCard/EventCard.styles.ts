@@ -1,10 +1,7 @@
-import React from "react";
 import { Card } from "antd";
 import styled from "styled-components";
-import EventModel from "@/domain/EventModel";
-import { CalendarOutlined } from "@ant-design/icons";
 
-const StyledCard = styled(Card)`
+export const StyledCard = styled(Card)`
   border-radius: 12px;
   overflow: hidden;
   background: rgba(0, 0, 0, 0.6); /* Transparent background */
@@ -15,9 +12,10 @@ const StyledCard = styled(Card)`
   flex-direction: column;
   justify-content: space-between;
   border: none; /* Remove default border */
-  transition: border 0.3s ease-in-out; /* Smooth transition */
+  transition: transform 0.3s ease-in-out, border 0.3s ease-in-out; /* Smooth transition */
 
   &:hover {
+    transform: scale(1.05);
     border: 1px solid white; /* White border on hover */
   }
 
@@ -35,7 +33,7 @@ const StyledCard = styled(Card)`
 `;
 
 
-const EventTitle = styled.h4`
+export const EventTitle = styled.h4`
   font-size: 14px;
   font-weight: bold;
   color: white;
@@ -45,31 +43,17 @@ const EventTitle = styled.h4`
   text-overflow: ellipsis; /* Prevents overflow */
 `;
 
-const EventPrice = styled.p`
+export const EventPrice = styled.p`
   color: #00ff99;
   font-weight: bold;
   font-size: 14px;
   margin-bottom: 4px;
 `;
 
-const EventDate = styled.p`
+export const EventDate = styled.p`
   color: #cccccc;
   font-size: 12px;
   display: flex;
   align-items: center;
   margin-top: auto; /* Pushes date to bottom */
 `;
-
-export const EventCard: React.FC<EventModel> = ({ eventName, price, date, eventBannerURL }) => {
-  // Format Date
-  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-  const formattedDate = `${date.getDate()} ${monthNames[date.getMonth()]} ${date.getFullYear()}`;
-
-  return (
-    <StyledCard hoverable cover={<img src={eventBannerURL} alt={eventName} />}>
-      <EventTitle title={eventName}>{eventName}</EventTitle>
-      <EventPrice>{price}</EventPrice>
-      <EventDate><CalendarOutlined /> {formattedDate}</EventDate>
-    </StyledCard>
-  );
-};

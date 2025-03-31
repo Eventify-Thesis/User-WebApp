@@ -1,7 +1,7 @@
 import React from "react";
 import { Tabs } from "antd";
 import styled from "styled-components";
-import CategoryCard from "./CategoryCard";
+import CategoryCard from "./CategoryCard/CategoryCard";
 import { useTranslation } from "react-i18next";
 
 const { TabPane } = Tabs;

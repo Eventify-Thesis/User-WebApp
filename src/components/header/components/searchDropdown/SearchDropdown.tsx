@@ -3,7 +3,7 @@ import { FilterIcon } from '@/components/common/icons/FilterIcon';
 import { HeaderActionWrapper } from '@/components/header/Header.styles';
 import { Btn, InputSearch } from '../HeaderSearch/HeaderSearch.styles';
 import { useTranslation } from 'react-i18next';
-import SearchPopover from './SearchPopover';
+import SearchPopover from './SearchPopover/SearchPopover';
 import { InputRef } from 'antd';
 
 interface SearchDropdownProps {
