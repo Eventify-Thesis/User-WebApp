@@ -14,6 +14,11 @@
     "recommendations": "Recommend events for you",
     "viewMore": "View more events"
   },
+  "interested": {
+    "title": "Favourited Events",
+    "searchPlaceholder": "Search for an event...",
+    "noInterested": "You have no favourited events yet."
+  },
   "filters": {
     "filter": "Filter",
     "searchResult": "Search result",

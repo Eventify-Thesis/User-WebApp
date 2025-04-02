@@ -7,6 +7,12 @@ export const Card = styled.div`
   color: white;
   padding: 10px;
   text-align: left;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+
+  &.fade-out {
+    opacity: 0;
+    transform: translateY(20px);
+  }
 `;
 
 // Wrapper to apply hover effect
@@ -53,9 +59,9 @@ export const EventImage = styled.img`
   width: 100%;
   display: block;
   border-radius: 10px;
-  height: 200px; /* Set a fixed height */
-  object-fit: cover;
   transition: transform 0.5s ease-in-out;
+  height: 150px; /* Set a fixed height */
+  object-fit: cover;
 `;
 
 export const EventTitle = styled.h3`
