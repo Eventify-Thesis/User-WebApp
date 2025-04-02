@@ -1,4 +1,19 @@
 {
+  "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+  "searchBar":{
+    "browseByCategory": "Browse by Category",
+    "browseByLocation": "Browse by City",
+    "music": "Music",
+    "theaterArts": "Theater & Arts",
+    "sports": "Sports",
+    "others": "Others",
+    "hcm": "Ho Chi Minh",
+    "hanoi": "Hanoi",
+    "dalat": "Da Lat",
+    "otherLocations": "Other location",
+    "recommendations": "Recommend events for you",
+    "viewMore": "View more events"
+  },
   "interested": {
     "title": "Favourited Events",
     "searchPlaceholder": "Search for an event...",
