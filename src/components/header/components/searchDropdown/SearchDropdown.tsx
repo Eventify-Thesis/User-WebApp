@@ -1,74 +1,56 @@
-// @ts-nocheck
-// @ts-ignore
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { FilterIcon } from '@/components/common/icons/FilterIcon';
-import { SearchOverlay } from './searchOverlay/SearchOverlay/SearchOverlay';
 import { HeaderActionWrapper } from '@/components/header/Header.styles';
-import { CategoryComponents } from '@/components/header/components/HeaderSearch/HeaderSearch';
 import { Btn, InputSearch } from '../HeaderSearch/HeaderSearch.styles';
 import { useTranslation } from 'react-i18next';
-import { BasePopover } from '@/components/common/BasePopover/BasePopover';
+import SearchPopover from './SearchPopover/SearchPopover';
+import { InputRef } from 'antd';
 
-interface SearchOverlayProps {
+interface SearchDropdownProps {
   query: string;
   setQuery: (query: string) => void;
-  data: CategoryComponents[] | null;
-  isOverlayOpen: boolean;
-  setOverlayOpen: (state: boolean) => void;
 }
 
-export const SearchDropdown: React.FC<SearchOverlayProps> = ({
-  query,
-  setQuery,
-  data,
-  isOverlayOpen,
-  setOverlayOpen,
-}) => {
+export const SearchDropdown: React.FC<SearchDropdownProps> = ({ query, setQuery }) => {
+  const [isModalOpen, setModalOpen] = useState(false);
   const [isFilterOpen, setFilterOpen] = useState(false);
-
+  const inputRef = useRef<InputRef>(null);
   const { t } = useTranslation();
-
+  
   useEffect(() => {
-    setOverlayOpen(!!query || isFilterOpen);
-  }, [query, isFilterOpen, setOverlayOpen]);
-
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const ref = useRef<any>(null);
-
+    if (isModalOpen) {
+      inputRef.current?.focus();
+    }
+  }, [isModalOpen]);
+  
   return (
     <>
-      <BasePopover
-        {...((!!data || isFilterOpen) && {
-          trigger: 'click',
-          onOpenChange: setOverlayOpen,
-        })}
-        overlayClassName="search-overlay"
-        content={<SearchOverlay data={data} isFilterOpen={isFilterOpen} />}
-        open={isOverlayOpen}
-        getPopupContainer={() => ref.current}
-      >
-        <HeaderActionWrapper>
-          <InputSearch
-            width="100%"
-            value={query}
-            height="max-content"
-            placeholder={t('header.search')}
-            filter={
-              <Btn
-                size="small"
-                type={isFilterOpen ? 'ghost' : 'text'}
-                aria-label="Filter"
-                icon={<FilterIcon />}
-                onClick={() => setFilterOpen(!isFilterOpen)}
-              />
-            }
-            onChange={(event) => setQuery(event.target.value)}
-            enterButton={null}
-            addonAfter={null}
-          />
-          <div ref={ref} />
-        </HeaderActionWrapper>
-      </BasePopover>
+      <HeaderActionWrapper>
+        <InputSearch
+          ref={inputRef} // ✅ Keep reference to input
+          width="100%"
+          value={query}
+          height="max-content"
+          placeholder={t('header.search')}
+          filter={
+            <Btn
+              size="small"
+              type={isFilterOpen ? 'link' : 'text'}
+              aria-label="Filter"
+              icon={<FilterIcon />}
+              onClick={() => setFilterOpen(!isFilterOpen)}
+            />
+          }
+          onFocus={() => setModalOpen(true)} // ✅ Open modal, but input keeps focus
+          onChange={(event) => setQuery(event.target.value)} // ✅ Allow typing
+          enterButton={null}
+          addonAfter={null}
+        />
+      </HeaderActionWrapper>
+
+      <SearchPopover visible={isModalOpen} onClose={() => setModalOpen(false)} />
     </>
   );
 };
+
+export default SearchDropdown;

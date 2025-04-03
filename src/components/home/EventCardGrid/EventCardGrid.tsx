@@ -1,10 +1,9 @@
 "use client";
 import React from "react";
-import EventModel from "@/domain/EventModel";
 import { EventCard } from "./EventCard/EventCard.tsx";
 import { SeeMoreButton } from "./SeeMoreButton/SeeMoreButton.styles";
 import { Section, Title, EventsGrid } from "./EventCardGrid.styles";
-
+import EventModel from "@/domain/EventModel.ts";
 
 interface EventCardGridProps {
     eventCategory: string,
