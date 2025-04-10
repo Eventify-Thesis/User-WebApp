@@ -1,6 +1,6 @@
-import { httpApi } from "@/api/http.api";
-import BuyerModel from "@/domain/BuyerModel";
-import { mockBuyers } from "@/mocks/buyers"; 
+import { httpApi } from '@/api/http.api';
+import BuyerModel from '@/domain/BuyerModel';
+import { mockBuyers } from '@/mocks/buyers';
 
 export const buyerClient = {
   getBuyerByEmail: async (email: string): Promise<BuyerModel | null> => {
