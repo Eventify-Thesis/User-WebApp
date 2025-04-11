@@ -22,17 +22,23 @@ const Header: React.FC = () => {
         icon={<ArrowLeftOutlined />}
         onClick={() => navigate(-1)}
         style={{
+          fontWeight: 'bold',
           position: 'absolute',
           left: 0,
           top: '50%',
+          color: 'white',
           transform: 'translateY(-50%)',
         }}
-      />
+      >
+        Back
+      </Button>
       <Title
         level={4}
         style={{
+          fontWeight: 'bold',
           margin: 0,
           textAlign: 'center',
+          color: 'var(--primary-color)',
         }}
       >
         Choose Ticket

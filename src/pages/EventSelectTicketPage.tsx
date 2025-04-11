@@ -4,8 +4,9 @@ import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useParams } from 'react-router-dom';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
-import { Space } from 'antd';
+import { Space, theme } from 'antd';
 import { TicketCard, SummaryPanel, Header } from '@/components/select-ticket';
+import { useGetEventDetail } from '@/queries/useGetEventDetail';
 
 interface TicketSelection {
   id: number;
@@ -16,9 +17,11 @@ interface TicketSelection {
 
 const EventSelectTicketPage: React.FC = () => {
   const { eventId, showId } = useParams();
+  const { data: event } = useGetEventDetail(eventId);
   const { data: show } = useGetEventShowDetail(eventId, showId);
   const { t } = useTranslation();
   const { isDesktop } = useResponsive();
+  const { token } = theme.useToken();
 
   const [selectedTickets, setSelectedTickets] = useState<TicketSelection[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<any[]>([]);
@@ -41,7 +44,7 @@ const EventSelectTicketPage: React.FC = () => {
     if (!ticket) return;
 
     if (
-      quantity < ticket.minTicketPurchase ||
+      (quantity != 0 && quantity < ticket.minTicketPurchase) ||
       quantity > ticket.maxTicketPurchase
     )
       return;
@@ -98,7 +101,12 @@ const EventSelectTicketPage: React.FC = () => {
 
   return (
     <div
-      style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        minHeight: '100vh',
+        background: '#141414',
+      }}
     >
       <PageTitle>{t('eventSelectTicketPage.title')}</PageTitle>
       {show && (
@@ -109,37 +117,49 @@ const EventSelectTicketPage: React.FC = () => {
               flexDirection: 'column',
               flex: 1,
               maxWidth: isDesktop ? 'calc(100% - 400px)' : '100%',
+              background: '#141414',
+              color: '#fff',
             }}
           >
             <Header />
-            <div style={{ flex: 1, padding: '24px' }}>{mainContent}</div>
+            <div
+              style={{
+                flex: 1,
+                padding: '24px',
+                background: 'linear-gradient(180deg, #1f1f1f 0%, #141414 100%)',
+              }}
+            >
+              {mainContent}
+            </div>
           </div>
           {isDesktop && (
             <div style={{ width: '400px', height: '100vh' }}>
               <SummaryPanel
-                eventName={show.name}
+                eventName={event?.eventName}
                 startTime={show.startTime}
-                location={show.location}
+                venueName={event?.venueName}
                 selectedTickets={selectedTickets}
                 selectedSeats={selectedSeats}
                 totalPrice={totalPrice}
                 onContinue={handleContinue}
                 hasSeatingPlan={!!show.seatingPlanId}
                 ticketTypes={show.ticketTypes}
+                theme="dark"
               />
             </div>
           )}
           {!isDesktop && (
             <SummaryPanel
-              eventName={show.name}
+              eventName={event?.eventName}
               startTime={show.startTime}
-              location={show.location}
+              venueName={event?.venueName}
               selectedTickets={selectedTickets}
               selectedSeats={selectedSeats}
               totalPrice={totalPrice}
               onContinue={handleContinue}
               hasSeatingPlan={!!show.seatingPlanId}
               ticketTypes={show.ticketTypes}
+              theme="dark"
             />
           )}
         </div>

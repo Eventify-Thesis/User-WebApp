@@ -1,5 +1,5 @@
 import { httpApi } from '@/api/http.api';
-import EventModel from '@/domain/EventModel';
+import EventModel, { EventDetailResponse } from '@/domain/EventModel';
 import { IdParam } from '@/types/types';
 import { mockEvents } from '@/mocks/events';
 import { ShowModel } from '@/domain/ShowModel';
@@ -13,7 +13,7 @@ export const eventClient = {
     // return response.data.data;
   },
 
-  getDetail: async (eventId: IdParam): Promise<EventModel> => {
+  getDetail: async (eventId: IdParam): Promise<EventDetailResponse> => {
     const response = await httpApi.get<any>(`/events/${eventId}`);
     return response.data.data;
   },
