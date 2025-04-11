@@ -1,7 +1,8 @@
-import { httpApi } from "@/api/http.api";
-import EventModel from "@/domain/EventModel";
-import { IdParam } from "@/types/types";
-import { mockEvents } from "@/mocks/events";
+import { httpApi } from '@/api/http.api';
+import EventModel from '@/domain/EventModel';
+import { IdParam } from '@/types/types';
+import { mockEvents } from '@/mocks/events';
+import { ShowModel } from '@/domain/ShowModel';
 
 export const eventClient = {
   getList: async (): Promise<EventModel[]> => {
@@ -12,18 +13,31 @@ export const eventClient = {
     // return response.data.data;
   },
 
-  getById: async (eventId: IdParam): Promise<EventModel> => {
-    const response = await httpApi.get<any>(`/event/${eventId}`);
+  getDetail: async (eventId: IdParam): Promise<EventModel> => {
+    const response = await httpApi.get<any>(`/events/${eventId}`);
     return response.data.data;
   },
 
   create: async (eventData: Partial<EventModel>): Promise<EventModel> => {
-    const response = await httpApi.post<any>("/event", eventData);
+    const response = await httpApi.post<any>('/event', eventData);
     return response.data.data;
   },
 
-  update: async (eventId: IdParam, eventData: Partial<EventModel>): Promise<EventModel> => {
+  update: async (
+    eventId: IdParam,
+    eventData: Partial<EventModel>,
+  ): Promise<EventModel> => {
     const response = await httpApi.patch<any>(`/event/${eventId}`, eventData);
+    return response.data.data;
+  },
+
+  getShowDetail: async (
+    eventId: IdParam,
+    showId: IdParam,
+  ): Promise<ShowModel> => {
+    const response = await httpApi.get<any>(
+      `/events/${eventId}/shows/${showId}`,
+    );
     return response.data.data;
   },
 

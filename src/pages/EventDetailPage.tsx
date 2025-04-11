@@ -5,49 +5,64 @@ import { useResponsive } from '@/hooks/useResponsive';
 import { HeroSection } from '@/components/event-detail/HeroSection/HeroSection';
 import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import { DescriptionSection } from '@/components/event-detail/DescriptionSection/DescriptionSection';
-import { TickerInfoSection } from '@/components/event-detail/TicketsInfoSection/TicketsInfoSection';
 import { OrganizerInfoSection } from '@/components/event-detail/OrganizerInfoSection/OrganizerInfoSection';
 import styled from 'styled-components';
 import { LAYOUT, media } from '@/styles/themes/constants';
+import { useParams } from 'react-router-dom';
+import { useGetEventDetail } from '@/queries/useGetEventDetail';
+import TicketsInfoSection from '@/components/event-detail/TicketsInfoSection/TicketsInfoSection';
 
 const EventDetailPage: React.FC = () => {
+  const { slug } = useParams();
+
+  const eventId = slug?.split('-')?.[slug?.split('-')?.length - 1];
+  console.log(eventId);
+
+  const { data: event } = useGetEventDetail(eventId);
+  console.log(event);
   const { isTablet, isDesktop } = useResponsive();
 
   const { t } = useTranslation();
-  const exampleEvent = {
-    title: 'Sự kiện tháng 10',
-    date: '10/10/2021',
-    venue: 'Sân vận động Quốc gia Mỹ Đình',
-    address: 'Đường Lê Đức Thọ, Mỹ Đình, Nam Từ Liêm, Hà Nội',
-    price: '500.000đ',
-    organizerName: 'Công ty TNHH ABC',
-    organizerImage: 'https://cdn-icons-png.freepik.com/512/219/219964.png',
-    organizerDescription: 'Công ty ABC chuyên tổ chức sự kiện lớn nhỏ',
-  };
+  const { eventDescription, orgName, orgLogoUrl, orgDescription } = event || {};
 
   const desktopLayout = (
     <BaseRow align="middle" gutter={[10, 10]} style={{ width: '100%' }}>
       <Banner>
-        <HeroSection event={exampleEvent} />
+        <HeroSection event={event} />
       </Banner>
       <MainInfoSection>
-        <DescriptionSection />
-        <TickerInfoSection />
+        <DescriptionSection description={eventDescription} />
+        <TicketsInfoSection shows={event?.shows || []} />
         <OrganizerInfoSection
-          organizerDescription={exampleEvent.organizerDescription}
-          organizerName={exampleEvent.organizerName}
-          organizerImage={exampleEvent.organizerImage}
+          organizerDescription={orgDescription}
+          organizerName={orgName}
+          organizerImage={orgLogoUrl}
         />
       </MainInfoSection>
     </BaseRow>
   );
 
-  const mobileAndTabletLayout = <HeroSection event={exampleEvent} />;
+  const mobileAndTabletLayout = (
+    <BaseRow align="middle" gutter={[10, 10]} style={{ width: '100%' }}>
+      <Banner>
+        <HeroSection event={event} />
+      </Banner>
+      <MainInfoSection>
+        <DescriptionSection description={eventDescription} />
+        <TicketsInfoSection shows={event?.shows || []} />
+        <OrganizerInfoSection
+          organizerDescription={orgDescription}
+          organizerName={orgName}
+          organizerImage={orgLogoUrl}
+        />
+      </MainInfoSection>
+    </BaseRow>
+  );
 
   return (
     <>
-      <PageTitle>{exampleEvent.title}</PageTitle>
-      {isDesktop ? desktopLayout : mobileAndTabletLayout}
+      <PageTitle>{event?.eventName || 'Eventify'}</PageTitle>
+      {event && <>{isDesktop ? desktopLayout : mobileAndTabletLayout}</>}
     </>
   );
 };

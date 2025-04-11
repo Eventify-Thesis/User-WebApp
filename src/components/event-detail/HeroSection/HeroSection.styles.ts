@@ -107,10 +107,9 @@ export const BuyTicketButton = styled(BaseButton)`
 `;
 
 export const EventImage = styled.img`
-  width: 100%;
+  width: 80%;
   overflow-clip-margin: content-box;
   overflow: clip;
-  height: 100%;
   object-fit: cover;
   object-position: center center;
   border-left: 2px dashed rgb(39, 39, 42);

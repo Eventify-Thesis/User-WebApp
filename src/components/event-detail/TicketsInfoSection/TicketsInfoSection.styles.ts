@@ -32,6 +32,11 @@ export const TicketsList = styled(Collapse)`
     transition: all 0.3s, visibility 0s;
     color: white;
   }
+
+  && .ant-collapse-content-box {
+    background-color: rgb(39, 39, 42);
+    padding: 0 !important;
+  }
 `;
 
 /**

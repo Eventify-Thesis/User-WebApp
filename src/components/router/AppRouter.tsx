@@ -16,6 +16,9 @@ const SearchResult = React.lazy(() => import('@/pages/SearchResult'));
 const InterestedPage = React.lazy(() => import('@/pages/InterestedPage'));
 const OrderHistory = React.lazy(() => import('@/pages/OrderHistory'));
 const TicketOrder = React.lazy(() => import('@/pages/TicketOrder'));
+const EventSelectTicketPage = React.lazy(
+  () => import('@/pages/EventSelectTicketPage'),
+);
 
 import { withLoading } from '@/hocs/withLoading.hoc';
 import { SignIn, SignUp } from '@clerk/clerk-react';
@@ -42,6 +45,10 @@ export const AppRouter: React.FC = () => {
         </Route>
 
         <Route path={HOME_PATH} element={protectedLayout}>
+          <Route
+            path="/events/:eventId/bookings/:showId/select-ticket"
+            element={<EventSelectTicketPage />}
+          />
           <Route path=":slug" element={<EventDetailPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
         </Route>

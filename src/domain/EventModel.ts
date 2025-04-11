@@ -1,61 +1,12 @@
-export interface PaymentInfo {
-  id: string;
-  eventId: string;
-  bankAccount: string;
-  bankAccountName: string;
-  bankAccountNumber: string;
-  bankOffice: string;
-  businessType: string;
-  companyName?: string;
-  companyAddress?: string;
-  taxNumber?: string;
-}
-
-export interface Setting {
-  id: string;
-  eventId: string;
-  url: string;
-  maximumAttendees?: number;
-  ageRestriction?: string;
-  messageAttendees?: string;
-  isPrivate?: boolean;
-  eventDescription?: string;
-  isEnableQuestionForm?: boolean;
-}
-
-export interface TicketType {
-  id: string;
-  name: string;
-  price: number;
-  isFree: boolean;
-  quantity: number;
-  minTicketPurchase: number;
-  maxTicketPurchase: number;
-  startTime: Date;
-  endTime: Date;
-  description: string;
-  imageURL: string;
-  isDisabled?: boolean;
-  position: number;
-}
-
-export interface Showing {
-  ticketTypes: TicketType[];
-  startTime: Date;
-  endTime: Date;
-}
-
-export interface Show {
-  id: string;
-  eventId: string;
-  showings: Showing[];
-}
+import { PaymentInfoModel } from './PaymentInfoModel';
+import { SettingModel } from './SettingModel';
+import { ShowModel } from './ShowModel';
 
 export default interface EventModel {
-  id: string; // Matches MongoDB ObjectId
-  paymentInfo?: PaymentInfo;
-  setting?: Setting;
-  show?: Show;
+  id: string;
+  paymentInfo?: PaymentInfoModel;
+  setting?: SettingModel;
+  shows?: ShowModel[];
   organizationId?: string;
   eventName: string;
   eventDescription?: string;
@@ -63,9 +14,9 @@ export default interface EventModel {
   status?: string;
   orgName?: string;
   orgDescription?: string;
-  orgLogoURL?: string;
-  eventLogoURL?: string;
-  eventBannerURL?: string;
+  orgLogoUrl?: string;
+  eventLogoUrl?: string;
+  eventBannerUrl?: string;
   venueName?: string;
   cityId?: string;
   districtId?: string;
@@ -73,8 +24,17 @@ export default interface EventModel {
   street?: string;
   categories?: string[];
   categoriesIds?: string[];
+}
+
+export interface EventDetailResponse extends EventModel {
   price?: string; // Not in schema, but kept for display purposes
   date: Date; // Not in schema, but kept for display purposes
   isInterested?: boolean; // Added for UI state
   interestedCount?: number; //TODO: Add to schema
+  startTime: Date;
+  endTime: Date;
+  address: {
+    addressVi: string;
+    addressEn: string;
+  };
 }
