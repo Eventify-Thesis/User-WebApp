@@ -1,59 +1,69 @@
-import React, { useState, useCallback, useEffect } from 'react';
-import { Grid, Stack } from '@mantine/core';
-import { Layout, Modal, Form, Input, message, Button } from 'antd';
-import { v4 as uuidv4 } from 'uuid';
-import { useParams } from 'react-router-dom';
-import {
-  useGetSeatingPlanDetail,
-  useSeatingPlanMutations,
-} from '@/queries/useSeatingPlanQueries';
-import {
-  SeatingPlan,
-  Selection,
-  EditorTool,
-  Shape,
-  Row,
-  Seat,
-  Area,
-} from './types/index';
-import PlanSettingsPanel from './components/PlanSettingsPanel';
-import SeatSettingsPanel from './components/SeatSettingsPanel';
-import RowSettingsPanel from './components/RowSettingsPanel';
-import ShapeSettingsPanel from './components/ShapeSettingsPanel';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Layout, Spin, Button, Space } from 'antd';
+import { ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
 import Canvas from './components/Canvas';
-import useEditorState from './hooks/useEditorState';
 import './EventSeatMap.css';
-import { useCanvasState } from './hooks/useCanvasState';
-import { useCanvasHandlers } from './hooks/useCanvasHandlers';
+import { useGetSeatingPlanDetail } from '@/queries/useSeatingPlanQueries';
+const { Content } = Layout;
 
-const { Content, Sider } = Layout;
+interface EventSeatMapProps {
+  eventId: string;
+  seatingPlanId: string;
+  onSeatSelect: (seats: any[]) => void;
+  selectedSeats: any[];
+}
 
-const EventSeatMap: React.FC = () => {
-  const { eventId, planId } = useParams();
-  const [seatingPlan, setSeatingPlan] = useState<SeatingPlan>();
-  const [showGrid, setShowGrid] = useState(true);
-  const [saveModalVisible, setSaveModalVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [form] = Form.useForm();
+const EventSeatMap: React.FC<EventSeatMapProps> = ({
+  eventId,
+  seatingPlanId,
+  onSeatSelect,
+  selectedSeats,
+}) => {
+  const { data: seatingPlanData, isLoading: isLoadingPlan } =
+    useGetSeatingPlanDetail(eventId!, seatingPlanId!);
+  const [scale, setScale] = useState(1);
 
-  const { data: existingPlan, isLoading: isLoadingPlan } =
-    useGetSeatingPlanDetail(eventId!, planId!);
-
-  // Load existing plan if available
-  useEffect(() => {
-    if (existingPlan && !isLoadingPlan && planId !== 'new') {
-      const parsedPlan = JSON.parse(existingPlan.plan);
-      setSeatingPlan(parsedPlan);
+  const seatingPlan = useMemo(() => {
+    if (seatingPlanData?.plan) {
+      return JSON.parse(seatingPlanData.plan);
     }
-  }, [existingPlan, isLoadingPlan, planId]);
+    return null;
+  }, [seatingPlanData]);
+
+  const handleZoom = (delta: number) => {
+    setScale((prev) => Math.max(0.5, Math.min(2, prev + delta)));
+  };
 
   return (
-    <Layout style={{ height: '100vh' }}>
-      <Layout>
+    <Layout style={{ height: '100%', width: '100%' }}>
+      {isLoadingPlan ? (
+        <Spin />
+      ) : seatingPlan ? (
         <Content className="seat-map-content">
-          <Canvas seatingPlan={seatingPlan} showGrid={showGrid} />
+          <div className="zoom-controls">
+            <Space direction="vertical" size="small">
+              <Button
+                icon={<ZoomInOutlined />}
+                onClick={() => handleZoom(0.1)}
+                title="Zoom In"
+              />
+              <Button
+                icon={<ZoomOutOutlined />}
+                onClick={() => handleZoom(-0.1)}
+                title="Zoom Out"
+              />
+            </Space>
+          </div>
+          <Canvas
+            seatingPlan={seatingPlan}
+            scale={scale}
+            onSeatSelect={onSeatSelect}
+            selectedSeats={selectedSeats}
+          />
         </Content>
-      </Layout>
+      ) : (
+        <div>No seating plan data available</div>
+      )}
     </Layout>
   );
 };

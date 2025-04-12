@@ -1,12 +1,13 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useParams } from 'react-router-dom';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
-import { Space, theme } from 'antd';
+import { Space, Spin, theme } from 'antd';
 import { TicketCard, SummaryPanel, Header } from '@/components/select-ticket';
 import { useGetEventDetail } from '@/queries/useGetEventDetail';
+import EventSeatMap from '@/components/EventSeatMap/EventSeatMap';
 
 interface TicketSelection {
   id: number;
@@ -17,11 +18,15 @@ interface TicketSelection {
 
 const EventSelectTicketPage: React.FC = () => {
   const { eventId, showId } = useParams();
-  const { data: event } = useGetEventDetail(eventId);
-  const { data: show } = useGetEventShowDetail(eventId, showId);
+  const { data: event, isLoading: isLoadingEvent } = useGetEventDetail(eventId);
+  console.log('event', event);
+
+  const { data: show, isLoading: isLoadingShow } = useGetEventShowDetail(
+    eventId,
+    showId,
+  );
   const { t } = useTranslation();
   const { isDesktop } = useResponsive();
-  const { token } = theme.useToken();
 
   const [selectedTickets, setSelectedTickets] = useState<TicketSelection[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<any[]>([]);
@@ -77,28 +82,6 @@ const EventSelectTicketPage: React.FC = () => {
     });
   };
 
-  const mainContent = show?.seatingPlanId ? (
-    // <EventSeatMap
-    //   seatingPlanId={show.seatingPlanId}
-    //   onSeatSelect={handleSeatSelection}
-    //   selectedSeats={selectedSeats}
-    // />
-    <></>
-  ) : (
-    <Space direction="vertical" size="middle" style={{ width: '100%' }}>
-      {show?.ticketTypes.map((ticket) => (
-        <TicketCard
-          key={ticket.id}
-          ticket={ticket}
-          quantity={
-            selectedTickets.find((t) => t.id === ticket.id)?.quantity || 0
-          }
-          onQuantityChange={handleTicketQuantityChange}
-        />
-      ))}
-    </Space>
-  );
-
   return (
     <div
       style={{
@@ -109,7 +92,9 @@ const EventSelectTicketPage: React.FC = () => {
       }}
     >
       <PageTitle>{t('eventSelectTicketPage.title')}</PageTitle>
-      {show && (
+      {isLoadingEvent || isLoadingShow ? (
+        <Spin />
+      ) : (
         <div style={{ display: 'flex', flex: 1 }}>
           <div
             style={{
@@ -125,11 +110,35 @@ const EventSelectTicketPage: React.FC = () => {
             <div
               style={{
                 flex: 1,
-                padding: '24px',
                 background: 'linear-gradient(180deg, #1f1f1f 0%, #141414 100%)',
               }}
             >
-              {mainContent}
+              {event.id && show?.seatingPlanId ? (
+                <EventSeatMap
+                  eventId={event?.id}
+                  seatingPlanId={show.seatingPlanId}
+                  onSeatSelect={handleSeatSelection}
+                  selectedSeats={selectedSeats}
+                />
+              ) : (
+                <Space
+                  direction="vertical"
+                  size="middle"
+                  style={{ width: '100%' }}
+                >
+                  {show?.ticketTypes.map((ticket) => (
+                    <TicketCard
+                      key={ticket.id}
+                      ticket={ticket}
+                      quantity={
+                        selectedTickets.find((t) => t.id === ticket.id)
+                          ?.quantity || 0
+                      }
+                      onQuantityChange={handleTicketQuantityChange}
+                    />
+                  ))}
+                </Space>
+              )}
             </div>
           </div>
           {isDesktop && (

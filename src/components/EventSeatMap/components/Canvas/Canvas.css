@@ -44,3 +44,7 @@
 .canvas-container[data-tool="move"] {
   cursor: move;
 }
+
+canvas {
+  background: #000000 !important;
+}
