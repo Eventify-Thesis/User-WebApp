@@ -4,7 +4,7 @@ import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useParams } from 'react-router-dom';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
-import { Space, Spin, theme } from 'antd';
+import { Space, Spin } from 'antd';
 import { TicketCard, SummaryPanel, Header } from '@/components/select-ticket';
 import { useGetEventDetail } from '@/queries/useGetEventDetail';
 import EventSeatMap from '@/components/EventSeatMap/EventSeatMap';
@@ -30,14 +30,26 @@ const EventSelectTicketPage: React.FC = () => {
 
   const [selectedTickets, setSelectedTickets] = useState<TicketSelection[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<any[]>([]);
-
+  const [ticketTypesMapping, setTicketTypesMapping] = useState<any[]>([]);
   const totalPrice = useMemo(() => {
     if (show?.seatingPlanId) {
-      return selectedSeats.reduce(
-        (acc, seat) => acc + parseFloat(seat.price || '0'),
-        0,
-      );
+      if (ticketTypesMapping.length > 0) {
+        console.log('tic', ticketTypesMapping, selectedSeats);
+        return selectedSeats.reduce(
+          (acc, seat) =>
+            acc +
+            parseFloat(
+              ticketTypesMapping.find((t) =>
+                t.categories.includes(seat.category),
+              )!.price,
+            ),
+          0,
+        );
+      } else {
+        return parseFloat('0');
+      }
     }
+
     return selectedTickets.reduce(
       (acc, ticket) => acc + parseFloat(ticket.price) * ticket.quantity,
       0,
@@ -67,10 +79,6 @@ const EventSelectTicketPage: React.FC = () => {
       }
       return prev.map((t) => (t.id === ticketId ? { ...t, quantity } : t));
     });
-  };
-
-  const handleSeatSelection = (seats: any[]) => {
-    setSelectedSeats(seats);
   };
 
   const handleContinue = () => {
@@ -117,8 +125,10 @@ const EventSelectTicketPage: React.FC = () => {
                 <EventSeatMap
                   eventId={event?.id}
                   seatingPlanId={show.seatingPlanId}
-                  onSeatSelect={handleSeatSelection}
+                  showId={show.id}
                   selectedSeats={selectedSeats}
+                  setSelectedSeats={setSelectedSeats}
+                  setTicketTypesMapping={setTicketTypesMapping}
                 />
               ) : (
                 <Space

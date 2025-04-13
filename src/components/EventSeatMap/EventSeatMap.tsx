@@ -6,22 +6,38 @@ import './EventSeatMap.css';
 import { useGetSeatingPlanDetail } from '@/queries/useSeatingPlanQueries';
 const { Content } = Layout;
 
+interface SeatAvailability {
+  available_seats: { id: string }[];
+  ticket_types: Array<{
+    id: number;
+    name: string;
+    price: string;
+    categories: string[];
+    [key: string]: any;
+  }>;
+}
+
 interface EventSeatMapProps {
-  eventId: string;
-  seatingPlanId: string;
-  onSeatSelect: (seats: any[]) => void;
+  eventId: number;
+  seatingPlanId: number;
+  showId: number;
   selectedSeats: any[];
+  setSelectedSeats: (seats: any[]) => void;
+  setTicketTypesMapping: (ticketTypes: any[]) => void;
 }
 
 const EventSeatMap: React.FC<EventSeatMapProps> = ({
   eventId,
+  showId,
   seatingPlanId,
-  onSeatSelect,
   selectedSeats,
+  setSelectedSeats,
+  setTicketTypesMapping,
 }) => {
   const { data: seatingPlanData, isLoading: isLoadingPlan } =
     useGetSeatingPlanDetail(eventId!, seatingPlanId!);
   const [scale, setScale] = useState(1);
+  const [availableSeats, setAvailableSeats] = useState<Set<string>>(new Set());
 
   const seatingPlan = useMemo(() => {
     if (seatingPlanData?.plan) {
@@ -30,15 +46,63 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
     return null;
   }, [seatingPlanData]);
 
+  useEffect(() => {
+    let eventSource: EventSource | null = null;
+
+    if (seatingPlan) {
+      // Create EventSource for SSE
+      eventSource = new EventSource(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/seats/${showId}/availability/stream`,
+      );
+
+      eventSource.onmessage = (event) => {
+        try {
+          const data: SeatAvailability = JSON.parse(event.data).data;
+          const availableSeatIds = new Set(
+            data.available_seats.map((seat) => seat.id),
+          );
+          setAvailableSeats(availableSeatIds);
+          setTicketTypesMapping(data.ticket_types);
+        } catch (error) {
+          console.error('Error parsing SSE data:', error);
+        }
+      };
+
+      eventSource.onerror = (error) => {
+        console.error('SSE Error:', error);
+        eventSource?.close();
+      };
+    }
+
+    // Cleanup on unmount
+    return () => {
+      if (eventSource) {
+        eventSource.close();
+      }
+    };
+  }, [seatingPlanId, seatingPlan]);
+
   const handleZoom = (delta: number) => {
     setScale((prev) => Math.max(0.5, Math.min(2, prev + delta)));
   };
 
+  const handleSeatSelect = (seat: any) => {
+    setSelectedSeats((prev) => {
+      if (prev.includes(seat)) {
+        return prev.filter((s) => s !== seat);
+      } else {
+        return [...prev, seat];
+      }
+    });
+  };
+
   return (
     <Layout style={{ height: '100%', width: '100%' }}>
-      {isLoadingPlan ? (
+      {isLoadingPlan && !availableSeats ? (
         <Spin />
-      ) : seatingPlan ? (
+      ) : seatingPlan && availableSeats && availableSeats.size > 0 ? (
         <Content className="seat-map-content">
           <div className="zoom-controls">
             <Space direction="vertical" size="small">
@@ -55,10 +119,12 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
             </Space>
           </div>
           <Canvas
+            availableSeats={availableSeats}
             seatingPlan={seatingPlan}
             scale={scale}
-            onSeatSelect={onSeatSelect}
+            onSeatSelect={handleSeatSelect}
             selectedSeats={selectedSeats}
+            availableSeats={availableSeats}
           />
         </Content>
       ) : (

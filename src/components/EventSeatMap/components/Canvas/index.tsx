@@ -1,6 +1,6 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
 import { Stage, Layer } from 'react-konva';
-import { SeatingPlan } from '../..//types/index';
+import { SeatingPlan } from '../../types/index';
 import { ShapeLayer } from './components/ShapeLayer';
 import { RowLayer } from './components/RowLayer';
 import './Canvas.css';
@@ -11,6 +11,7 @@ interface CanvasProps {
   scale: number;
   onSeatSelect: (seats: any[]) => void;
   selectedSeats: any[];
+  availableSeats: Set<string>;
 }
 
 const Canvas: React.FC<CanvasProps> = ({
@@ -18,10 +19,13 @@ const Canvas: React.FC<CanvasProps> = ({
   scale,
   onSeatSelect,
   selectedSeats,
+  availableSeats,
 }) => {
   const stageRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 600 });
+  const [stageScale, setStageScale] = useState(scale);
+  const [stagePosition, setStagePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
     const updateDimensions = () => {
@@ -39,6 +43,10 @@ const Canvas: React.FC<CanvasProps> = ({
     return () => window.removeEventListener('resize', updateDimensions);
   }, []);
 
+  useEffect(() => {
+    setStageScale(scale);
+  }, [scale]);
+
   const handleWheel = useCallback((e: any) => {
     e.evt.preventDefault();
     const stage = stageRef.current;
@@ -52,19 +60,23 @@ const Canvas: React.FC<CanvasProps> = ({
     };
 
     const newScale = e.evt.deltaY > 0 ? oldScale * 0.9 : oldScale * 1.1;
-
-    stage.scale({ x: newScale, y: newScale });
+    setStageScale(newScale);
 
     const newPos = {
       x: pointer.x - mousePointTo.x * newScale,
       y: pointer.y - mousePointTo.y * newScale,
     };
-    stage.position(newPos);
-    stage.batchDraw();
+    setStagePosition(newPos);
   }, []);
 
   const handleDragEnd = useCallback((e: any) => {
-    // You can save the position here if needed
+    const stage = stageRef.current;
+    if (stage) {
+      setStagePosition({
+        x: stage.x(),
+        y: stage.y(),
+      });
+    }
   }, []);
 
   return (
@@ -84,18 +96,9 @@ const Canvas: React.FC<CanvasProps> = ({
         draggable
         onWheel={handleWheel}
         onDragEnd={handleDragEnd}
-        scale={{ x: scale, y: scale }}
+        scale={{ x: stageScale, y: stageScale }}
+        position={stagePosition}
       >
-        {seatingPlan?.backgroundImage && (
-          <BackgroundLayer
-            backgroundImage={seatingPlan.backgroundImage}
-            stageSize={{
-              width: dimensions.width,
-              height: dimensions.height,
-            }}
-          />
-        )}
-
         <BackgroundLayer
           background={seatingPlan.background}
           stageSize={{
@@ -103,9 +106,9 @@ const Canvas: React.FC<CanvasProps> = ({
             height: dimensions.height,
           }}
         />
-
         <ShapeLayer seatingPlan={seatingPlan} />
         <RowLayer
+          availableSeats={availableSeats}
           seatingPlan={seatingPlan}
           onSeatSelect={onSeatSelect}
           selectedSeats={selectedSeats}

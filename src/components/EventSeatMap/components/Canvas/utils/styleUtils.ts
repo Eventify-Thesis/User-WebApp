@@ -20,13 +20,15 @@ export const getShapeStyles = (item: any, isSelected: boolean) => {
 export const getSeatStyles = (
   seat: any,
   isSelected: boolean,
-  isHighlighted: boolean,
-  categories: any[],
+  isAvailable: boolean,
 ) => {
   let fillColor = CONSTANTS.STYLE.DEFAULT.FILL;
   let strokeColor = CONSTANTS.STYLE.DEFAULT.STROKE;
 
-  if (isSelected) {
+  if (!isAvailable) {
+    fillColor = 'black';
+    strokeColor = 'black';
+  } else if (isSelected) {
     fillColor = CONSTANTS.STYLE.SELECTED.FILL;
     strokeColor = CONSTANTS.STYLE.SELECTED.STROKE;
   }

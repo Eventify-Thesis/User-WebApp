@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Typography, Space, Button, Row, Divider, theme } from 'antd';
 import { CalendarOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
@@ -18,6 +18,7 @@ interface SummaryPanelProps {
   startTime?: string;
   venueName?: string;
   selectedTickets: { id: number; quantity: number }[];
+  selectedSeats: any[];
   totalPrice: number;
   onContinue: () => void;
   ticketTypes: TicketType[];
@@ -29,6 +30,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
   startTime,
   venueName,
   selectedTickets,
+  selectedSeats,
   totalPrice,
   onContinue,
   ticketTypes,
@@ -36,10 +38,20 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
 }) => {
   const { isDesktop } = useResponsive();
   const { token } = theme.useToken();
-  const totalTickets = selectedTickets.reduce(
-    (acc, ticket) => acc + ticket.quantity,
-    0,
-  );
+
+  const [totalTickets, setTotalTickets] = useState(0);
+  console.log('selectedTickets', selectedTickets);
+  console.log('selectedSeats', selectedSeats);
+
+  useEffect(() => {
+    if (selectedTickets && selectedTickets.length > 0) {
+      setTotalTickets(
+        selectedTickets.reduce((acc, ticket) => acc + ticket.quantity, 0),
+      );
+    } else if (selectedSeats && selectedSeats.length > 0) {
+      setTotalTickets(selectedSeats.length);
+    }
+  }, [selectedTickets, selectedSeats]);
   const hasSelections = totalTickets > 0;
 
   const isDark = themeProp === 'dark';
