@@ -1,14 +1,20 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { interestedEventsClient } from "@/api/interestedEvents.client";
-import { GET_INTERESTED_EVENTS_QUERY_KEY } from "../queries/useGetInterestedEvents";
-import { useState } from "react";
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { interestedEventsClient } from '@/api/interestedEvents.client';
+import { GET_INTERESTED_EVENTS_QUERY_KEY } from '../queries/useGetInterestedEvents';
+import { useState } from 'react';
 
 export const useUpdateInterestedEvent = () => {
   const queryClient = useQueryClient();
   const [fadingEvents, setFadingEvents] = useState<string[]>([]);
 
   const mutation = useMutation({
-    mutationFn: async ({ eventId, isInterested }: { eventId: string; isInterested: boolean }) => {
+    mutationFn: async ({
+      eventId,
+      isInterested,
+    }: {
+      eventId: number;
+      isInterested: boolean;
+    }) => {
       // Delete below code when API is ready
       return { eventId, isInterested };
       // Uncomment below code when API is ready
@@ -19,8 +25,10 @@ export const useUpdateInterestedEvent = () => {
 
       await new Promise((resolve) => setTimeout(resolve, 300)); // Simulate fade-out animation
 
-      queryClient.setQueryData([GET_INTERESTED_EVENTS_QUERY_KEY], (oldData: any) =>
-        oldData ? oldData.filter((event: any) => event.id !== eventId) : []
+      queryClient.setQueryData(
+        [GET_INTERESTED_EVENTS_QUERY_KEY],
+        (oldData: any) =>
+          oldData ? oldData.filter((event: any) => event.id !== eventId) : [],
       );
 
       setFadingEvents((prev) => prev.filter((id) => id !== eventId)); // Remove event from fading list

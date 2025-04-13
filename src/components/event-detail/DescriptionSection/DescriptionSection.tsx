@@ -6,7 +6,13 @@ import { UpOutlined, DownOutlined } from '@ant-design/icons';
 import * as S from './DescriptionSection.styles';
 import './Description.styles.css';
 
-export const DescriptionSection: React.FC = () => {
+interface DescriptionSectionProps {
+  description?: string;
+}
+
+export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
+  description,
+}) => {
   const { t } = useTranslation();
   const { isTablet, isDesktop } = useResponsive();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -16,7 +22,7 @@ export const DescriptionSection: React.FC = () => {
   };
   const collapsibleContent = (
     <div style={{ marginTop: '8px', position: 'relative' }}>
-      <p
+      <div
         style={{
           display: isExpanded ? 'block' : '-webkit-box',
           WebkitLineClamp: 20,
@@ -27,88 +33,8 @@ export const DescriptionSection: React.FC = () => {
           color: 'rgb(39, 39, 42)',
           margin: 0,
         }}
-      >
-        This is a long description that can be expanded or collapsed. Lorem
-        ipsum dolor sit amet, consectetur adipiscing elit. Nulla vitae elit
-        libero, a pharetra augue. Donec id elit non mi porta gravida at eget
-        metus. Nullam id dolor id nibh ultricies vehicula ut id elit. This is a
-        long description that can be expanded or collapsed. Lorem ipsum dolor
-        sit amet, consectetur adipiscing elit. Nulla vitae elit libero, a
-        pharetra augue. Donec id elit non mi porta gravida at eget metus. Nullam
-        id dolor id nibh ultricies vehicula ut id elit. This is a long
-        description that can be expanded or collapsed. Lorem ipsum dolor sit
-        amet, consectetur adipiscing elit. Nulla vitae elit libero, a pharetra
-        augue. Donec id elit non mi porta gravida at eget metus. Nullam id dolor
-        id nibh ultricies vehicula ut id elit. This is a long description that
-        can be expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit. This is a long description that can be
-        expanded or collapsed. Lorem ipsum dolor sit amet, consectetur
-        adipiscing elit. Nulla vitae elit libero, a pharetra augue. Donec id
-        elit non mi porta gravida at eget metus. Nullam id dolor id nibh
-        ultricies vehicula ut id elit.
-      </p>
+        dangerouslySetInnerHTML={{ __html: description || '' }}
+      />
 
       {/* Fade-out Effect */}
       {!isExpanded && (
@@ -166,6 +92,19 @@ export const DescriptionSection: React.FC = () => {
     ></S.DescriptionCollapse>
   );
 
-  const mobileAndTabletLayout = <></>;
+  const mobileAndTabletLayout = (
+    <S.DescriptionCollapse
+      defaultActiveKey={['1']}
+      collapsible="icon"
+      items={[
+        {
+          key: '1',
+          label: label,
+          children: collapsibleContent,
+          showArrow: false,
+        },
+      ]}
+    ></S.DescriptionCollapse>
+  );
   return <>{isDesktop ? desktopLayout : mobileAndTabletLayout}</>;
 };

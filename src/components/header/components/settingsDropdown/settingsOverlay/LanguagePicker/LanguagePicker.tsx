@@ -1,5 +1,3 @@
-// @ts-nocheck
-// @ts-ignore
 import React from 'react';
 import ReactCountryFlag from 'react-country-flag';
 import { RadioBtn } from '../SettingsOverlay/SettingsOverlay.styles';
@@ -22,10 +20,10 @@ export const LanguagePicker: React.FC = () => {
             <ReactCountryFlag svg countryCode="GB" />
           </BaseSpace>
         </RadioBtn>
-        <RadioBtn value="de">
+        <RadioBtn value="vi">
           <BaseSpace align="center">
-            Deutsch
-            <ReactCountryFlag svg countryCode="DE" />
+            Tiếng Việt
+            <ReactCountryFlag svg countryCode="VN" />
           </BaseSpace>
         </RadioBtn>
       </BaseSpace>

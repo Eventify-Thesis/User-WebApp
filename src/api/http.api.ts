@@ -4,8 +4,8 @@ import { ApiError } from '@/api/ApiError';
 import { readToken } from '@/services/localStorage.service';
 
 export const httpApi = axios.create({
-  baseURL: import.meta.env.BASE_URL,
-  withCredentials: true,
+  baseURL: `${import.meta.env.VITE_API_BASE_URL}`,
+  // withCredentials: true,
 });
 
 httpApi.interceptors.request.use((config) => {

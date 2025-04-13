@@ -1,6 +1,7 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConfigProvider } from 'antd/lib';
 import './App.css';
+import './styles/components.css';
 import { AppRouter } from './components/router/AppRouter';
 import { useLanguage } from './hooks/useLanguage';
 import en from 'antd/lib/locale/en_US';
