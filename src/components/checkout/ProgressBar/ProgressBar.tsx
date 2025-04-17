@@ -5,93 +5,162 @@ import styled from 'styled-components';
 import { BaseSteps } from '@/components/common/BaseSteps/BaseSteps';
 import { BASE_COLORS } from '@/styles/themes/constants';
 
-const ProgressBar: React.FC = () => {
-  const { isTablet, isDesktop } = useResponsive();
+interface ProgressBarProps {
+  currentStep: number;
+  totalSteps: number;
+}
 
+const ProgressBar: React.FC<ProgressBarProps> = ({ currentStep, totalSteps }) => {
+  const { isDesktop } = useResponsive();
   const { t } = useTranslation();
 
-  const desktopLayout = (
-    <>
-      <Steps
-        current={1}
-        items={[
-          {
-            title: t('checkout.chooseTicket'),
-          },
-          {
-            title: t('checkout.questionnaire'),
-            // subTitle: 'Left 00:00:08',
-          },
-          {
-            title: t('checkout.payment'),
-          },
-        ]}
-      />
-    </>
+  const steps = [
+    {
+      title: t('checkout.chooseTicket'),
+    },
+    {
+      title: t('checkout.questionnaire'),
+    },
+    {
+      title: t('checkout.payment'),
+    },
+  ].slice(0, totalSteps);
+
+  return (
+    <Container>
+      <StepsWrapper>
+        {isDesktop ? (
+          <Steps
+            current={currentStep - 1}
+            items={steps}
+          />
+        ) : (
+          <MobileSteps
+            current={currentStep - 1}
+            items={steps}
+          />
+        )}
+      </StepsWrapper>
+    </Container>
   );
-
-  const mobileAndTabletLayout = <></>;
-
-  return <>{isDesktop ? desktopLayout : mobileAndTabletLayout}</>;
 };
+
 export default ProgressBar;
 
-const Steps = styled(BaseSteps)`
-  width: 50%;
-  font-family: Montserrat;
+const Container = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1.5rem 1rem;
+  background-color: rgb(39, 39, 42);
+`;
 
+const StepsWrapper = styled.div`
+  width: 100%;
+  max-width: 600px;
+`;
+
+const Steps = styled(BaseSteps)`
+  width: 100%;
+  
   && {
-    /* Process Step */
-    .ant-steps-item-process {
-      .ant-steps-item-container {
-        .ant-steps-item-content {
-          .ant-steps-item-title {
-            font-size: 14px;
-            color: ${BASE_COLORS.yellow};
+    .ant-steps-item {
+      &-icon {
+        width: 32px;
+        height: 32px;
+        line-height: 32px;
+        background: transparent;
+        border: 2px solid ${BASE_COLORS.white};
+        
+        .ant-steps-icon {
+          color: ${BASE_COLORS.white};
+          font-size: 14px;
+        }
+      }
+
+      &-title {
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      &-tail {
+        &::after {
+          background-color: rgba(255, 255, 255, 0.3) !important;
+          height: 2px;
+        }
+      }
+
+      /* Process Step */
+      &-process {
+        .ant-steps-item-icon {
+          background: ${BASE_COLORS.yellow};
+          border-color: ${BASE_COLORS.yellow};
+
+          .ant-steps-icon {
+            color: rgb(39, 39, 42);
           }
         }
-      }
 
-      > .ant-steps-item-container
-        > .ant-steps-item-content
-        > .ant-steps-item-title::after {
-        background-color: white;
-      }
-    }
-
-    /* Finish Step */
-    .ant-steps-item-finish {
-      .ant-steps-item-icon {
-        background: white;
-      }
-
-      > .ant-steps-item-container
-        > .ant-steps-item-content
-        > .ant-steps-item-title {
-        color: white;
-      }
-    }
-
-    /* Wait Step */
-    .ant-steps-item-wait {
-      .ant-steps-item-icon {
-        color: white;
-
-        > .ant-steps-icon {
-          color: white;
+        .ant-steps-item-title {
+          color: ${BASE_COLORS.yellow} !important;
         }
       }
 
-      > .ant-steps-item-container
-        > .ant-steps-item-content
-        > .ant-steps-item-title {
-        color: white;
+      /* Finished Step */
+      &-finish {
+        .ant-steps-item-icon {
+          background: ${BASE_COLORS.white};
+          border-color: ${BASE_COLORS.white};
+
+          .ant-steps-icon {
+            color: rgb(39, 39, 42);
+          }
+        }
+
+        .ant-steps-item-title {
+          color: ${BASE_COLORS.white} !important;
+        }
+
+        .ant-steps-item-tail::after {
+          background-color: ${BASE_COLORS.white} !important;
+        }
+      }
+
+      /* Waiting Step */
+      &-wait {
+        .ant-steps-item-icon {
+          border-color: rgba(255, 255, 255, 0.3);
+          
+          .ant-steps-icon {
+            color: rgba(255, 255, 255, 0.3);
+          }
+        }
+
+        .ant-steps-item-title {
+          color: rgba(255, 255, 255, 0.5) !important;
+        }
       }
     }
+  }
+`;
 
-    /* Common Styles */
-    .ant-steps-item-icon {
-      border-color: white;
+const MobileSteps = styled(Steps)`
+  && {
+    .ant-steps-item {
+      &-icon {
+        width: 28px;
+        height: 28px;
+        line-height: 28px;
+        
+        .ant-steps-icon {
+          font-size: 12px;
+        }
+      }
+
+      &-title {
+        font-size: 11px;
+        padding-inline-end: 8px;
+      }
     }
   }
 `;

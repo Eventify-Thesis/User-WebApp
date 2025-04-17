@@ -1,13 +1,16 @@
 import { Icon } from '@iconify/react/dist/iconify.js';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
+import dayjs from 'dayjs';
+import 'dayjs/locale/vi';
+import 'dayjs/locale/en';
 
 interface EventInfoProps {
   title: string;
   venue: string;
   address: string;
   date: string;
-  time: string;
 }
 
 export const EventInfo: React.FC<EventInfoProps> = ({
@@ -15,8 +18,12 @@ export const EventInfo: React.FC<EventInfoProps> = ({
   venue,
   address,
   date,
-  time,
 }) => {
+  const { t, i18n } = useTranslation();
+
+  const formattedDate = dayjs(date)
+    .locale(i18n.language)
+    .format('dddd, MMMM D, YYYY HH:mm');
   return (
     <EventInfoWrapper>
       <EventTitle>{title}</EventTitle>
@@ -28,7 +35,7 @@ export const EventInfo: React.FC<EventInfoProps> = ({
       <EventAddress>{address}</EventAddress>
       <EventDateTime>
         <Icon icon="lucide:calendar" width="17" height="17" />
-        <DateTimeText>{`${time}, ${date}`}</DateTimeText>
+        <DateTimeText>{formattedDate}</DateTimeText>
       </EventDateTime>
     </EventInfoWrapper>
   );

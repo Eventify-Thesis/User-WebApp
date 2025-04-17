@@ -16,7 +16,7 @@ export enum QuestionBelongsTo {
 }
 
 export interface QuestionModel {
-  id: string;
+  id: number;
   title: string;
   type: QuestionType;
   options?: string[];
@@ -26,5 +26,5 @@ export interface QuestionModel {
   eventId: number;
   belongsTo: QuestionBelongsTo;
   isHidden: boolean;
-  ticketTypeIds?: string[];
+  ticketTypeIds?: number[];
 }

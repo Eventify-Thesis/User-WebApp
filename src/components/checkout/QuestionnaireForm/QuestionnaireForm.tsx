@@ -3,15 +3,23 @@ import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import { useResponsive } from '@/hooks/useResponsive';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { FormSection } from './FormSection';
 import { TicketInfo } from './TicketInfo/TicketInfo';
+import { QuestionsTable } from './QuestionsTable';
+import { useGetEventQuestions } from '@/queries/useGetEventQuestions';
+import { IdParam } from '@/types/types';
+import { Spin } from 'antd';
 
-interface QuestionnaireFormProps {}
+interface QuestionnaireFormProps {
+  eventId: IdParam;
+}
 
-export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({}) => {
+export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
+  eventId,
+}) => {
   const { isTablet, isDesktop } = useResponsive();
-
   const { t } = useTranslation();
+
+  const { data: questions, isLoading } = useGetEventQuestions(eventId);
 
   const desktopLayout = (
     <BaseRow
@@ -22,7 +30,7 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({}) => {
       }}
     >
       <BaseCol xl={18} xxl={16}>
-        <FormSection />
+        <QuestionsTable questions={questions} />
       </BaseCol>
       <BaseCol xl={6} xxl={8}>
         <TicketInfo />
@@ -32,5 +40,15 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({}) => {
 
   const mobileAndTabletLayout = <div>Mobile and Tablet</div>;
 
-  return <>{isDesktop ? desktopLayout : mobileAndTabletLayout}</>;
+  return (
+    <>
+      {isLoading ? (
+        <Spin size="large" />
+      ) : isDesktop ? (
+        desktopLayout
+      ) : (
+        mobileAndTabletLayout
+      )}
+    </>
+  );
 };

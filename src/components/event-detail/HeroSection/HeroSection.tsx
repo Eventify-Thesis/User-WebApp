@@ -37,8 +37,6 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
     .locale(i18n.language)
     .format('dddd, MMMM D, YYYY HH:mm');
 
-  console.log('EVENT', event);
-
   // Get the minimum price of all ticket types
   const minPrice = event.shows?.reduce(
     (min: number, show: ShowModel) =>

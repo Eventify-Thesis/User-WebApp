@@ -6,13 +6,13 @@ export const getShapeStyles = (item: any, isSelected: boolean) => {
     fill: item.fill
       ? item.fill
       : isSelected
-      ? CONSTANTS.STYLE.SELECTED.FILL
-      : CONSTANTS.STYLE.DEFAULT.FILL,
+        ? CONSTANTS.STYLE.SELECTED.FILL
+        : CONSTANTS.STYLE.DEFAULT.FILL,
     stroke: item.stroke
       ? item.stroke
       : isSelected
-      ? CONSTANTS.STYLE.SELECTED.STROKE
-      : item.stroke || CONSTANTS.STYLE.DEFAULT.STROKE,
+        ? CONSTANTS.STYLE.SELECTED.STROKE
+        : item.stroke || CONSTANTS.STYLE.DEFAULT.STROKE,
     strokeWidth: isSelected ? 2 : 1,
   };
 };
@@ -26,8 +26,8 @@ export const getSeatStyles = (
   let strokeColor = CONSTANTS.STYLE.DEFAULT.STROKE;
 
   if (!isAvailable) {
-    fillColor = 'black';
-    strokeColor = 'black';
+    fillColor = CONSTANTS.STYLE.UNAVAILABLE.FILL;
+    strokeColor = CONSTANTS.STYLE.UNAVAILABLE.STROKE;
   } else if (isSelected) {
     fillColor = CONSTANTS.STYLE.SELECTED.FILL;
     strokeColor = CONSTANTS.STYLE.SELECTED.STROKE;

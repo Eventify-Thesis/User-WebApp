@@ -18,19 +18,6 @@ export const eventClient = {
     return response.data.data;
   },
 
-  create: async (eventData: Partial<EventModel>): Promise<EventModel> => {
-    const response = await httpApi.post<any>('/event', eventData);
-    return response.data.data;
-  },
-
-  update: async (
-    eventId: IdParam,
-    eventData: Partial<EventModel>,
-  ): Promise<EventModel> => {
-    const response = await httpApi.patch<any>(`/event/${eventId}`, eventData);
-    return response.data.data;
-  },
-
   getShowDetail: async (
     eventId: IdParam,
     showId: IdParam,
@@ -41,7 +28,9 @@ export const eventClient = {
     return response.data.data;
   },
 
-  remove: async (eventId: IdParam): Promise<void> => {
-    await httpApi.delete<any>(`/event/${eventId}`);
+  getEventQuestions: async (eventId: IdParam): Promise<any> => {
+    const response = await httpApi.get<any>(`/events/${eventId}/questions`);
+    return response.data.data.result;
   },
+
 };

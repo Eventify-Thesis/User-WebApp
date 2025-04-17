@@ -86,12 +86,7 @@ export const RowLayer: React.FC<RowLayerProps> = ({
                       x={seat.position.x}
                       y={seat.position.y}
                       radius={seat.radius || CONSTANTS.SEAT.RADIUS}
-                      {...getSeatStyles(
-                        seat,
-                        isSelected,
-                        isAvailable,
-                        seatingPlan.categories,
-                      )}
+                      {...getSeatStyles(seat, isSelected, isAvailable)}
                       onClick={() => handleSeatClick(seat)}
                       onTap={() => handleSeatClick(seat)}
                       // listening={isAvailable}

@@ -3,6 +3,9 @@ import { Typography, Space, Button, Row, Divider, theme } from 'antd';
 import { CalendarOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useNavigate } from 'react-router-dom';
+import { bookingClient, ItemInfo } from '@/api/booking.client';
+import { notification } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -22,7 +25,9 @@ interface SummaryPanelProps {
   totalPrice: number;
   onContinue: () => void;
   ticketTypes: TicketType[];
+  ticketTypesMapping: Record<string, any>;
   theme?: 'light' | 'dark';
+  id: number;
 }
 
 const SummaryPanel: React.FC<SummaryPanelProps> = ({
@@ -32,16 +37,15 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
   selectedTickets,
   selectedSeats,
   totalPrice,
-  onContinue,
   ticketTypes,
+  onContinue,
   theme: themeProp = 'light',
 }) => {
   const { isDesktop } = useResponsive();
   const { token } = theme.useToken();
+  const navigate = useNavigate();
 
   const [totalTickets, setTotalTickets] = useState(0);
-  console.log('selectedTickets', selectedTickets);
-  console.log('selectedSeats', selectedSeats);
 
   useEffect(() => {
     if (selectedTickets && selectedTickets.length > 0) {
@@ -128,7 +132,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         </Title>
 
         <Space direction="vertical" size="small" style={{ marginTop: 16 }}>
-          {location && (
+          {venueName && (
             <Space>
               <EnvironmentOutlined style={{ color: token.colorPrimary }} />
               <Text style={{ color: styles.textColor }}>{venueName}</Text>
