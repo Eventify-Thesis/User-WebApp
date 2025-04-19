@@ -3,15 +3,19 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-interface TicketSummaryProps {}
+interface TicketSummaryProps {
+  subtotalAmount: number;
+}
 
-export const TicketSummary: React.FC<TicketSummaryProps> = () => {
+export const TicketSummary: React.FC<TicketSummaryProps> = ({
+  subtotalAmount,
+}) => {
   const { t } = useTranslation();
   return (
     <SummaryWrapper>
       <TotalContainer>
         <TotalLabel>{t('checkout.temporaryCalculate')}</TotalLabel>
-        <TotalAmount>8.000.000 đ</TotalAmount>
+        <TotalAmount>{subtotalAmount} đ</TotalAmount>
       </TotalContainer>
       <InstructionContainer>
         <Instruction>{t('checkout.pleaseFill')}</Instruction>

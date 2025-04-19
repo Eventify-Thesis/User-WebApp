@@ -1,6 +1,19 @@
 {
-  "monthNames": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-  "searchBar":{
+  "monthNames": [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec"
+  ],
+  "searchBar": {
     "browseByCategory": "Browse by Category",
     "browseByLocation": "Browse by City",
     "music": "Music",
@@ -121,7 +134,12 @@
     "temporaryCalculate": "Temporary calculate",
     "ticketType": "Ticket type",
     "quantity": "Quantity",
-    "continue": "Continue"
+    "continue": "Continue",
+    "leaveConfirmation": "Leave Checkout?",
+    "leaveConfirmationDescription": "If you leave now, your booking will be cancelled and you'll need to select tickets again. Are you sure you want to leave?",
+    "ticketDetails": "Ticket details",
+    "resetConfirmation": "Reset Ticket Selection",
+    "resetConfirmationDescription": "Are you sure you want to reset your ticket selection? This will cancel your current booking and you'll need to select tickets again."
   },
   "alerts": {
     "accept": "Accept",
@@ -356,7 +374,10 @@
     "verifyEmailPage": "Verify email page",
     "warning": "Warning",
     "zipcode": "Zipcode",
-    "delete": "Delete"
+    "delete": "Delete",
+    "stay": "Stay",
+    "leave": "Leave",
+    "reset": "Reset"
   },
   "medical-dashboard": {
     "activity": {

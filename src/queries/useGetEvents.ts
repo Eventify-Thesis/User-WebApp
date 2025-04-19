@@ -12,10 +12,3 @@ export const useGetEvents = () => {
   });
 };
 
-export const useGetEventById = (eventId: number) => {
-  return useQuery<EventModel>({
-    queryKey: ['event', eventId],
-    queryFn: () => eventClient.getById(eventId),
-    enabled: !!eventId,
-  });
-};

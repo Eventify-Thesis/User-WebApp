@@ -7,10 +7,15 @@ import { useLanguage } from '@/hooks/useLanguage';
 
 interface EventDetailsProps {
   event: EventDetailResponse;
+  expireIn?: number;
 }
 
-export const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
+export const EventDetails: React.FC<EventDetailsProps> = ({
+  event,
+  expireIn,
+}) => {
   const language = useLanguage();
+
   return (
     <EventWrapper>
       <ContentContainer>
@@ -24,7 +29,9 @@ export const EventDetails: React.FC<EventDetailsProps> = ({ event }) => {
           }
           date={event.startTime}
         />
-        <CountdownTimer />
+        {typeof expireIn === 'number' && expireIn > 0 && (
+          <CountdownTimer expireIn={expireIn} />
+        )}
       </ContentContainer>
     </EventWrapper>
   );

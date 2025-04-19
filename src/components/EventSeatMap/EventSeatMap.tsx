@@ -1,6 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Layout, Spin, Button, Space } from 'antd';
-import { ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import {
+  ReloadOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons';
 import Canvas from './components/Canvas';
 import './EventSeatMap.css';
 import { useGetSeatingPlanDetail } from '@/queries/useSeatingPlanQueries';
@@ -117,6 +121,11 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
                 icon={<ZoomInOutlined />}
                 onClick={() => handleZoom(0.1)}
                 title="Zoom In"
+              />
+              <Button
+                icon={<ReloadOutlined />}
+                onClick={() => setSelectedSeats([])}
+                title="Reset Selected Seats"
               />
               <Button
                 icon={<ZoomOutOutlined />}

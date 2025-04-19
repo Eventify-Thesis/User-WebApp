@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { useResponsive } from '@/hooks/useResponsive';
 import { useNavigate, useParams } from 'react-router-dom';
+import { saveBookingCode } from '@/services/localStorage.service';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
 import { notification, Space, Spin } from 'antd';
 import { TicketCard, SummaryPanel, Header } from '@/components/select-ticket';
@@ -112,14 +113,6 @@ const EventSelectTicketPage: React.FC = () => {
         throw new Error('No tickets or seats selected');
       }
 
-      console.log('Submitting ticket info:', {
-        eventId: event?.id,
-        showId: show?.id,
-        timestamp: Date.now(),
-        platform: 'web',
-        items: ticketItems,
-      });
-
       const response = await submitTicketInfo({
         eventId: event?.id,
         showId: show?.id,
@@ -127,6 +120,10 @@ const EventSelectTicketPage: React.FC = () => {
         platform: 'web',
         items: ticketItems,
       });
+
+      if (response.data?.code) {
+        saveBookingCode(show?.id, response.data.code);
+      }
 
       navigate(`/events/${event?.id}/bookings/${show?.id}/form-answers`);
     } catch (error) {

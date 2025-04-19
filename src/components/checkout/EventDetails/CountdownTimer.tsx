@@ -1,12 +1,43 @@
 import { useResponsive } from '@/hooks/useResponsive';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import styled from 'styled-components';
 
-export const CountdownTimer: React.FC = () => {
-  const { isTablet, isDesktop } = useResponsive();
+interface CountdownTimerProps {
+  expireIn?: number;
+}
 
+export const CountdownTimer: React.FC<CountdownTimerProps> = ({
+  expireIn = 0,
+}) => {
+  const { isTablet, isDesktop } = useResponsive();
   const { t } = useTranslation();
+  const [timeLeft, setTimeLeft] = useState(expireIn);
+
+  useEffect(() => {
+    if (expireIn > 0) {
+      setTimeLeft(expireIn);
+    }
+  }, [expireIn]);
+
+  useEffect(() => {
+    if (timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const minutes = Math.floor(timeLeft / 60);
+  const seconds = timeLeft % 60;
 
   return (
     <TimerWrapper>
@@ -14,10 +45,10 @@ export const CountdownTimer: React.FC = () => {
         <TimerLabel>{t('checkout.finishOrderIn')}</TimerLabel>
         <TimerDisplay>
           <TimeUnit>
-            <TimeValue>14</TimeValue>
+            <TimeValue>{String(minutes).padStart(2, '0')}</TimeValue>
             <Separator>:</Separator>
           </TimeUnit>
-          <TimeValue>34</TimeValue>
+          <TimeValue>{String(seconds).padStart(2, '0')}</TimeValue>
         </TimerDisplay>
       </TimerContainer>
     </TimerWrapper>
@@ -48,66 +79,34 @@ const TimerContainer = styled.div`
 `;
 
 const TimerLabel = styled.div`
-  width: 100%;
-  font-size: 14px;
-  font-weight: 400;
+  color: #fff;
   text-align: center;
-  line-height: 16px;
-  padding: 0 24px;
-  @media (max-width: 991px) {
-    padding: 0 20px;
-  }
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 8px;
 `;
 
 const TimerDisplay = styled.div`
   display: flex;
-  margin-top: 20px;
-  width: 100%;
-  align-items: center;
-  font-weight: 700;
-  white-space: nowrap;
-  line-height: 1;
   justify-content: center;
-  padding: 0 18px;
-  @media (max-width: 991px) {
-    white-space: initial;
-  }
+  align-items: center;
+  gap: 4px;
 `;
 
 const TimeUnit = styled.div`
-  align-self: stretch;
   display: flex;
   align-items: center;
-  justify-content: center;
-  margin: auto 0;
-  @media (max-width: 991px) {
-    white-space: initial;
-  }
 `;
 
-const TimeValue = styled.div`
-  align-self: stretch;
-  border-radius: 20px;
-  background-color: #2dc275;
-  min-height: 64px;
-  font-size: 21px;
-  width: 64px;
-  height: 64px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: auto 0;
-  @media (max-width: 991px) {
-    white-space: initial;
-  }
+const TimeValue = styled.span`
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
 `;
 
-const Separator = styled.div`
-  align-self: stretch;
-  font-size: 25px;
-  margin: auto 0;
-  padding: 0 8px;
-  @media (max-width: 991px) {
-    white-space: initial;
-  }
+const Separator = styled.span`
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0 2px;
 `;
