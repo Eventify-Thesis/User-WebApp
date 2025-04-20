@@ -2,28 +2,42 @@ import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router';
 import { SearchDropdown } from '../searchDropdown/SearchDropdown';
 import { BaseButton } from '@/components/common/BaseButton/BaseButton';
-import {
-  components as configComponents,
-  Component,
-} from '@/constants/config/components';
-import { categoriesList, CategoryType } from '@/constants/categoriesList';
 import { useResponsive } from '@/hooks/useResponsive';
+import { useSearchSemanticEvents } from '@/queries/useSearchSemanticEvents';
+import { useNavigate } from 'react-router-dom';
 import * as S from './HeaderSearch.styles';
-
-export interface CategoryComponents {
-  category: CategoryType;
-  components: Component[];
-}
 
 export const HeaderSearch: React.FC = () => {
   const { mobileOnly, isTablet } = useResponsive();
-
   const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const [query, setQuery] = useState('');
-
   const [isModalOpen, setModalOpen] = useState(false);
+  const [triggerSearch, setTriggerSearch] = useState(false);
 
+  const {
+    data: searchResults,
+    isLoading,
+    refetch,
+  } = useSearchSemanticEvents(query, 4);
+
+  const handleSearch = (text: string) => {
+    setQuery(text);
+    setTriggerSearch(true);
+    if (text.trim()) {
+      navigate(`/search-result?query=${encodeURIComponent(text.trim())}`);
+    }
+  };
+
+  useEffect(() => {
+    if (triggerSearch && query) {
+      refetch();
+      setTriggerSearch(false);
+    }
+  }, [triggerSearch, query, refetch]);
+
+  // Close modal on route change
   useEffect(() => {
     setModalOpen(false);
   }, [pathname]);
@@ -38,7 +52,6 @@ export const HeaderSearch: React.FC = () => {
           />
           <S.SearchModal
             open={isModalOpen}
-            closable={false}
             footer={null}
             onCancel={() => setModalOpen(false)}
             destroyOnClose
@@ -47,6 +60,9 @@ export const HeaderSearch: React.FC = () => {
             <SearchDropdown
               query={query}
               setQuery={setQuery}
+              onSearch={handleSearch}
+              isModalOpen={isModalOpen}
+              setModalOpen={setModalOpen}
             />
           </S.SearchModal>
         </>
@@ -56,6 +72,7 @@ export const HeaderSearch: React.FC = () => {
         <SearchDropdown
           query={query}
           setQuery={setQuery}
+          onSearch={handleSearch}
         />
       )}
     </>
