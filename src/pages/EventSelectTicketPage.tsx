@@ -2,12 +2,15 @@ import React, { useState, useMemo, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { useResponsive } from '@/hooks/useResponsive';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { saveBookingCode } from '@/services/localStorage.service';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
-import { Space, Spin } from 'antd';
+import { notification, Space, Spin } from 'antd';
 import { TicketCard, SummaryPanel, Header } from '@/components/select-ticket';
 import { useGetEventDetail } from '@/queries/useGetEventDetail';
 import EventSeatMap from '@/components/EventSeatMap/EventSeatMap';
+import { useBookingMutations } from '@/mutations/useBookingMutations';
+import { ItemInfo } from '@/api/booking.client';
 
 interface TicketSelection {
   id: number;
@@ -19,30 +22,27 @@ interface TicketSelection {
 const EventSelectTicketPage: React.FC = () => {
   const { eventId, showId } = useParams();
   const { data: event, isLoading: isLoadingEvent } = useGetEventDetail(eventId);
-  console.log('event', event);
-
   const { data: show, isLoading: isLoadingShow } = useGetEventShowDetail(
     eventId,
     showId,
   );
   const { t } = useTranslation();
   const { isDesktop } = useResponsive();
+  const navigate = useNavigate();
+  const { submitTicketInfo } = useBookingMutations();
 
   const [selectedTickets, setSelectedTickets] = useState<TicketSelection[]>([]);
   const [selectedSeats, setSelectedSeats] = useState<any[]>([]);
-  const [ticketTypesMapping, setTicketTypesMapping] = useState<any[]>([]);
+  const [ticketTypesMapping, setTicketTypesMapping] = useState<
+    Record<string, any>
+  >({});
+
   const totalPrice = useMemo(() => {
     if (show?.seatingPlanId) {
-      if (ticketTypesMapping.length > 0) {
-        console.log('tic', ticketTypesMapping, selectedSeats);
+      if (ticketTypesMapping) {
         return selectedSeats.reduce(
           (acc, seat) =>
-            acc +
-            parseFloat(
-              ticketTypesMapping.find((t) =>
-                t.categories.includes(seat.category),
-              )!.price,
-            ),
+            acc + parseFloat(ticketTypesMapping[seat.category]?.price || '0'),
           0,
         );
       } else {
@@ -55,7 +55,6 @@ const EventSelectTicketPage: React.FC = () => {
       0,
     );
   }, [selectedTickets, selectedSeats, show]);
-
   const handleTicketQuantityChange = (ticketId: number, quantity: number) => {
     const ticket = show?.ticketTypes.find((t) => t.id === ticketId);
     if (!ticket) return;
@@ -81,14 +80,63 @@ const EventSelectTicketPage: React.FC = () => {
     });
   };
 
-  const handleContinue = () => {
-    // Handle continue action
-    console.log('Continue with selection:', {
-      selectedTickets,
-      selectedSeats,
-      totalPrice,
-    });
-  };
+  const handleContinue = useCallback(async () => {
+    try {
+      let ticketItems: ItemInfo[] = [];
+
+      if (selectedTickets && selectedTickets.length > 0) {
+        ticketItems = selectedTickets.map((ticket) => ({
+          id: ticket.id,
+          quantity: ticket.quantity,
+        }));
+      } else if (selectedSeats && selectedSeats.length > 0) {
+        // Group seats by ticket type
+        const seatsByTicketType = selectedSeats.reduce((acc, seat) => {
+          const ticketType = ticketTypesMapping[seat.category];
+          if (!acc[ticketType.id]) {
+            acc[ticketType.id] = {
+              id: ticketType.id,
+              quantity: 0,
+              seats: [],
+            };
+          }
+          acc[ticketType.id].quantity += 1;
+          acc[ticketType.id].seats.push({
+            id: seat.uuid, // Ensure seat id is present
+            quantity: 1,
+          });
+          return acc;
+        }, {});
+
+        ticketItems = Object.values(seatsByTicketType);
+      } else {
+        throw new Error('No tickets or seats selected');
+      }
+
+      const response = await submitTicketInfo({
+        eventId: event?.id,
+        showId: show?.id,
+        timestamp: Date.now(),
+        platform: 'web',
+        items: ticketItems,
+      });
+
+      if (!response.data?.error) {
+        saveBookingCode(show?.id, response.data.code);
+        navigate(`/events/${event?.id}/bookings/${show?.id}/question-form`);
+      } else if (response.data?.error) {
+        notification.error({
+          message: 'Seat already reserved',
+          description: response.data?.error,
+        });
+      }
+    } catch (error) {
+      notification.error({
+        message: 'Error',
+        description: 'Failed to process your booking. Please try again.',
+      });
+    }
+  }, [event, show, selectedTickets, selectedSeats, ticketTypesMapping]);
 
   return (
     <div
@@ -163,6 +211,7 @@ const EventSelectTicketPage: React.FC = () => {
                 onContinue={handleContinue}
                 hasSeatingPlan={!!show.seatingPlanId}
                 ticketTypes={show.ticketTypes}
+                ticketTypesMapping={ticketTypesMapping}
                 theme="dark"
               />
             </div>
@@ -178,6 +227,7 @@ const EventSelectTicketPage: React.FC = () => {
               onContinue={handleContinue}
               hasSeatingPlan={!!show.seatingPlanId}
               ticketTypes={show.ticketTypes}
+              ticketTypesMapping={ticketTypesMapping}
               theme="dark"
             />
           )}

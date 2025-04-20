@@ -16,10 +16,8 @@ const EventDetailPage: React.FC = () => {
   const { slug } = useParams();
 
   const eventId = slug?.split('-')?.[slug?.split('-')?.length - 1];
-  console.log(eventId);
 
   const { data: event } = useGetEventDetail(eventId);
-  console.log(event);
   const { isTablet, isDesktop } = useResponsive();
 
   const { t } = useTranslation();

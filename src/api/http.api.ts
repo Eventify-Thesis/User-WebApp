@@ -5,15 +5,21 @@ import { readToken } from '@/services/localStorage.service';
 
 export const httpApi = axios.create({
   baseURL: `${import.meta.env.VITE_API_BASE_URL}`,
-  // withCredentials: true,
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  },
 });
 
 httpApi.interceptors.request.use((config) => {
-  config.headers = {
-    ...config.headers,
-    Authorization: `Bearer ${readToken()}`,
-  };
-
+  const token = readToken();
+  if (token) {
+    config.headers = {
+      ...config.headers,
+      Authorization: `Bearer ${token}`,
+    };
+  }
   return config;
 });
 

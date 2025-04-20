@@ -1,6 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Layout, Spin, Button, Space } from 'antd';
-import { ZoomInOutlined, ZoomOutOutlined } from '@ant-design/icons';
+import {
+  ReloadOutlined,
+  ZoomInOutlined,
+  ZoomOutOutlined,
+} from '@ant-design/icons';
 import Canvas from './components/Canvas';
 import './EventSeatMap.css';
 import { useGetSeatingPlanDetail } from '@/queries/useSeatingPlanQueries';
@@ -23,7 +27,7 @@ interface EventSeatMapProps {
   showId: number;
   selectedSeats: any[];
   setSelectedSeats: (seats: any[]) => void;
-  setTicketTypesMapping: (ticketTypes: any[]) => void;
+  setTicketTypesMapping: (ticketTypes: Record<string, any>) => void;
 }
 
 const EventSeatMap: React.FC<EventSeatMapProps> = ({
@@ -64,7 +68,15 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
             data.available_seats.map((seat) => seat.id),
           );
           setAvailableSeats(availableSeatIds);
-          setTicketTypesMapping(data.ticket_types);
+          let ticketTypesMapping: Record<string, any> = {};
+
+          for (const ticketType of data.ticket_types) {
+            for (const category of ticketType.categories) {
+              ticketTypesMapping[category] = ticketType;
+            }
+          }
+
+          setTicketTypesMapping(ticketTypesMapping);
         } catch (error) {
           console.error('Error parsing SSE data:', error);
         }
@@ -89,6 +101,7 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
   };
 
   const handleSeatSelect = (seat: any) => {
+    if (!availableSeats?.has(seat.uuid)) return;
     setSelectedSeats((prev) => {
       if (prev.includes(seat)) {
         return prev.filter((s) => s !== seat);
@@ -97,7 +110,6 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
       }
     });
   };
-
   return (
     <Layout style={{ height: '100%', width: '100%' }}>
       {isLoadingPlan && !availableSeats ? (
@@ -110,6 +122,11 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
                 icon={<ZoomInOutlined />}
                 onClick={() => handleZoom(0.1)}
                 title="Zoom In"
+              />
+              <Button
+                icon={<ReloadOutlined />}
+                onClick={() => setSelectedSeats([])}
+                title="Reset Selected Seats"
               />
               <Button
                 icon={<ZoomOutOutlined />}

@@ -49,8 +49,11 @@ export const AppRouter: React.FC = () => {
             path="/events/:eventId/bookings/:showId/select-ticket"
             element={<EventSelectTicketPage />}
           />
+          <Route
+            path="/events/:eventId/bookings/:showId/:step"
+            element={<CheckoutPage />}
+          />
           <Route path=":slug" element={<EventDetailPage />} />
-          <Route path="checkout" element={<CheckoutPage />} />
         </Route>
 
         <Route path="/auth" element={<AuthLayoutFallback />}>

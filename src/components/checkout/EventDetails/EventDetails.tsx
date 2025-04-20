@@ -2,35 +2,36 @@ import React from 'react';
 import styled from 'styled-components';
 import { EventInfo } from './EventInfo';
 import { CountdownTimer } from './CountdownTimer';
+import { EventDetailResponse } from '@/domain/EventModel';
+import { useLanguage } from '@/hooks/useLanguage';
 
 interface EventDetailsProps {
-  title: string;
-  venue: string;
-  address: string;
-  date: string;
-  time: string;
-  eventImage: string;
+  event: EventDetailResponse;
+  expireIn?: number;
 }
 
 export const EventDetails: React.FC<EventDetailsProps> = ({
-  title,
-  venue,
-  address,
-  date,
-  time,
-  eventImage,
+  event,
+  expireIn,
 }) => {
+  const language = useLanguage();
+
   return (
     <EventWrapper>
       <ContentContainer>
         <EventInfo
-          title={title}
-          venue={venue}
-          address={address}
-          date={date}
-          time={time}
+          title={event.eventName}
+          venue={event.venueName}
+          address={
+            language === 'en'
+              ? event.address.addressEn
+              : event.address.addressVi
+          }
+          date={event.startTime}
         />
-        <CountdownTimer />
+        {typeof expireIn === 'number' && expireIn > 0 && (
+          <CountdownTimer expireIn={expireIn} />
+        )}
       </ContentContainer>
     </EventWrapper>
   );

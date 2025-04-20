@@ -12,13 +12,16 @@ export const CONSTANTS = {
   },
   STYLE: {
     SELECTED: {
-      FILL: 'rgba(100, 150, 255, 0.5)',
-      FILL_LIGHT: 'rgba(100, 150, 255, 0.3)',
-      STROKE: '#4444ff',
+      FILL: 'green',
+      STROKE: 'green'
     },
     DEFAULT: {
       FILL: '#FFFFFF',
       STROKE: '#CCCCCC',
+    },
+    UNAVAILABLE: {
+      FILL: 'red',
+      STROKE: '#999999',
     },
   },
 };
