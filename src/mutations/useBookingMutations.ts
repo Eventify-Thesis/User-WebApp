@@ -29,5 +29,6 @@ export const useBookingMutations = () => {
 
   return {
     submitTicketInfo: submitTicketInfoMutation.mutateAsync,
+    updateFormAnswer: updateFormAnswerMutation.mutateAsync,
   };
 }

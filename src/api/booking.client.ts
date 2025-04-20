@@ -28,8 +28,7 @@ export interface Question {
 }
 
 export interface Attendee {
-  ticket_price_id: number;
-  ticket_id: number;
+  id: number;
   first_name: string;
   last_name: string;
   email: string;
@@ -70,11 +69,11 @@ export const bookingClient = {
 
   getAnswer: async (showId: number, bookingCode: string) => {
     const response = await httpApi.get(`/bookings/answers?showId=${showId}&bookingCode=${bookingCode}`);
-    return response.data;
+    return response.data.data;
   },
 
   updateAnswers: async (showId: number, bookingCode: string, answers: any) => {
     const response = await httpApi.put(`/bookings/answers?showId=${showId}&bookingCode=${bookingCode}`, answers);
-    return response.data;
+    return response.data.data;
   }
 };

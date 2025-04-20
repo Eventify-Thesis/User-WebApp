@@ -16,6 +16,7 @@ import { InputGroup } from '../InputGroup';
 import classes from './CheckoutQuestion.module.scss';
 import { QuestionModel } from '@/domain/QuestionModel';
 import { UserGeneratedContent } from '../UserGeneratedContent';
+import { TicketTypeModel } from '@/domain/TicketTypeModel';
 
 interface CheckoutQuestionProps {
   questions: QuestionModel[];
@@ -31,7 +32,7 @@ interface QuestionInputProps {
 interface CheckoutTicketQuestionProps {
   questions: QuestionModel[];
   form: UseFormReturnType<any, any>;
-  ticket: Ticket;
+  ticket: TicketTypeModel;
   index: number;
 }
 

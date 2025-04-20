@@ -1,82 +1,349 @@
 import { useResponsive } from '@/hooks/useResponsive';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { QuestionsTable } from './QuestionsTable';
 import { useGetEventQuestions } from '@/queries/useGetEventQuestions';
-import { IdParam } from '@/types/types';
 import { Spin } from 'antd';
-import styled from 'styled-components';
 import { useGetFormAnswers } from '@/queries/useGetFormAnswers';
+import { useForm } from '@mantine/form';
+import { useNavigate } from 'react-router-dom';
+import { QuestionModel } from '@/domain/QuestionModel';
+import { Button, TextInput } from '@mantine/core';
+import { Card } from './Card';
+import { InputGroup } from './InputGroup';
+import {
+  CheckoutOrderQuestions,
+  CheckoutTicketQuestions,
+} from './CheckoutQuestion';
+import { CheckoutContent } from './CheckoutContent';
+import { CopyOutlined } from '@ant-design/icons';
+import { TicketTypeModel } from '@/domain/TicketTypeModel';
 
 interface QuestionnaireFormProps {
-  eventId: IdParam;
-  showId: IdParam;
+  eventId: number;
+  showId: number;
   bookingCode: string;
+  ticketTypes: TicketTypeModel[];
+  orderItems: any[];
 }
 
 export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
   eventId,
   showId,
   bookingCode,
+  ticketTypes,
+  orderItems,
 }) => {
   const { isTablet, isDesktop } = useResponsive();
   const { t } = useTranslation();
 
-  const { data: questions, isLoading } = useGetEventQuestions(eventId);
-  const { data: formAnswers, isLoading: isFormAnswersLoading } =
-    useGetFormAnswers(showId, bookingCode);
+  const {
+    data: questions,
+    isLoading: isQuestionsLoading,
+    isFetched: isQuestionsError,
+  } = useGetEventQuestions(eventId);
+  const {
+    data: formAnswers,
+    isLoading: isFormAnswersLoading,
+    isFetched: isFormAnswersError,
+  } = useGetFormAnswers(showId!, bookingCode);
 
-  const questionsWithAnswers = React.useMemo(() => {
-    if (!questions || !formAnswers) return [];
+  const navigate = useNavigate();
+  const ticketQuestions = questions?.filter(
+    (question) => question.belongsTo === 'TICKET',
+  );
+  const orderQuestions = questions?.filter(
+    (question) => question.belongsTo === 'ORDER',
+  );
+  let attendeeIndex = 0;
 
-    return questions.map((question) => {
-      // Find answer in order questions
-      const orderAnswer = formAnswers.order.questions.find(
-        (q) => q.question_id === question.id,
-      );
+  const form = useForm({
+    initialValues: {
+      order: {
+        first_name: '',
+        last_name: '',
+        email: '',
+        address: {},
+        questions: {},
+      },
+      attendees: [
+        {
+          first_name: '',
+          last_name: '',
+          email: '',
+          ticket_price_id: '',
+          ticket_id: '',
+          questions: {},
+        },
+      ],
+    },
+  });
 
-      // Find answer in attendees questions (taking the first match)
-      const attendeeAnswer = formAnswers.attendees
-        ?.find((attendee) =>
-          attendee.questions.some((q) => q.question_id === question.id),
-        )
-        ?.questions.find((q) => q.question_id === question.id);
-
-      const answer = orderAnswer || attendeeAnswer;
-
+  const copyDetailsToAllAttendees = () => {
+    const updatedAttendees = form.values.attendees.map((attendee) => {
       return {
-        ...question,
-        answer: answer?.response?.answer || '',
+        ...attendee,
+        first_name: form.values.order.first_name,
+        last_name: form.values.order.last_name,
+        email: form.values.order.email,
       };
     });
-  }, [questions, formAnswers]);
 
-  const desktopLayout = (
-    <FormContainer>
-      {isFormAnswersLoading ? (
-        <Spin size="large" />
-      ) : (
-        <QuestionsTable questions={questionsWithAnswers} />
-      )}
-    </FormContainer>
-  );
+    form.setValues({
+      ...form.values,
+      attendees: updatedAttendees,
+    });
+  };
 
-  const mobileAndTabletLayout = <div>Mobile and Tablet</div>;
+  const createTicketIdToQuestionMap = () => {
+    const ticketIdToQuestionMap = new Map();
 
+    ticketQuestions?.forEach((question) => {
+      question.ticket_ids?.forEach((id) => {
+        const existingQuestions = ticketIdToQuestionMap.get(id);
+        ticketIdToQuestionMap.set(
+          id,
+          existingQuestions ? [...existingQuestions, question] : [question],
+        );
+      });
+    });
+
+    return ticketIdToQuestionMap;
+  };
+
+  const createAttendeesAndQuestions = (
+    ticketIdToQuestionMap: Map<number, QuestionModel[]>,
+  ) => {
+    const attendees: any = [];
+
+    orderItems?.forEach((orderItem) => {
+      Array.from(Array(orderItem?.quantity)).map(() => {
+        attendees.push({
+          ticket_price_id: orderItem?.ticket_price_id,
+          ticket_id: orderItem?.ticket_id,
+          first_name: '',
+          last_name: '',
+          email: '',
+          questions: ticketIdToQuestionMap
+            .get(orderItem?.ticket_id)
+            ?.map((question: Question) => {
+              return {
+                question_id: question.id,
+                response: {},
+              };
+            }),
+        });
+      });
+    });
+
+    return attendees;
+  };
+
+  const createFormOrderQuestions = () => {
+    const formOrderQuestions: any = [];
+
+    orderQuestions?.forEach((orderQuestion) => {
+      formOrderQuestions.push({
+        question_id: orderQuestion.id,
+        response: {},
+      });
+    });
+
+    return formOrderQuestions;
+  };
+
+  useEffect(() => {
+    if (
+      !isQuestionsLoading &&
+      !isFormAnswersLoading &&
+      ticketQuestions &&
+      orderQuestions
+    ) {
+      const attendees = createAttendeesAndQuestions(
+        createTicketIdToQuestionMap(),
+      );
+      const formOrderQuestions = createFormOrderQuestions();
+
+      form.setValues({
+        ...form.values,
+        attendees: attendees,
+        order: {
+          ...form.values.order,
+          questions: formOrderQuestions,
+        },
+      });
+    }
+  }, [isQuestionsLoading, isFormAnswersLoading, isQuestionsError]);
+
+  if (isQuestionsLoading || isFormAnswersLoading) {
+    return <Spin />;
+  }
+
+  // if (order?.payment_status === 'AWAITING_PAYMENT') {
+  //   return (
+  //     <HomepageInfoMessage
+  //       message={t`This order is awaiting payment`}
+  //       link={eventCheckoutPath(eventId, orderShortId, 'payment')}
+  //       linkText={t`Complete payment`}
+  //     />
+  //   );
+  // }
+
+  // if (order?.status === 'COMPLETED') {
+  //   return (
+  //     <HomepageInfoMessage
+  //       message={t`This order is complete`}
+  //       link={eventCheckoutPath(eventId, orderShortId, 'summary')}
+  //       linkText={t`View order details`}
+  //     />
+  //   );
+  // }
+
+  // if (order?.status === 'CANCELLED') {
+  //   return (
+  //     <HomepageInfoMessage
+  //       message={t`This order has been cancelled`}
+  //       link={eventHomepagePath(event as Event)}
+  //       linkText={t`Go to event homepage`}
+  //     />
+  //   );
+  // }
+
+  // if (order?.is_expired) {
+  //   navigate(`/event/${eventId}/${eventSlug}`);
+  // }
+
+  // if (isOrderError && orderError?.response?.status === 404) {
+  //   return (
+  //     <>
+  //       <HomepageInfoMessage
+  //         message={t`Sorry, this order no longer exists.`}
+  //         link={eventHomepagePath(event as Event)}
+  //         linkText={t`Back to event page`}
+  //       />
+  //     </>
+  //   );
+  // }
+
+  // if (isOrderError || isEventError || isQuestionsError) {
+  //   return (
+  //     <>
+  //       <HomepageInfoMessage
+  //         message={t`Sorry, something went wrong loading this page.`}
+  //         link={eventHomepagePath(event as Event)}
+  //         linkText={t`Back to event page`}
+  //       />
+  //     </>
+  //   );
+  // }
   return (
-    <>
-      {isLoading ? (
-        <Spin size="large" />
-      ) : isDesktop ? (
-        desktopLayout
-      ) : (
-        mobileAndTabletLayout
-      )}
-    </>
+    <form style={{ width: '100%' }}>
+      <CheckoutContent>
+        <Card>
+          <InputGroup>
+            <TextInput
+              withAsterisk
+              label={t`First Name`}
+              placeholder={t`First name`}
+              {...form.getInputProps('order.first_name')}
+            />
+            <TextInput
+              withAsterisk
+              label={t`Last Name`}
+              placeholder={t`Last Name`}
+              {...form.getInputProps('order.last_name')}
+            />
+          </InputGroup>
+
+          <TextInput
+            withAsterisk
+            type={'email'}
+            label={t`Email Address`}
+            placeholder={t`Email Address`}
+            {...form.getInputProps('order.email')}
+            value={formAnswers?.order?.email || ''}
+          />
+
+          {orderQuestions && (
+            <CheckoutOrderQuestions form={form} questions={orderQuestions} />
+          )}
+
+          <Button
+            p={0}
+            ml={0}
+            size={'sm'}
+            variant={'transparent'}
+            leftSection={<CopyOutlined />}
+            onClick={copyDetailsToAllAttendees}
+          >
+            {t`Copy details to all attendees`}
+          </Button>
+        </Card>
+
+        {orderItems?.map((orderItem) => {
+          const ticket = ticketTypes?.find(
+            (ticket) => ticket.id === orderItem.id,
+          );
+
+          if (!ticket) {
+            return;
+          }
+
+          return (
+            <div key={orderItem.ticket_id + orderItem.id}>
+              <h3>{orderItem?.item_name}</h3>
+              {Array.from(Array(orderItem?.quantity)).map((_, index) => {
+                const attendeeInputs = (
+                  <Card key={`${orderItem.id} ${index}`}>
+                    <h4 style={{ marginTop: 0 }}>
+                      {t`Attendee`} {index + 1} {t`Details`}
+                    </h4>
+                    <InputGroup>
+                      <TextInput
+                        withAsterisk
+                        label={t`First Name`}
+                        placeholder={t`First name`}
+                        {...form.getInputProps(
+                          `attendees.${attendeeIndex}.first_name`,
+                        )}
+                      />
+                      <TextInput
+                        withAsterisk
+                        label={t`Last Name`}
+                        placeholder={t`Last Name`}
+                        {...form.getInputProps(
+                          `attendees.${attendeeIndex}.last_name`,
+                        )}
+                      />
+                    </InputGroup>
+
+                    <TextInput
+                      withAsterisk
+                      label={t`Email Address`}
+                      placeholder={t`Email Address`}
+                      {...form.getInputProps(
+                        `attendees.${attendeeIndex}.email`,
+                      )}
+                    />
+
+                    {ticketQuestions && (
+                      <CheckoutTicketQuestions
+                        index={attendeeIndex}
+                        ticket={ticket}
+                        form={form}
+                        questions={ticketQuestions}
+                      />
+                    )}
+                  </Card>
+                );
+
+                attendeeIndex++;
+
+                return attendeeInputs;
+              })}
+            </div>
+          );
+        })}
+      </CheckoutContent>
+    </form>
   );
 };
-
-const FormContainer = styled.div`
-  width: 100%;
-  min-width: 600px;
-`;

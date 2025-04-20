@@ -7,12 +7,16 @@ import { ContinueButton } from './ContinueButton';
 import BookingModel from '@/domain/BookingModel';
 
 interface TicketInfoProps {
+  showId: number;
+  bookingCode: string;
   bookingStatus: BookingModel;
   currentStep?: string;
   onContinue?: () => void;
 }
 
 export const TicketInfo: React.FC<TicketInfoProps> = ({
+  showId,
+  bookingCode,
   bookingStatus,
   currentStep,
 }) => {
@@ -26,7 +30,9 @@ export const TicketInfo: React.FC<TicketInfoProps> = ({
         discountAmount={bookingStatus.discountAmount}
         platformDiscountAmount={bookingStatus.platformDiscountAmount}
       />
-      {currentStep && <ContinueButton />}
+      {currentStep === 'question-form' && (
+        <ContinueButton showId={showId} bookingCode={bookingCode} />
+      )}
     </TicketInfoWrapper>
   );
 };

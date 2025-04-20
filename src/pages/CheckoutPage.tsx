@@ -138,7 +138,9 @@ const CheckoutPage: React.FC = () => {
             <QuestionnaireForm
               eventId={eventId}
               showId={showId}
+              ticketTypes={show.ticketTypes}
               bookingCode={bookingCode}
+              orderItems={bookingStatus?.result?.items}
             />
           </QuestionnaireRow>
         );
@@ -169,7 +171,12 @@ const CheckoutPage: React.FC = () => {
         <MainContent>{renderStepContent()}</MainContent>
         <SideContent>
           {bookingStatus?.result && (
-            <TicketInfo bookingStatus={bookingStatus.result} />
+            <TicketInfo
+              showId={showId}
+              bookingCode={bookingCode}
+              bookingStatus={bookingStatus.result}
+              currentStep={step}
+            />
           )}
         </SideContent>
       </CheckoutContainer>
