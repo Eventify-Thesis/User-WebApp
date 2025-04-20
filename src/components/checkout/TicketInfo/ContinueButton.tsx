@@ -5,34 +5,32 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 interface ContinueButtonProps {
-  showId: number;
   bookingCode: string;
+  isLoading: boolean;
+  onSubmit?: () => void;
 }
 
 export const ContinueButton: React.FC<ContinueButtonProps> = ({
-  showId,
   bookingCode,
+  isLoading,
+  onSubmit,
 }) => {
-  const navigate = useNavigate();
-  const { updateFormAnswer } = useBookingMutations();
   const { t } = useTranslation();
 
   const handleContinue = async () => {
-    try {
-      await updateFormAnswer({
-        showId: showId!,
-        bookingCode: bookingCode!,
-        data: answers,
-      });
-      // navigate('payment-info');
-    } catch (error) {
-      // Error is handled by the mutation
+    if (onSubmit) {
+      onSubmit();
     }
   };
 
   return (
-    <Button type="primary" onClick={handleContinue} block>
-      {t('checkout.continue')}
+    <Button
+      type="primary"
+      onClick={handleContinue}
+      loading={isLoading}
+      style={{ width: '100%' }}
+    >
+      {t('Continue')}
     </Button>
   );
 };

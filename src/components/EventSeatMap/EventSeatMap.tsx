@@ -101,6 +101,7 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
   };
 
   const handleSeatSelect = (seat: any) => {
+    if (!availableSeats?.has(seat.uuid)) return;
     setSelectedSeats((prev) => {
       if (prev.includes(seat)) {
         return prev.filter((s) => s !== seat);

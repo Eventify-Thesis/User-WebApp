@@ -18,12 +18,37 @@ import { CheckoutContent } from './CheckoutContent';
 import { CopyOutlined } from '@ant-design/icons';
 import { TicketTypeModel } from '@/domain/TicketTypeModel';
 
+interface FormValues {
+  order: {
+    first_name: string;
+    last_name: string;
+    email: string;
+    address: Record<string, any>;
+    questions: Array<{
+      question_id: number;
+      response: Record<string, any>;
+    }>;
+  };
+  attendees: Array<{
+    first_name: string;
+    last_name: string;
+    email: string;
+    id: number;
+    questions: Array<{
+      question_id: number;
+      response: Record<string, any>;
+    }>;
+  }>;
+}
+
 interface QuestionnaireFormProps {
   eventId: number;
   showId: number;
   bookingCode: string;
   ticketTypes: TicketTypeModel[];
   orderItems: any[];
+  onSubmit: (values: any) => void;
+  onFormReady?: (form: ReturnType<typeof useForm<FormValues>>) => void;
 }
 
 export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
@@ -32,6 +57,8 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
   bookingCode,
   ticketTypes,
   orderItems,
+  onSubmit,
+  onFormReady,
 }) => {
   const { isTablet, isDesktop } = useResponsive();
   const { t } = useTranslation();
@@ -56,23 +83,22 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
   );
   let attendeeIndex = 0;
 
-  const form = useForm({
+  const form = useForm<FormValues>({
     initialValues: {
       order: {
         first_name: '',
         last_name: '',
         email: '',
         address: {},
-        questions: {},
+        questions: [],
       },
       attendees: [
         {
           first_name: '',
           last_name: '',
           email: '',
-          ticket_price_id: '',
-          ticket_id: '',
-          questions: {},
+          id: '',
+          questions: [],
         },
       ],
     },
@@ -118,14 +144,13 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
     orderItems?.forEach((orderItem) => {
       Array.from(Array(orderItem?.quantity)).map(() => {
         attendees.push({
-          ticket_price_id: orderItem?.ticket_price_id,
-          ticket_id: orderItem?.ticket_id,
+          id: orderItem?.id,
           first_name: '',
           last_name: '',
           email: '',
           questions: ticketIdToQuestionMap
-            .get(orderItem?.ticket_id)
-            ?.map((question: Question) => {
+            .get(orderItem?.id)
+            ?.map((question: QuestionModel) => {
               return {
                 question_id: question.id,
                 response: {},
@@ -163,16 +188,40 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
       );
       const formOrderQuestions = createFormOrderQuestions();
 
-      form.setValues({
-        ...form.values,
-        attendees: attendees,
-        order: {
-          ...form.values.order,
-          questions: formOrderQuestions,
-        },
-      });
+      // Initialize form with existing answers if available
+      if (formAnswers?.result) {
+        const { order, attendees: existingAttendees } = formAnswers.result;
+
+        form.setValues({
+          order: {
+            first_name: order?.first_name || '',
+            last_name: order?.last_name || '',
+            email: order?.email || '',
+            address: order?.address || {},
+            questions: order?.questions || formOrderQuestions,
+          },
+          attendees: attendees.map((attendee: any, index: number) => ({
+            ...attendee,
+            id: existingAttendees?.[index]?.id || '',
+            first_name: existingAttendees?.[index]?.first_name || '',
+            last_name: existingAttendees?.[index]?.last_name || '',
+            email: existingAttendees?.[index]?.email || '',
+            questions:
+              existingAttendees?.[index]?.questions || attendee.questions,
+          })),
+        });
+      } else {
+        form.setValues({
+          ...form.values,
+          attendees: attendees,
+          order: {
+            ...form.values.order,
+            questions: formOrderQuestions,
+          },
+        });
+      }
     }
-  }, [isQuestionsLoading, isFormAnswersLoading, isQuestionsError]);
+  }, [isQuestionsLoading, isFormAnswersLoading, isQuestionsError, formAnswers]);
 
   if (isQuestionsLoading || isFormAnswersLoading) {
     return <Spin />;
@@ -260,7 +309,6 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
             label={t`Email Address`}
             placeholder={t`Email Address`}
             {...form.getInputProps('order.email')}
-            value={formAnswers?.order?.email || ''}
           />
 
           {orderQuestions && (

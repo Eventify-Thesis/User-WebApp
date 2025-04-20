@@ -121,11 +121,15 @@ const EventSelectTicketPage: React.FC = () => {
         items: ticketItems,
       });
 
-      if (response.data?.code) {
+      if (!response.data?.error) {
         saveBookingCode(show?.id, response.data.code);
+        navigate(`/events/${event?.id}/bookings/${show?.id}/question-form`);
+      } else if (response.data?.error) {
+        notification.error({
+          message: 'Seat already reserved',
+          description: response.data?.error,
+        });
       }
-
-      navigate(`/events/${event?.id}/bookings/${show?.id}/form-answers`);
     } catch (error) {
       notification.error({
         message: 'Error',

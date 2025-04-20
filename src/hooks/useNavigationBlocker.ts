@@ -13,17 +13,22 @@ export function useNavigationBlocker() {
 
 
   const handleConfirmNavigationClick = useCallback(async () => {
+    setShowModal(false);
     const bookingCode = showId ? getBookingCode(showId) : null;
     if (bookingCode) {
       try {
         await bookingClient.cancelBooking(Number(showId), bookingCode);
+        // Clear booking code from localStorage after successful cancellation
+        localStorage.removeItem(`booking_code_${showId}`);
       } catch (error) {
         console.error('Failed to cancel booking:', error);
       }
     }
-    setShowModal(false);
-    // Navigate back to ticket selection page
-    navigate(`/events/${eventId}/bookings/${showId}/select-ticket`);
+    // Set confirmed navigation to true and navigate
+    setConfirmedNavigation(true);
+
+    console.log('herhehrhe hre s00')
+    navigate(`/events/${eventId}/bookings/${showId}/select-ticket`, { replace: true });
   }, [showId, eventId, navigate]);
 
   const handleCancelNavigationClick = useCallback(() => {

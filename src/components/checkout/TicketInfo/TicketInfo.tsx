@@ -10,8 +10,8 @@ interface TicketInfoProps {
   showId: number;
   bookingCode: string;
   bookingStatus: BookingModel;
-  currentStep?: string;
-  onContinue?: () => void;
+  currentStep: string;
+  onContinue?: () => Promise<void>;
 }
 
 export const TicketInfo: React.FC<TicketInfoProps> = ({
@@ -19,6 +19,7 @@ export const TicketInfo: React.FC<TicketInfoProps> = ({
   bookingCode,
   bookingStatus,
   currentStep,
+  onContinue,
 }) => {
   return (
     <TicketInfoWrapper>
@@ -27,11 +28,14 @@ export const TicketInfo: React.FC<TicketInfoProps> = ({
       <TicketSummary
         subtotalAmount={bookingStatus.subtotalAmount}
         totalAmount={bookingStatus.totalAmount}
-        discountAmount={bookingStatus.discountAmount}
         platformDiscountAmount={bookingStatus.platformDiscountAmount}
       />
       {currentStep === 'question-form' && (
-        <ContinueButton showId={showId} bookingCode={bookingCode} />
+        <ContinueButton
+          bookingCode={bookingCode}
+          isLoading={false}
+          onSubmit={onContinue}
+        />
       )}
     </TicketInfoWrapper>
   );

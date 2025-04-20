@@ -22,6 +22,8 @@ import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
 import { useGetBookingStatus } from '@/queries/useGetBookingStatus';
 import { getBookingCode } from '@/services/localStorage.service';
 import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
+import { useBookingMutations } from '@/mutations/useBookingMutations';
+import { useForm } from '@/components/checkout/QuestionnaireForm/useForm';
 
 enum CheckoutStep {
   QUESTION_FORM = 'question-form',
@@ -53,6 +55,12 @@ const CheckoutPage: React.FC = () => {
   );
   const { data: bookingStatus, isLoading: isLoadingBooking } =
     useGetBookingStatus(Number(showId), bookingCode);
+
+  const { updateFormAnswer } = useBookingMutations();
+
+  const [formRef, setFormRef] = React.useState<ReturnType<
+    typeof useForm
+  > | null>(null);
 
   // Initialize timer when booking status is loaded
   useEffect(() => {
@@ -130,6 +138,39 @@ const CheckoutPage: React.FC = () => {
     return step === CheckoutStep.QUESTION_FORM ? 2 : 3;
   };
 
+  const handleQuestionnaireSubmit = async () => {
+    if (!formRef) return;
+
+    try {
+      const values = formRef.values;
+
+      await updateFormAnswer({
+        bookingCode: bookingCode!,
+        showId: Number(showId),
+        data: {
+          order: {
+            first_name: values.order.first_name,
+            last_name: values.order.last_name,
+            email: values.order.email,
+            address: values.order.address,
+            questions: values.order.questions,
+          },
+          attendees: values.attendees.map((attendee) => ({
+            id: attendee.id,
+            first_name: attendee.first_name,
+            last_name: attendee.last_name,
+            email: attendee.email,
+            questions: attendee.questions,
+          })),
+        },
+      });
+
+      navigate('payment-info');
+    } catch (error) {
+      // Error is handled by the mutation
+    }
+  };
+
   const renderStepContent = () => {
     switch (step) {
       case CheckoutStep.QUESTION_FORM:
@@ -141,6 +182,7 @@ const CheckoutPage: React.FC = () => {
               ticketTypes={show.ticketTypes}
               bookingCode={bookingCode}
               orderItems={bookingStatus?.result?.items}
+              onFormReady={setFormRef}
             />
           </QuestionnaireRow>
         );
@@ -176,6 +218,7 @@ const CheckoutPage: React.FC = () => {
               bookingCode={bookingCode}
               bookingStatus={bookingStatus.result}
               currentStep={step}
+              onContinue={handleQuestionnaireSubmit}
             />
           )}
         </SideContent>
