@@ -104,6 +104,12 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
     },
   });
 
+  useEffect(() => {
+    if (onFormReady) {
+      onFormReady(form);
+    }
+  }, [onFormReady, form]);
+
   const copyDetailsToAllAttendees = () => {
     const updatedAttendees = form.values.attendees.map((attendee) => {
       return {

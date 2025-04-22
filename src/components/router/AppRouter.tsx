@@ -20,6 +20,10 @@ const EventSelectTicketPage = React.lazy(
   () => import('@/pages/EventSelectTicketPage'),
 );
 
+const CheckoutSuccessPage = React.lazy(
+  () => import('@/pages/CheckoutSuccessPage'),
+);
+
 import { withLoading } from '@/hocs/withLoading.hoc';
 import { SignIn, SignUp } from '@clerk/clerk-react';
 
@@ -52,6 +56,11 @@ export const AppRouter: React.FC = () => {
           <Route
             path="/events/:eventId/bookings/:showId/:step"
             element={<CheckoutPage />}
+          />
+
+          <Route
+            path="checkout/:orderId/success"
+            element={<CheckoutSuccessPage />}
           />
           <Route path=":slug" element={<EventDetailPage />} />
         </Route>

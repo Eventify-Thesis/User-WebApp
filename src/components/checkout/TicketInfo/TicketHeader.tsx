@@ -28,7 +28,11 @@ export const TicketHeader: React.FC<TicketHeaderProps> = () => {
     if (showId) {
       try {
         await bookingClient.cancelBooking(Number(showId), bookingCode!);
-        navigate(`/events/${eventId}/bookings/${showId}/select-ticket`);
+        localStorage.removeItem(`bookingCode_${showId}`);
+
+        navigate(`/events/${eventId}/bookings/${showId}/select-ticket`, {
+          replace: true,
+        });
       } catch (error) {
         console.error('Error canceling booking:', error);
       }

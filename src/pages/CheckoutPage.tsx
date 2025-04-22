@@ -23,7 +23,8 @@ import { useGetBookingStatus } from '@/queries/useGetBookingStatus';
 import { getBookingCode } from '@/services/localStorage.service';
 import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
 import { useBookingMutations } from '@/mutations/useBookingMutations';
-import { useForm } from '@/components/checkout/QuestionnaireForm/useForm';
+import { useForm } from '@mantine/form';
+import { PaymentInfo } from '@/components/checkout/PaymentInfo/PaymentInfo';
 
 enum CheckoutStep {
   QUESTION_FORM = 'question-form',
@@ -59,7 +60,28 @@ const CheckoutPage: React.FC = () => {
   const { updateFormAnswer } = useBookingMutations();
 
   const [formRef, setFormRef] = React.useState<ReturnType<
-    typeof useForm
+    typeof useForm<{
+      order: {
+        first_name: string;
+        last_name: string;
+        email: string;
+        address: Record<string, any>;
+        questions: Array<{
+          question_id: number;
+          response: Record<string, any>;
+        }>;
+      };
+      attendees: Array<{
+        first_name: string;
+        last_name: string;
+        email: string;
+        id: number;
+        questions: Array<{
+          question_id: number;
+          response: Record<string, any>;
+        }>;
+      }>;
+    }>
   > | null>(null);
 
   // Initialize timer when booking status is loaded
@@ -104,11 +126,16 @@ const CheckoutPage: React.FC = () => {
 
   // Redirect if no booking code
   if (!bookingCode) {
-    notification.error({
-      message: 'Error',
-      description: 'Invalid booking session. Please try again.',
-    });
-    return <Navigate to={`/events/${eventId}/shows/${showId}`} replace />;
+    // notification.error({
+    //   message: 'Error',
+    //   description: 'Invalid booking session. Please try again.',
+    // });
+    return (
+      <Navigate
+        to={`/events/${eventId}/bookings/${showId}/select-ticket`}
+        replace
+      />
+    );
   }
 
   if (isLoadingEvent || isLoadingShow || isLoadingBooking) {
@@ -139,7 +166,10 @@ const CheckoutPage: React.FC = () => {
   };
 
   const handleQuestionnaireSubmit = async () => {
-    if (!formRef) return;
+    if (!formRef) {
+      console.error('Form reference not available');
+      return;
+    }
 
     try {
       const values = formRef.values;
@@ -165,9 +195,16 @@ const CheckoutPage: React.FC = () => {
         },
       });
 
-      navigate('payment-info');
+      // Remove form change warning before navigation
+      window.onbeforeunload = null;
+
+      navigate(
+        `/events/${eventId}/bookings/${showId}/${CheckoutStep.PAYMENT_INFO}`,
+        { replace: true },
+      );
     } catch (error) {
       // Error is handled by the mutation
+      console.error('Failed to submit form:', error);
     }
   };
 
@@ -189,8 +226,7 @@ const CheckoutPage: React.FC = () => {
       case CheckoutStep.PAYMENT_INFO:
         return (
           <PaymentRow>
-            {/* TODO: Implement PaymentForm component */}
-            <div>Payment form will be implemented here</div>
+            <PaymentInfo orderId={bookingStatus?.result?.orderId} />
           </PaymentRow>
         );
       default:

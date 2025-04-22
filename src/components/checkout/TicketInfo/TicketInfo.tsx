@@ -25,17 +25,20 @@ export const TicketInfo: React.FC<TicketInfoProps> = ({
     <TicketInfoWrapper>
       <TicketHeader expireIn={bookingStatus.expireIn} />
       <TicketDetails items={bookingStatus.items} />
-      <TicketSummary
-        subtotalAmount={bookingStatus.subtotalAmount}
-        totalAmount={bookingStatus.totalAmount}
-        platformDiscountAmount={bookingStatus.platformDiscountAmount}
-      />
+
       {currentStep === 'question-form' && (
-        <ContinueButton
-          bookingCode={bookingCode}
-          isLoading={false}
-          onSubmit={onContinue}
-        />
+        <>
+          <TicketSummary
+            subtotalAmount={bookingStatus.subtotalAmount}
+            totalAmount={bookingStatus.totalAmount}
+            platformDiscountAmount={bookingStatus.platformDiscountAmount}
+          />
+          <ContinueButton
+            bookingCode={bookingCode}
+            isLoading={false}
+            onSubmit={onContinue}
+          />
+        </>
       )}
     </TicketInfoWrapper>
   );
