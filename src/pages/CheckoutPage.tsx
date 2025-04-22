@@ -44,6 +44,7 @@ const CheckoutPage: React.FC = () => {
     showModal: isLeaveModalOpen,
     handleConfirmNavigationClick,
     handleCancelNavigationClick,
+    unblock,
   } = useNavigationBlocker();
 
   // Get booking code from localStorage
@@ -194,10 +195,7 @@ const CheckoutPage: React.FC = () => {
           })),
         },
       });
-
-      // Remove form change warning before navigation
-      window.onbeforeunload = null;
-
+      unblock();
       navigate(
         `/events/${eventId}/bookings/${showId}/${CheckoutStep.PAYMENT_INFO}`,
         { replace: true },

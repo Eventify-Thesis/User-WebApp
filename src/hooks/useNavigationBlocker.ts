@@ -1,17 +1,36 @@
+// src/hooks/useNavigationBlocker.ts
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { bookingClient } from '@/api/booking.client';
-import { getBookingCode, removeBookingCode } from '@/services/localStorage.service';
+
+enum CheckoutStep {
+  QUESTION_FORM = 'question-form',
+  PAYMENT_INFO = 'payment-info',
+}
 
 export function useNavigationBlocker() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { showId, eventId } = useParams();
-  const [showModal, setShowModal] = useState(false);
-  const [targetLocation, setTargetLocation] = useState<string | null>(null);
+  const { showId, eventId, step } = useParams<{
+    showId: string;
+    eventId: string;
+    step: string;
+  }>();
 
-  // Handle browser back/forward buttons and programmatic navigation
+  // only block when we're actually on the question-form step
+  const isBlocking = step === CheckoutStep.QUESTION_FORM;
+
+  const [showModal, setShowModal] = useState(false);
+  const [targetPath, setTargetPath] = useState<string | null>(null);
+
+  // expose unblock so you could programmatically turn it off if needed
+  const unblock = useCallback(() => {
+    setShowModal(false);
+  }, []);
+
+  // only hook into popstate & beforeunload when blocking
   useEffect(() => {
+    if (!isBlocking) return;
+
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
       e.returnValue = '';
@@ -20,72 +39,41 @@ export function useNavigationBlocker() {
 
     const handlePopState = (e: PopStateEvent) => {
       e.preventDefault();
-      if (!showModal) {
-        setShowModal(true);
-        setTargetLocation(window.location.pathname);
-        // Push current path to prevent navigation
-        window.history.pushState(null, '', location.pathname);
-      }
+      setTargetPath(window.location.pathname);
+      setShowModal(true);
+      // restore original
+      window.history.pushState(null, '', location.pathname);
     };
 
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    // prime history so back/forward will fire a popstate
     window.history.pushState(null, '', location.pathname);
     window.addEventListener('popstate', handlePopState);
-    window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
-      window.removeEventListener('popstate', handlePopState);
       window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
     };
-  }, [location.pathname, showModal]);
+  }, [isBlocking, location.pathname]);
 
   const handleConfirmNavigationClick = useCallback(async () => {
-    try {
-      const bookingCode = showId ? getBookingCode(showId) : null;
-      
-      // First navigate to select-ticket to avoid the booking code check redirect
-      const targetPath = `/events/${eventId}/bookings/${showId}/select-ticket`;
-      navigate(targetPath, { replace: true });
-
-      // Then clean up the booking
-      if (bookingCode) {
-        removeBookingCode(showId);
-        try {
-          await bookingClient.cancelBooking(Number(showId), bookingCode);
-        } catch (error) {
-          console.error('Failed to cancel booking:', error);
-        }
-      }
-
-      // Close modal after everything is done
-      setShowModal(false);
-    } catch (error) {
-      console.error('Navigation error:', error);
-      // Ensure we still navigate even if there's an error
-      const fallbackPath = `/events/${eventId}/bookings/${showId}/select-ticket`;
-      navigate(fallbackPath, { replace: true });
-    }
-  }, [showId, eventId, navigate]);
+    // user chose “yes, leave”
+    const next = targetPath ?? `/events/${eventId}/bookings/${showId}/select-ticket`;
+    unblock();                     // close modal & disable blocking
+    navigate(next, { replace: true });
+  }, [eventId, showId, navigate, targetPath, unblock]);
 
   const handleCancelNavigationClick = useCallback(() => {
+    // user chose “stay”
     setShowModal(false);
-    setTargetLocation(null);
-    // Stay on current page
+    // restore the URL to what it was
     window.history.pushState(null, '', location.pathname);
   }, [location.pathname]);
-
-  // Block programmatic navigation
-  useEffect(() => {
-    const currentPath = window.location.pathname;
-    if (location.pathname !== currentPath && !showModal) {
-      setShowModal(true);
-      setTargetLocation(location.pathname);
-      window.history.pushState(null, '', currentPath);
-    }
-  }, [location.pathname, showModal]);
 
   return {
     showModal,
     handleConfirmNavigationClick,
     handleCancelNavigationClick,
+    unblock,
   };
 }
