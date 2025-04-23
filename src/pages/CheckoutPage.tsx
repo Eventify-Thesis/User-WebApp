@@ -5,6 +5,8 @@ import {
   Navigate,
   useLocation,
   useNavigate,
+  Outlet,
+  useMatch,
 } from 'react-router-dom';
 import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { useResponsive } from '@/hooks/useResponsive';
@@ -25,14 +27,29 @@ import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
 import { useBookingMutations } from '@/mutations/useBookingMutations';
 import { useForm } from '@mantine/form';
 import { PaymentInfo } from '@/components/checkout/PaymentInfo/PaymentInfo';
-
+import { PaymentStep, QuestionStep } from '@/components/checkout/steps';
+import { CheckoutContext } from '@/types/checkout';
 enum CheckoutStep {
   QUESTION_FORM = 'question-form',
   PAYMENT_INFO = 'payment-info',
 }
 
 const CheckoutPage: React.FC = () => {
-  const { eventId, showId, step } = useParams();
+  const { eventId, showId } = useParams();
+
+  const isQuestion = useMatch(
+    '/events/:eventId/bookings/:showId/question-form',
+  );
+  const isPayment = useMatch('/events/:eventId/bookings/:showId/payment-info');
+
+  const step = isQuestion
+    ? 'question-form'
+    : isPayment
+    ? 'payment-info'
+    : 'question-form';
+
+  // now you know which step is active
+  const currentStep = isPayment ? 3 : 2;
   const location = useLocation();
   const navigate = useNavigate();
   const { isDesktop } = useResponsive();
@@ -60,30 +77,41 @@ const CheckoutPage: React.FC = () => {
 
   const { updateFormAnswer } = useBookingMutations();
 
-  const [formRef, setFormRef] = React.useState<ReturnType<
-    typeof useForm<{
+  const form = useForm<{
+    order: {
+      first_name: string;
+      last_name: string;
+      email: string;
+      address: any;
+      questions: any[];
+    };
+    attendees: Array<{
+      id: number;
+      first_name: string;
+      last_name: string;
+      email: string;
+      questions: any[];
+    }>;
+  }>({
+    initialValues: {
       order: {
-        first_name: string;
-        last_name: string;
-        email: string;
-        address: Record<string, any>;
-        questions: Array<{
-          question_id: number;
-          response: Record<string, any>;
-        }>;
-      };
-      attendees: Array<{
-        first_name: string;
-        last_name: string;
-        email: string;
-        id: number;
-        questions: Array<{
-          question_id: number;
-          response: Record<string, any>;
-        }>;
-      }>;
-    }>
-  > | null>(null);
+        first_name: '',
+        last_name: '',
+        email: '',
+        address: {},
+        questions: [],
+      },
+      attendees: [
+        {
+          first_name: '',
+          last_name: '',
+          email: '',
+          id: '',
+          questions: [],
+        },
+      ],
+    },
+  });
 
   // Initialize timer when booking status is loaded
   useEffect(() => {
@@ -147,33 +175,18 @@ const CheckoutPage: React.FC = () => {
     );
   }
 
-  // Validate step and redirect if invalid
-  if (
-    !step ||
-    ![CheckoutStep.QUESTION_FORM, CheckoutStep.PAYMENT_INFO].includes(
-      step as CheckoutStep,
-    )
-  ) {
-    return (
-      <Navigate
-        to={`/events/${eventId}/bookings/${showId}/${CheckoutStep.QUESTION_FORM}`}
-        replace
-      />
-    );
-  }
-
   const getCurrentStep = () => {
     return step === CheckoutStep.QUESTION_FORM ? 2 : 3;
   };
 
   const handleQuestionnaireSubmit = async () => {
-    if (!formRef) {
+    if (!form) {
       console.error('Form reference not available');
       return;
     }
 
     try {
-      const values = formRef.values;
+      const values = form.values;
 
       await updateFormAnswer({
         bookingCode: bookingCode!,
@@ -206,30 +219,15 @@ const CheckoutPage: React.FC = () => {
     }
   };
 
-  const renderStepContent = () => {
-    switch (step) {
-      case CheckoutStep.QUESTION_FORM:
-        return (
-          <QuestionnaireRow>
-            <QuestionnaireForm
-              eventId={eventId}
-              showId={showId}
-              ticketTypes={show.ticketTypes}
-              bookingCode={bookingCode}
-              orderItems={bookingStatus?.result?.items}
-              onFormReady={setFormRef}
-            />
-          </QuestionnaireRow>
-        );
-      case CheckoutStep.PAYMENT_INFO:
-        return (
-          <PaymentRow>
-            <PaymentInfo orderId={bookingStatus?.result?.orderId} />
-          </PaymentRow>
-        );
-      default:
-        return null;
-    }
+  const onContinue = handleQuestionnaireSubmit; // your existing function
+
+  // now build the context payload
+  const ctx: CheckoutContext = {
+    event: event!,
+    show: show!,
+    bookingStatus: bookingStatus!.result,
+    form,
+    onContinue,
   };
 
   return (
@@ -244,7 +242,9 @@ const CheckoutPage: React.FC = () => {
         </EventDetailsRow>
       )}
       <CheckoutContainer>
-        <MainContent>{renderStepContent()}</MainContent>
+        <MainContent>
+          <Outlet context={ctx} />
+        </MainContent>
         <SideContent>
           {bookingStatus?.result && (
             <TicketInfo
@@ -304,16 +304,6 @@ const EventDetailsRow = styled(BaseRow)`
   width: 100%;
   background-color: var(--background-color);
   padding: 24px 24px 0 24px;
-`;
-
-const QuestionnaireRow = styled(BaseRow)`
-  width: 100%;
-  min-width: 600px;
-`;
-
-const PaymentRow = styled(BaseRow)`
-  width: 100%;
-  min-width: 600px;
 `;
 
 const LoadingContainer = styled.div`

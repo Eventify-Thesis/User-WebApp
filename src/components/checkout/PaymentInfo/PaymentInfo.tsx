@@ -35,7 +35,7 @@ interface PaymentIntentResponse {
 }
 
 interface PaymentInfoProps {
-  orderId: string;
+  orderId: number;
 }
 
 const VoucherModal: React.FC<{
