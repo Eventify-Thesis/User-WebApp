@@ -39,12 +39,14 @@ export default function SearchResults() {
   });
 
   const { data: searchResults = [], refetch, isFetching } = useSearchSemanticEvents({ query, limit: 4 });
+  console.log(searchResults)
   const formattedEvents = searchResults.map((event: any) => ({
     id: event.id.toString(),
     eventName: event.eventName,
-    price: event.price, // or some fallback logic
-    date: new Date(), // fallback since API has no date
-    eventBannerURL: event.event_logo_url, // placeholder
+    minimumPrice: event.lowest_price,
+    startTime: event.soonest_start_time, 
+    eventBannerUrl: event.event_logo_url,
+    isInterested: event.bookmarked,
     ...event, // in case future data adds more
   }));
 

@@ -15,7 +15,7 @@ export const useSearchSemanticEvents = (params: SearchEventsParams) => {
       });
       return result ?? []; // Ensure fallback to [] if result is undefined
     },
-    enabled: false,
+    enabled: true,
     refetchOnWindowFocus: false,
   });
 };
