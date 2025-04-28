@@ -24,6 +24,7 @@ export interface QuestionResponse {
 
 export interface Question {
   question_id: number;
+  ticket_type_id: number;
   response: QuestionResponse;
 }
 
