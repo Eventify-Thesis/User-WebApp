@@ -4,6 +4,7 @@ import { IdParam } from '@/types/types';
 import { mockEvents } from '@/mocks/events';
 import { ShowModel } from '@/domain/ShowModel';
 
+
 export const eventClient = {
   getList: async (): Promise<EventModel[]> => {
     // Simulate API call and return mock data

@@ -4,26 +4,32 @@ import { useState } from 'react';
 import { StarOutlined, StarFilled } from '@ant-design/icons';
 import EventModel from '@/domain/EventModel';
 
-const EventCard: React.FC<EventModel> = ({
+interface EventCardProps extends EventModel {
+  minimumPrice?: number;
+  startTime?: Date;
+  isInterested?: boolean;
+}
+
+const EventCard: React.FC<EventCardProps> = ({
   id,
   eventName,
-  eventLogoURL,
-  eventBannerURL,
-  price,
-  date,
+  eventLogoUrl,
+  eventBannerUrl,
+  minimumPrice,
+  startTime,
   isInterested: initialFavorited = false,
 }) => {
   const { t } = useTranslation();
   const [isFavorited, setIsFavorited] = useState(initialFavorited);
 
   const toggleFavorite = () => {
-    setIsFavorited((prev) => !prev);
+    setIsFavorited((prev: any) => !prev);
   };
 
   return (
     <s.Card>
       <s.ImageWrapper>
-        <s.EventImage src={eventBannerURL} alt={eventName} />
+        <s.EventImage src={eventBannerUrl} alt={eventName} />
 
         {/* Bookmark/Favorite Icon */}
         <s.BookmarkIcon onClick={toggleFavorite}>
@@ -35,9 +41,13 @@ const EventCard: React.FC<EventModel> = ({
         </s.BookmarkIcon>
       </s.ImageWrapper>
 
-      <s.EventTitle>{eventName}</s.EventTitle>
-      {price && <s.EventPrice>{t('homePage.from')} {price}</s.EventPrice>}
-      <s.EventDate>📅 {date.toDateString()}</s.EventDate>
+      <s.EventTitle title={eventName}>{eventName}</s.EventTitle>
+      <s.EventPrice>
+        {minimumPrice ? t('homePage.from') + ' ' + Math.floor(minimumPrice) : 'N/A'}
+      </s.EventPrice>
+      <s.EventDate>
+        {startTime ? '📅 ' + new Date(startTime).toDateString() : 'N/A'}
+      </s.EventDate>
     </s.Card>
   );
 };
