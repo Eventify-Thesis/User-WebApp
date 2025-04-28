@@ -19,11 +19,23 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-  
+
   const leftSide = (
     <S.SearchColumn xl={12} xxl={14}>
-      <BaseRow justify="center" align="middle" wrap={false} style={{ width: '100%' }}>
-        <BaseCol xl={9} xxl={12} style={{ display: 'flex', justifyContent: 'center' }}>
+      <BaseRow
+        justify="center"
+        align="middle"
+        wrap={false}
+        style={{ width: '100%' }}
+      >
+        <BaseCol
+          xl={9}
+          xxl={12}
+          style={{ display: 'flex', justifyContent: 'center' }}
+          onClick={() => (window.location.href = '/')}
+          onMouseEnter={(e) => (e.currentTarget.style.cursor = 'pointer')}
+          onMouseLeave={(e) => (e.currentTarget.style.cursor = 'default')}
+        >
           <Logo />
         </BaseCol>
         <BaseCol

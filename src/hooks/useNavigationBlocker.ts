@@ -1,68 +1,79 @@
+// src/hooks/useNavigationBlocker.ts
 import { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
-import { bookingClient } from '@/api/booking.client';
-import { getBookingCode } from '@/services/localStorage.service';
+
+enum CheckoutStep {
+  QUESTION_FORM = 'question-form',
+  PAYMENT_INFO = 'payment-info',
+}
 
 export function useNavigationBlocker() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { showId, eventId } = useParams();
-  const [showModal, setShowModal] = useState(false);
-  const [lastLocation, setLastLocation] = useState<string | null>(null);
-  const [confirmedNavigation, setConfirmedNavigation] = useState(false);
+  const { showId, eventId, step } = useParams<{
+    showId: string;
+    eventId: string;
+    step: string;
+  }>();
 
+  // only block when we're actually on the question-form step
+  const isBlocking = step === CheckoutStep.QUESTION_FORM;
+
+  const [showModal, setShowModal] = useState(false);
+  const [targetPath, setTargetPath] = useState<string | null>(null);
+
+  // expose unblock so you could programmatically turn it off if needed
+  const unblock = useCallback(() => {
+    setShowModal(false);
+  }, []);
+
+  // only hook into popstate & beforeunload when blocking
+  useEffect(() => {
+    if (!isBlocking) return;
+
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+      e.returnValue = '';
+      return '';
+    };
+
+    const handlePopState = (e: PopStateEvent) => {
+      e.preventDefault();
+      setTargetPath(window.location.pathname);
+      setShowModal(true);
+      // restore original
+      window.history.pushState(null, '', location.pathname);
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    // prime history so back/forward will fire a popstate
+    window.history.pushState(null, '', location.pathname);
+    window.addEventListener('popstate', handlePopState);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      window.removeEventListener('popstate', handlePopState);
+    };
+  }, [isBlocking, location.pathname]);
 
   const handleConfirmNavigationClick = useCallback(async () => {
-    setShowModal(false);
-    const bookingCode = showId ? getBookingCode(showId) : null;
-    if (bookingCode) {
-      try {
-        await bookingClient.cancelBooking(Number(showId), bookingCode);
-        // Clear booking code from localStorage after successful cancellation
-        localStorage.removeItem(`booking_code_${showId}`);
-      } catch (error) {
-        console.error('Failed to cancel booking:', error);
-      }
-    }
-    // Set confirmed navigation to true and navigate
-    setConfirmedNavigation(true);
-
-    console.log('herhehrhe hre s00')
-    navigate(`/events/${eventId}/bookings/${showId}/select-ticket`, { replace: true });
-  }, [showId, eventId, navigate]);
+    // user chose “yes, leave”
+    const next = targetPath ?? `/events/${eventId}/bookings/${showId}/select-ticket`;
+    unblock();                     // close modal & disable blocking
+    navigate(next, { replace: true });
+  }, [eventId, showId, navigate, targetPath, unblock]);
 
   const handleCancelNavigationClick = useCallback(() => {
+    // user chose “stay”
     setShowModal(false);
+    // restore the URL to what it was
     window.history.pushState(null, '', location.pathname);
   }, [location.pathname]);
-
-  useEffect(() => {
-    if (confirmedNavigation && lastLocation) {
-      navigate(lastLocation);
-    }
-  }, [confirmedNavigation, lastLocation, navigate]);
-
-  useEffect(() => {
-    window.history.pushState(null, '', window.location.pathname);
-
-    const handlePopstate = (event: PopStateEvent) => {
-      event.preventDefault();
-      if (!showModal) {
-        setLastLocation(window.location.pathname);
-        setShowModal(true);
-        window.history.pushState(null, '', location.pathname);
-      }
-    };
-
-    window.addEventListener('popstate', handlePopstate);
-    return () => {
-      window.removeEventListener('popstate', handlePopstate);
-    };
-  }, [location.pathname, showModal]);
 
   return {
     showModal,
     handleConfirmNavigationClick,
     handleCancelNavigationClick,
+    unblock,
   };
 }

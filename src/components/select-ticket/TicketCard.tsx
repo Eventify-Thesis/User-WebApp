@@ -95,6 +95,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
               width: '50px',
               background: 'transparent',
               border: 'none',
+              color: 'white',
               textAlign: 'center',
             }}
             className="dark-input-number"

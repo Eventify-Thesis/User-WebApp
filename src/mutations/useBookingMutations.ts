@@ -27,8 +27,21 @@ export const useBookingMutations = () => {
     },
   });
 
+  const createPaymentIntent = useMutation({
+    mutationFn: (data: { orderId: number }) => {
+      return bookingClient.createPaymentIntent(data.orderId);
+    },
+    onError: (error: Error) => {
+      notification.error({
+        message: error.message,
+        description: 'Failed to create payment. Please try again.',
+      });
+    },
+  });
+
   return {
     submitTicketInfo: submitTicketInfoMutation.mutateAsync,
     updateFormAnswer: updateFormAnswerMutation.mutateAsync,
+    createPaymentIntent: createPaymentIntent.mutateAsync,
   };
 }
