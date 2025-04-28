@@ -38,12 +38,11 @@ export default function SearchResults() {
     categories: [],
   });
 
-  const { data: searchResults = [], refetch, isFetching } = useSearchSemanticEvents(query, 4);
-
+  const { data: searchResults = [], refetch, isFetching } = useSearchSemanticEvents({ query, limit: 4 });
   const formattedEvents = searchResults.map((event: any) => ({
     id: event.id.toString(),
     eventName: event.eventName,
-    price: "Miễn phí", // or some fallback logic
+    price: event.price, // or some fallback logic
     date: new Date(), // fallback since API has no date
     eventBannerURL: event.event_logo_url, // placeholder
     ...event, // in case future data adds more

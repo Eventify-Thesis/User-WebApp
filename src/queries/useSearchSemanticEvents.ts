@@ -1,15 +1,20 @@
 // useSearchSemanticEvents.ts
 import { useQuery } from "@tanstack/react-query";
-import { eventClient } from "@/api/event.client";
+import { searchClient } from "@/api/search.client";
 import { useAuth } from "@clerk/clerk-react";
+import { SearchEventsParams } from "@/api/search.client";
 
-export const useSearchSemanticEvents = (query: string, limit: number = 15) => {
-  const { userId } = useAuth();
-
+export const useSearchSemanticEvents = (params: SearchEventsParams) => {
+  const { userId: authUserId } = useAuth();
   return useQuery({
-    queryKey: ["semanticSearch", query, limit],
-    queryFn: () => {
-      return eventClient.searchSemanticEvents(query, userId, limit);
+    queryKey: ["semanticSearch", params],
+    queryFn: async () => {
+      const result = await searchClient.searchSemanticEvents({
+        ...params,
+        userId: params.userId ?? authUserId ?? undefined,
+      });
+      console.log("useSearchSemantic", result)
+      return result ?? []; // Ensure fallback to [] if result is undefined
     },
     enabled: false,
     refetchOnWindowFocus: false,

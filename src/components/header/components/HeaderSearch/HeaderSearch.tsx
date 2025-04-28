@@ -20,7 +20,7 @@ export const HeaderSearch: React.FC = () => {
     data: searchResults,
     isLoading,
     refetch,
-  } = useSearchSemanticEvents(query, 4);
+  } = useSearchSemanticEvents({query, limit: 4});
 
   const handleSearch = (text: string) => {
     setQuery(text);

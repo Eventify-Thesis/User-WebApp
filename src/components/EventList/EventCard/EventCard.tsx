@@ -9,15 +9,15 @@ const EventCard: React.FC<EventModel> = ({
   eventName,
   eventLogoURL,
   eventBannerURL,
-  price,
-  date,
+  lowest_price,
+  soonest_start_time,
   isInterested: initialFavorited = false,
 }) => {
   const { t } = useTranslation();
   const [isFavorited, setIsFavorited] = useState(initialFavorited);
 
   const toggleFavorite = () => {
-    setIsFavorited((prev) => !prev);
+    setIsFavorited((prev: any) => !prev);
   };
 
   return (
@@ -35,9 +35,13 @@ const EventCard: React.FC<EventModel> = ({
         </s.BookmarkIcon>
       </s.ImageWrapper>
 
-      <s.EventTitle>{eventName}</s.EventTitle>
-      {price && <s.EventPrice>{t('homePage.from')} {price}</s.EventPrice>}
-      <s.EventDate>📅 {date.toDateString()}</s.EventDate>
+      <s.EventTitle title={eventName}>{eventName}</s.EventTitle>
+      <s.EventPrice>
+        {lowest_price ? t('homePage.from') + ' ' + Math.floor(lowest_price) : 'N/A'}
+      </s.EventPrice>
+      <s.EventDate>
+        {soonest_start_time ? '📅 ' + new Date(soonest_start_time).toDateString() : 'N/A'}
+      </s.EventDate>
     </s.Card>
   );
 };

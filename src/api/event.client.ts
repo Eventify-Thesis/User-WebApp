@@ -3,7 +3,7 @@ import EventModel, { EventDetailResponse } from '@/domain/EventModel';
 import { IdParam } from '@/types/types';
 import { mockEvents } from '@/mocks/events';
 import { ShowModel } from '@/domain/ShowModel';
-import { semanticApi } from "./semanticApi";
+
 
 export const eventClient = {
   getList: async (): Promise<EventModel[]> => {
@@ -17,24 +17,6 @@ export const eventClient = {
   getDetail: async (eventId: IdParam): Promise<EventDetailResponse> => {
     const response = await httpApi.get<any>(`/events/${eventId}`);
     return response.data.data;
-  },
-   
-  searchSemanticEvents: async (
-    query: string,
-    userId?: string,
-    limit: number = 15
-  ): Promise<EventModel[]> => {
-
-    const response = await semanticApi.get<any>("/api/search", {
-      params: {
-        q: query,
-        limit,
-        ...(userId ? { user_id: userId } : {}),
-      },
-    });
-
-    console.log("In event client with result:", response.data.result);
-    return response.data.result;
   },
 
   create: async (eventData: Partial<EventModel>): Promise<EventModel> => {

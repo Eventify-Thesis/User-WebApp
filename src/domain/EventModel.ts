@@ -22,6 +22,8 @@ export default interface EventModel {
   districtId?: string;
   wardId?: string;
   street?: string;
+  lowest_price?: number;
+  soonest_start_time?: Date;
   categories?: string[];
   categoriesIds?: string[];
 }
