@@ -1,5 +1,5 @@
 // PaymentInfo.tsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
   Elements,
@@ -8,7 +8,7 @@ import {
   useStripe,
   useElements,
 } from '@stripe/react-stripe-js';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import {
   Spin,
   notification,
@@ -20,10 +20,18 @@ import {
   Input,
   Space,
   Alert,
+  Tabs,
+  Tag,
+  List,
+  Divider,
+  message,
 } from 'antd';
 import { useMutation } from '@tanstack/react-query';
 import { useBookingMutations } from '@/mutations/useBookingMutations';
-import { TicketInfo } from '../TicketInfo/TicketInfo';
+import { VoucherModal } from '../VoucherModal/VoucherModal';
+import { PlusOutlined, DeleteOutlined, TagOutlined } from '@ant-design/icons';
+import { useVoucherMutations } from '@/mutations/useVoucherMutations';
+import BookingModel from '@/domain/BookingModel';
 
 const { Title, Text } = Typography;
 
@@ -35,59 +43,22 @@ interface PaymentIntentResponse {
 }
 
 interface PaymentInfoProps {
-  orderId: number;
+  bookingStatus: BookingModel;
 }
 
-const VoucherModal: React.FC<{
-  open: boolean;
-  onClose: () => void;
-  onApply: (code: string) => void;
-  loading: boolean;
-}> = ({ open, onClose, onApply, loading }) => {
-  const [code, setCode] = useState('');
-
-  const handleApply = () => {
-    onApply(code);
-    setCode('');
-  };
-
-  return (
-    <Modal
-      title="Apply Voucher"
-      open={open}
-      onCancel={onClose}
-      footer={[
-        <Button key="cancel" onClick={onClose}>
-          Cancel
-        </Button>,
-        <Button
-          key="apply"
-          type="primary"
-          onClick={handleApply}
-          loading={loading}
-          disabled={!code.trim()}
-        >
-          Apply
-        </Button>,
-      ]}
-    >
-      <Space direction="vertical" style={{ width: '100%' }}>
-        <Input
-          placeholder="Enter voucher code"
-          value={code}
-          onChange={(e) => setCode(e.target.value)}
-          onPressEnter={handleApply}
-        />
-      </Space>
-    </Modal>
-  );
-};
-
-export const PaymentInfo: React.FC<PaymentInfoProps> = ({ orderId }) => {
+export const PaymentInfo: React.FC<PaymentInfoProps> = ({ bookingStatus }) => {
+  const orderId = bookingStatus.orderId;
   const { createPaymentIntent } = useBookingMutations();
+  const { eventId, showId } = useParams();
   const [pi, setPi] = useState<PaymentIntentResponse | null>(null);
   const [voucherModalOpen, setVoucherModalOpen] = useState(false);
+  const [appliedVoucher, setAppliedVoucher] = useState<{
+    code: string;
+    amount: number;
+    name: string;
+  } | null>(null);
   const [applyingVoucher, setApplyingVoucher] = useState(false);
+  const [shouldRefreshPayment, setShouldRefreshPayment] = useState(false);
 
   const paymentIntentMutation = useMutation<PaymentIntentResponse, Error>({
     mutationFn: async () => {
@@ -96,36 +67,63 @@ export const PaymentInfo: React.FC<PaymentInfoProps> = ({ orderId }) => {
     },
     onSuccess: (data) => {
       setPi(data);
+      setShouldRefreshPayment(false);
     },
-    onError: (error: Error) => {
+    onError: (error) => {
       notification.error({
-        message: error.message,
-        description: 'Failed to create payment. Please try again.',
+        message: 'Error',
+        description: error.message,
       });
+      setShouldRefreshPayment(false);
     },
   });
 
+  // Only create payment intent on initial load and when voucher changes
   useEffect(() => {
-    paymentIntentMutation.mutate();
-  }, [orderId]);
+    if (!pi || shouldRefreshPayment) {
+      paymentIntentMutation.mutate();
+    }
+  }, [orderId, shouldRefreshPayment]);
 
-  const handleApplyVoucher = async (code: string) => {
-    setApplyingVoucher(true);
+  const { applyVoucher } = useVoucherMutations();
+
+  const handleApplyVoucher = async (code: string, name: string) => {
     try {
-      // TODO: Implement voucher application logic
-      notification.success({
-        message: 'Voucher Applied',
-        description: 'The discount has been applied to your order.',
+      setApplyingVoucher(true);
+      const result = await applyVoucher({
+        showId: Number(showId),
+        bookingCode: bookingStatus.bookingCode,
+        voucherCode: code,
       });
-      setVoucherModalOpen(false);
+      const data = result?.data;
+
+      if (data.success) {
+        setAppliedVoucher({
+          code,
+          name,
+          amount: data?.discountAmount,
+        });
+        setVoucherModalOpen(false);
+        message.success('Voucher applied successfully');
+        setShouldRefreshPayment(true);
+      } else {
+        message.error(data.message || 'Failed to apply voucher');
+      }
     } catch (error) {
-      notification.error({
-        message: 'Failed to Apply Voucher',
-        description:
-          error instanceof Error ? error.message : 'Please try again.',
-      });
+      message.error('Failed to apply voucher');
     } finally {
       setApplyingVoucher(false);
+    }
+  };
+
+  const handleRemoveVoucher = async () => {
+    try {
+      // TODO: Implement remove voucher API call
+      setAppliedVoucher(null);
+      message.success('Voucher removed successfully');
+      setShouldRefreshPayment(true);
+    } catch (error) {
+      message.error('Failed to remove voucher');
     }
   };
 
@@ -163,34 +161,95 @@ export const PaymentInfo: React.FC<PaymentInfoProps> = ({ orderId }) => {
   }).format(pi.amount);
 
   return (
-    <Space direction="vertical" size="large" style={{ width: '100%' }}>
+    <Space direction="vertical" style={{ width: '100%' }}>
       <Card>
         <Alert
           message="E-Ticket Information"
-          description="Your e-tickets will be available in the 'My Tickets' section of your account after successful payment."
+          description={
+            <Space direction="vertical">
+              <Text>
+                Your e-ticket will be sent to your email after payment is
+                completed
+              </Text>
+            </Space>
+          }
           type="info"
           showIcon
-          style={{ marginTop: 16 }}
         />
       </Card>
 
       <Card>
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <Text>Have a voucher?</Text>
-          <Button
-            type="primary"
-            ghost
-            onClick={() => setVoucherModalOpen(true)}
+        <Space direction="vertical" style={{ width: '100%' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+            }}
           >
-            Apply Voucher
-          </Button>
-        </div>
+            <Text>Voucher</Text>
+            {!appliedVoucher ? (
+              <Button
+                type="primary"
+                ghost
+                onClick={() => setVoucherModalOpen(true)}
+                icon={<PlusOutlined />}
+              >
+                Add Voucher
+              </Button>
+            ) : (
+              <Button type="link" onClick={() => setVoucherModalOpen(true)}>
+                Change
+              </Button>
+            )}
+          </div>
+
+          {appliedVoucher && (
+            <>
+              <Divider style={{ margin: '16px 0' }} />
+              <List.Item
+                style={{
+                  padding: '12px 0',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                }}
+              >
+                <Space align="start">
+                  <div
+                    style={{
+                      backgroundColor: '#f6ffed',
+                      padding: '8px 12px',
+                      borderRadius: '6px',
+                      border: '1px solid #b7eb8f',
+                    }}
+                  >
+                    <TagOutlined style={{ color: '#52c41a', marginRight: 8 }} />
+                    <Text strong style={{ color: '#52c41a' }}>
+                      {new Intl.NumberFormat('vi-VN').format(
+                        appliedVoucher.amount,
+                      )}{' '}
+                      ₫
+                    </Text>
+                  </div>
+                  <Space direction="vertical" size={1}>
+                    <Text strong>{appliedVoucher.name}</Text>
+                    <Text type="secondary" style={{ fontSize: '13px' }}>
+                      Code: {appliedVoucher.code}
+                    </Text>
+                  </Space>
+                </Space>
+                <Button
+                  type="text"
+                  danger
+                  icon={<DeleteOutlined />}
+                  onClick={handleRemoveVoucher}
+                  style={{ marginLeft: 'auto' }}
+                />
+              </List.Item>
+            </>
+          )}
+        </Space>
       </Card>
 
       <Card>
@@ -227,12 +286,15 @@ export const PaymentInfo: React.FC<PaymentInfoProps> = ({ orderId }) => {
         onClose={() => setVoucherModalOpen(false)}
         onApply={handleApplyVoucher}
         loading={applyingVoucher}
+        eventId={Number(eventId)}
+        showId={Number(showId)}
+        selectedVoucher={appliedVoucher?.code}
       />
     </Space>
   );
 };
 
-const CheckoutForm: React.FC<{ orderId: string }> = ({ orderId }) => {
+const CheckoutForm: React.FC<{ orderId: number }> = ({ orderId }) => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
@@ -242,61 +304,66 @@ const CheckoutForm: React.FC<{ orderId: string }> = ({ orderId }) => {
     e.preventDefault();
     if (!stripe || !elements) return;
 
-    setSubmitting(true);
-    const { error, paymentIntent } = await stripe.confirmPayment({
-      elements,
-      confirmParams: {
-        return_url: `${window.location.origin}/checkout/${orderId}/success`,
-      },
-      redirect: 'always',
-    });
-
-    // This code will only run if redirect fails
-    if (error) {
-      notification.error({
-        message: 'Payment Failed',
-        description: error.message,
+    try {
+      setSubmitting(true);
+      const { error, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/checkout/${orderId}/success`,
+        },
+        redirect: 'always',
       });
-      setSubmitting(false);
-      return;
-    }
 
-    if (paymentIntent) {
-      console.log('Payment Intent Status:', paymentIntent.status);
-      // This shouldn't happen often since we're using redirect: 'always'
-      switch (paymentIntent.status) {
-        case 'succeeded':
-          notification.success({
-            message: 'Payment Successful',
-            description: `Your order ${orderId} has been paid.`,
-          });
-          navigate(`/checkout/${orderId}/success`);
-          break;
-
-        case 'processing':
-          notification.info({
-            message: 'Payment Processing',
-            description:
-              'Your payment is being processed. We will update you once it is complete.',
-          });
-          // Redirect to a processing page
-          navigate(`/checkout/${orderId}/processing`);
-          break;
-
-        default:
-          notification.warning({
-            message: 'Payment Status',
-            description: `Unexpected status: ${paymentIntent.status}. Please contact support.`,
-          });
-          setSubmitting(false);
-          break;
+      // This code will only run if redirect fails
+      if (error) {
+        notification.error({
+          message: 'Payment Failed',
+          description: error.message,
+        });
+        return;
       }
+
+      if (paymentIntent) {
+        console.log('Payment Intent Status:', paymentIntent.status);
+        // This shouldn't happen often since we're using redirect: 'always'
+        switch (paymentIntent.status) {
+          case 'succeeded':
+            notification.success({
+              message: 'Payment Successful',
+              description: `Your order ${orderId} has been paid.`,
+            });
+            navigate(`/checkout/${orderId}/success`);
+            break;
+
+          case 'processing':
+            notification.info({
+              message: 'Payment Processing',
+              description:
+                'Your payment is being processed. We will update you once it is complete.',
+            });
+            navigate(`/checkout/${orderId}/processing`);
+            break;
+
+          default:
+            notification.warning({
+              message: 'Payment Status',
+              description: `Unexpected status: ${paymentIntent.status}. Please contact support.`,
+            });
+            break;
+        }
+      }
+    } catch (error) {
+      notification.error({
+        message: 'Payment Error',
+        description: 'An unexpected error occurred during payment.',
+      });
+    } finally {
+      setSubmitting(false);
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      {/* optional: capture email if you don’t already have it */}
       <LinkAuthenticationElement
         onChange={(e) => {
           /* e.value.email */

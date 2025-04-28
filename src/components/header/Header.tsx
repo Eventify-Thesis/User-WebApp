@@ -6,9 +6,5 @@ import { useResponsive } from '@/hooks/useResponsive';
 export const Header: React.FC = () => {
   const { isTablet } = useResponsive();
 
-  return isTablet ? (
-    <DesktopHeader />
-  ) : (
-    <MobileHeader />
-  );
+  return isTablet ? <DesktopHeader /> : <MobileHeader />;
 };

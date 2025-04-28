@@ -15,44 +15,33 @@ export const MobileHeader: React.FC = () => {
 
   return (
     <>
-      <BaseRow justify="space-between" align="middle" style={{ height: "100%" }}>
-        <BaseCol>
-          <BaseRow align="middle">
-            <BaseCol xl={9} xxl={12} style={{ display: 'flex', justifyContent: 'center' }}>
-                      <Logo />
-                    </BaseCol>
-            <BaseCol>
-              <HeaderSearch />
-            </BaseCol>
-          </BaseRow>
+      <BaseRow align="middle" style={{ width: '100%', padding: '0 12px' }}>
+        {/* Left side - Logo and Search */}
+        <BaseCol style={{ display: 'flex', alignItems: 'center' }}>
+          <Logo style={{ marginRight: 16 }} />
+          <HeaderSearch />
         </BaseCol>
 
-        <S.BurgerCol>
+        {/* Right side - User controls */}
+        <BaseCol style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <UserButton />
+          <SettingsDropdown />
           <S.MobileBurger onClick={() => setDrawerOpen(true)} isCross={isDrawerOpen} />
-        </S.BurgerCol>
-
-        <BaseRow>
-          <BaseCol>
-            <UserButton />
-          </BaseCol>
-          <BaseCol>
-            <SettingsDropdown />
-          </BaseCol>
-        </BaseRow>
+        </BaseCol>
       </BaseRow>
 
-      {/* Styled Hamburger Menu Expansion */}
       <S.StyledDrawer
         title="Menu"
         placement="right"
         onClose={() => setDrawerOpen(false)}
         open={isDrawerOpen}
+        width={280}
       >
-        <S.NavItem>
+        <S.NavItem onClick={() => window.location.href = '/tickets'}>
           <S.NavIcon icon="ion:ticket-outline" />
           Tickets
         </S.NavItem>
-        <S.NavItem>
+        <S.NavItem onClick={() => window.location.href = '/interested'}>
           <S.NavIcon icon="teenyicons:star-outline" />
           Interested
         </S.NavItem>

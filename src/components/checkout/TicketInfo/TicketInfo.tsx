@@ -21,8 +21,6 @@ export const TicketInfo: React.FC<TicketInfoProps> = ({
   currentStep,
   onContinue,
 }) => {
-  console.log('redner,', currentStep);
-
   return (
     <TicketInfoWrapper>
       <TicketHeader expireIn={bookingStatus.expireIn} />
