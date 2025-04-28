@@ -9,9 +9,15 @@ import { InputRef } from 'antd';
 interface SearchDropdownProps {
   query: string;
   setQuery: (query: string) => void;
+  onSearch: (query: string) => void;
+  isModalOpen?: boolean;
+  setModalOpen?: (open: boolean) => void;
 }
 
-export const SearchDropdown: React.FC<SearchDropdownProps> = ({ query, setQuery }) => {
+export const SearchDropdown: React.FC<SearchDropdownProps> = ({
+  query,
+  setQuery,
+  onSearch}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isFilterOpen, setFilterOpen] = useState(false);
   const inputRef = useRef<InputRef>(null);
@@ -41,10 +47,20 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({ query, setQuery 
               onClick={() => setFilterOpen(!isFilterOpen)}
             />
           }
-          onFocus={() => setModalOpen(true)} // ✅ Open modal, but input keeps focus
+          onFocus={() => setModalOpen?.(true)} // ✅ Open modal, but input keeps focus
           onChange={(event) => setQuery(event.target.value)} // ✅ Allow typing
           enterButton={null}
           addonAfter={null}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              e.preventDefault();
+              if (query.trim()) {
+                onSearch(query);
+                setModalOpen?.(false);
+              }
+            }
+          }}
+
         />
       </HeaderActionWrapper>
 
