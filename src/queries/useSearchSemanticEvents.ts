@@ -13,7 +13,6 @@ export const useSearchSemanticEvents = (params: SearchEventsParams) => {
         ...params,
         userId: params.userId ?? authUserId ?? undefined,
       });
-      console.log("useSearchSemantic", result)
       return result ?? []; // Ensure fallback to [] if result is undefined
     },
     enabled: false,
