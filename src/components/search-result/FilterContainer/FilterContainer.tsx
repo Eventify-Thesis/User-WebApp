@@ -31,15 +31,15 @@ const StyledButton = styled(Button)`
 interface EventFiltersProps {
   selectedDates: [Dayjs | null, Dayjs | null];
   setSelectedDates: (dates: [Dayjs | null, Dayjs | null]) => void;
-  filterData: { location: string; isFree: boolean; categories: string[] };
-  setFilterData: (data: { location: string; isFree: boolean; categories: string[] }) => void;
+  setFilterData: (data: { location?: string; categories: string[] }) => void;
+  filterData: { location?: string; categories: string[] };  
 }
 
 const EventFilters: React.FC<EventFiltersProps> = ({
   selectedDates,
   setSelectedDates,
-  filterData,
   setFilterData,
+  filterData, // Add this line
 }) => {
 
   const { t, i18n } = useTranslation();
@@ -50,6 +50,7 @@ const EventFilters: React.FC<EventFiltersProps> = ({
   if (!selectedDates || !selectedDates[0] || !selectedDates[1]) {
     return t('filters.allDays');
   }
+
 
   return `${selectedDates[0]
     .locale(currentLocale)  // Use the detected language

@@ -46,7 +46,8 @@ const EventCard: React.FC<EventCardProps> = ({
         {minimumPrice ? t('homePage.from') + ' ' + Math.floor(minimumPrice) : 'N/A'}
       </s.EventPrice>
       <s.EventDate>
-        {startTime ? '📅 ' + new Date(startTime).toDateString() : 'N/A'}
+        {/* Convert seconds to milliseconds by multiplying by 1000*/}
+        {startTime ? '📅 ' + new Date(Number(startTime) * 1000).toDateString() : 'N/A'}
       </s.EventDate>
     </s.Card>
   );

@@ -1,24 +1,13 @@
 import { useEffect, useState } from "react";
-import styled from "styled-components";
+import { useTranslation } from 'react-i18next';
 import { useLocation } from "react-router-dom";
 import type { Dayjs } from "dayjs";
 import EventFilters from "@/components/search-result/FilterContainer/FilterContainer";
 import { EventGrid } from "@/components/EventList/EventGrid/EventGrid";
 import { useSearchSemanticEvents } from "@/queries/useSearchSemanticEvents"; // make sure this is usable here
-
-const Container = styled.div`
-  background-color: black;
-  min-height: 100vh;
-  padding: 20px;
-  color: white;
-  box-sizing: border-box;
-  @media (max-width: 991px) {
-    padding: 0 40px;
-  }
-  @media (max-width: 640px) {
-    padding: 0 20px;
-  }
-`;
+import * as s from "@/components/search-result/SearchResult.styles";
+import { Loading } from "@/components/common/Loading/Loading";
+import { FilterData } from "@/components/search-result/FilterContainer/FilterDropdown/FilterDropdown.styles";
 
 function useQueryParam(key: string) {
   const { search } = useLocation();
@@ -26,20 +15,31 @@ function useQueryParam(key: string) {
 }
 
 export default function SearchResults() {
+  const { t } = useTranslation();
   const query = useQueryParam("query") || "";
+  const categoryParam = useQueryParam("categories");
   const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
-  const [filterData, setFilterData] = useState<{
-    location: string;
-    isFree: boolean;
-    categories: string[];
-  }>({
-    location: "Toàn quốc",
-    isFree: false,
-    categories: [],
+  const [filterData, setFilterData] = useState<FilterData>({
+    location: undefined,
+    categories: categoryParam ? categoryParam.split(',') : [],
   });
 
-  const { data: searchResults = [], refetch, isFetching } = useSearchSemanticEvents({ query, limit: 4 });
-  console.log(searchResults)
+  // Pass selected filters to the useSearchSemanticEvents hook
+  const { data: searchResults = [], refetch, isFetching } = useSearchSemanticEvents({
+    query,
+    limit: 5,
+    startDate: selectedDates[0] ? selectedDates[0].format("YYYY-MM-DD") : undefined,  // Handle null or undefined for startDate
+    endDate: selectedDates[1] ? selectedDates[1].format("YYYY-MM-DD") : undefined,    // Handle null or undefined for endDate
+    categories: filterData?.categories?.length ? filterData.categories : [],       // Default to empty array if no categories
+    city: filterData.locationValue || undefined                                
+  });
+  
+  useEffect(() => {
+    if (categoryParam) {
+      setFilterData(fd => ({ ...fd, categories: [categoryParam] }));
+    }
+  }, [categoryParam]);
+
   const formattedEvents = searchResults.map((event: any) => ({
     id: event.id.toString(),
     eventName: event.eventName,
@@ -57,14 +57,23 @@ export default function SearchResults() {
   }, [query, refetch]);
 
   return (
-    <Container>
+    <s.Container>
       <EventFilters
         selectedDates={selectedDates}
         setSelectedDates={setSelectedDates}
         filterData={filterData}
         setFilterData={setFilterData}
       />
-      <EventGrid events={formattedEvents} />
-    </Container>
+      {isFetching ? (
+        <Loading />
+      ) : formattedEvents.length > 0 ? (
+        <EventGrid events={formattedEvents}/>
+      ) : (
+        <s.NoEventsContainer>
+          <s.SadIcon />
+          <s.NoEventsText>{t('searchResult.noAvailableEvents')}</s.NoEventsText>
+        </s.NoEventsContainer>
+      )}
+    </s.Container>
   );
 }
