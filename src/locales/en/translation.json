@@ -27,6 +27,9 @@
     "recommendations": "Recommend events for you",
     "viewMore": "View more events"
   },
+  "searchResult": {
+    "noAvailableEvents": "There is no available event!"
+  },
   "interested": {
     "title": "Favourited Events",
     "searchPlaceholder": "Search for an event...",
@@ -87,6 +90,7 @@
     "hcm": "Ho Chi Minh",
     "hanoi": "Hanoi",
     "dalat": "Da Lat",
+    "otherPlaceholder": "charity,education",
     "otherLocation": "Other location",
     "enterLocation": "Enter desired location",
     "price": "Price",
