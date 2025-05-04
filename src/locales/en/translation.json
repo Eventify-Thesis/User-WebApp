@@ -46,6 +46,11 @@
     "past": "Past"
   },
   "ticketSection": {
+    "tickets": "Tickets",
+    "venue": "Venue",
+    "description": "Description",
+    "scanQRCode": "Scan QR Code",
+    "scanInstructions": "Present this QR code to check-in staff for verification",
     "ticketType": "Ticket Type",
     "area": "Area",
     "row": "Row",
@@ -66,6 +71,9 @@
     "phone": "Phone",
     "address": "Address",
     "orderSummary": "Order Summary",
+    "subtotal": "Subtotal",
+    "discount": "Discount",
+    "paidAt": "Paid At",
     "ticketType": "Ticket Type",
     "quantity": "Quantity",
     "totalPrice": "Total Price",
@@ -255,6 +263,7 @@
     "unchecked": "Unchecked"
   },
   "common": {
+    "close": "Close",
     "address": "Address",
     "advancedForms": "Advanced Forms",
     "age": "Age",

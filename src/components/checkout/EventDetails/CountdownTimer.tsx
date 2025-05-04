@@ -1,7 +1,7 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import styled from 'styled-components';
+import { Box, Paper, Stack, Text } from '@mantine/core';
 
 interface CountdownTimerProps {
   expireIn?: number;
@@ -40,73 +40,44 @@ export const CountdownTimer: React.FC<CountdownTimerProps> = ({
   const seconds = timeLeft % 60;
 
   return (
-    <TimerWrapper>
-      <TimerContainer>
-        <TimerLabel>{t('checkout.finishOrderIn')}</TimerLabel>
-        <TimerDisplay>
-          <TimeUnit>
-            <TimeValue>{String(minutes).padStart(2, '0')}</TimeValue>
-            <Separator>:</Separator>
-          </TimeUnit>
-          <TimeValue>{String(seconds).padStart(2, '0')}</TimeValue>
-        </TimerDisplay>
-      </TimerContainer>
-    </TimerWrapper>
+    <Box
+      w="11.875rem"
+      h="100%"
+      style={{ fontFamily: 'Montserrat, sans-serif' }}
+    >
+      <Paper
+        radius="xl"
+        p="lg"
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          height: '100%',
+          backdropFilter: 'blur(8px)',
+          backgroundColor: 'rgba(255, 255, 255, 0.25)',
+          border: '1px solid rgba(255, 255, 255, 0.38)',
+        }}
+      >
+        <Stack align="center" gap="md">
+          <Text c="white" size="sm" fw={500} style={{ letterSpacing: '0.01em', opacity: 0.9 }}>
+            {t('checkout.finishOrderIn')}
+          </Text>
+          <Box style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
+            <Box style={{ display: 'flex', alignItems: 'center' }}>
+              <Text c="white" size="xl" fw={600} style={{ letterSpacing: '-0.02em' }}>
+                {String(minutes).padStart(2, '0')}
+              </Text>
+              <Text c="white" size="xl" fw={600} mx={2} style={{ letterSpacing: '-0.02em' }}>
+                :
+              </Text>
+            </Box>
+            <Text c="white" size="xl" fw={600} style={{ letterSpacing: '-0.02em' }}>
+              {String(seconds).padStart(2, '0')}
+            </Text>
+          </Box>
+        </Stack>
+      </Paper>
+    </Box>
   );
 };
-
-const TimerWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  font-family: 'Montserrat', sans-serif;
-  justify-content: center;
-  width: 11.875rem;
-  height: 100%;
-`;
-
-const TimerContainer = styled.div`
-  justify-content: center;
-  border-radius: 36px;
-  border: 1px solid rgba(255, 255, 255, 0.38);
-  backdrop-filter: blur(8px);
-  background-color: rgba(255, 255, 255, 0.25);
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  overflow: hidden;
-  flex: 1;
-  padding: 33px 1px 34px;
-`;
-
-const TimerLabel = styled.div`
-  color: #fff;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-  margin-bottom: 8px;
-`;
-
-const TimerDisplay = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 4px;
-`;
-
-const TimeUnit = styled.div`
-  display: flex;
-  align-items: center;
-`;
-
-const TimeValue = styled.span`
-  color: #fff;
-  font-size: 24px;
-  font-weight: 600;
-`;
-
-const Separator = styled.span`
-  color: #fff;
-  font-size: 24px;
-  font-weight: 600;
-  margin: 0 2px;
-`;

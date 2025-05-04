@@ -75,7 +75,11 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
       >
         <BaseRow align="middle" justify="end" gutter={[4, 4]}>
           <S.NavRow gutter={[12, 0]} align="middle">
-            <S.NavItem>
+            <S.NavItem
+              onMouseEnter={(e) => (e.currentTarget.style.cursor = 'pointer')}
+              onMouseLeave={(e) => (e.currentTarget.style.cursor = 'default')}
+              onClick={() => (window.location.href = '/tickets')}
+            >
               <S.NavIcon icon="ion:ticket-outline" />
               Tickets
             </S.NavItem>

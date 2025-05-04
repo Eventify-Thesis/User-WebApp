@@ -4,6 +4,7 @@ import { EventInfo } from './EventInfo';
 import { CountdownTimer } from './CountdownTimer';
 import { EventDetailResponse } from '@/domain/EventModel';
 import { useLanguage } from '@/hooks/useLanguage';
+import { Container } from '@mantine/core';
 
 interface EventDetailsProps {
   event: EventDetailResponse;
@@ -48,15 +49,25 @@ const EventWrapper = styled.div`
   background: url('https://salt.tkbcdn.com/ts/ds/99/38/15/19919dffe776b8990327c2c461750391.jpg')
     center center / cover no-repeat;
   backdrop-filter: blur(1.5rem) brightness(0.6);
+
+  @media (max-width: 768px) {
+    padding-inline: 1rem;
+  }
 `;
 
-const ContentContainer = styled.div`
+const ContentContainer = styled(Container)`
   display: flex;
   min-height: 216px;
   width: 100%;
   gap: 24px;
   justify-content: center;
   flex-wrap: wrap;
-  padding: 1.5rem 16rem;
+  padding: 1.5rem;
   backdrop-filter: blur(1.5rem) brightness(0.6);
+  max-width: 1200px;
+
+  @media (max-width: 768px) {
+    padding: 1rem;
+    gap: 16px;
+  }
 `;
