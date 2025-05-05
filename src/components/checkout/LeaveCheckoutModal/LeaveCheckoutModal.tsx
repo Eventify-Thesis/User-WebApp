@@ -1,6 +1,6 @@
 import React from 'react';
-import { Modal, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { Modal, Button, Text, Group } from '@mantine/core';
 
 interface LeaveCheckoutModalProps {
   isOpen: boolean;
@@ -17,21 +17,24 @@ export const LeaveCheckoutModal: React.FC<LeaveCheckoutModalProps> = ({
 
   return (
     <Modal
-      title={t('checkout.leaveConfirmation')}
-      open={isOpen}
-      closable={false}
-      maskClosable={false}
-      keyboard={false}
-      footer={[
-        <Button key="stay" type="primary" onClick={onStay}>
-          {t('common.stay')}
-        </Button>,
-        <Button key="leave" danger onClick={onLeave}>
-          {t('common.leave')}
-        </Button>,
-      ]}
+      opened={isOpen}
+      onClose={() => {}}
+      withCloseButton={false}
+      closeOnClickOutside={false}
+      closeOnEscape={false}
+      centered
+      size="md"
+      title={<Text fw={600}>{t('checkout.leaveConfirmation')}</Text>}
     >
-      <p>{t('checkout.leaveConfirmationDescription')}</p>
+      <Text mb="xl">{t('checkout.leaveConfirmationDescription')}</Text>
+      <Group justify="flex-end" gap="sm">
+        <Button variant="light" color="gray" onClick={onLeave}>
+          {t('common.leave')}
+        </Button>
+        <Button variant="filled" color="blue" onClick={onStay}>
+          {t('common.stay')}
+        </Button>
+      </Group>
     </Modal>
   );
 };

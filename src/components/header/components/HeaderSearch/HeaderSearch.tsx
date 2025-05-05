@@ -16,11 +16,11 @@ export const HeaderSearch: React.FC = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [triggerSearch, setTriggerSearch] = useState(false);
 
-  const {
-    data: searchResults,
-    isLoading,
-    refetch,
-  } = useSearchSemanticEvents({query, limit: 4});
+  // const {
+  //   data: searchResults,
+  //   isLoading,
+  //   refetch,
+  // } = useSearchSemanticEvents({query, limit: 4});
 
   const handleSearch = (text: string) => {
     setQuery(text);
@@ -30,12 +30,12 @@ export const HeaderSearch: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    if (triggerSearch && query) {
-      refetch();
-      setTriggerSearch(false);
-    }
-  }, [triggerSearch, query, refetch]);
+  // useEffect(() => {
+  //   if (triggerSearch && query) {
+  //     refetch();
+  //     setTriggerSearch(false);
+  //   }
+  // }, [triggerSearch, query, refetch]);
 
   // Close modal on route change
   useEffect(() => {

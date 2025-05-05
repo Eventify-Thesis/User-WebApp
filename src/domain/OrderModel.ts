@@ -1,18 +1,85 @@
 import { IdParam } from '@/types/types';
+import EventModel from './EventModel';
+import { ShowModel } from './ShowModel';
 
-export default interface OrderModel {
-  id: IdParam;
+export enum OrderStatus {
+  PENDING = "PENDING",
+  PAID = "PAID",
+  PAYMENT_FAILED = "PAYMENT_FAILED",
+  CANCELLED = "CANCELLED",
+}
+
+export interface OrderModel {
+  id: number;
+  publicId: string;
+  shortId: string;
+
   userId: string;
+
+  firstName: string;
+
+  lastName: string;
+
+  email: string;
+
   eventId: number;
-  eventName: string;
-  imageUrl: string;
-  //ticketType: string; // whether it's booked online or offline
-  date: Date;
-  paymentMethod: string;
-  orderStatus: string;
+  showId: number;
+
+  bookingCode: string;
+
+  status: OrderStatus;
+
+  subtotalAmount: number;
+
+  platformDiscountAmount: number;
+
   totalAmount: number;
-  startTime: string; // "HH:mm" (24-hour format)
-  endTime: string; // "HH:mm" (24-hour format)
+
+  reservedUntil: Date;
+
+  stripePaymentIntentId: string;
+
+  stripePaymentStatus: string;
+
+  stripePaymentErrorMessage: string;
+
+  stripeCustomerId: string;
+
+  paidAt: Date;
+
+  items: OrderItemModel[];
+
+  event: EventModel;
+
+  show: ShowModel;
+
   createdAt: Date;
-  buyerEmail: string;
+
+  updatedAt: Date;
+}
+
+export interface OrderItemModel {
+  id: number;
+
+  orderId: number;
+
+  ticketTypeId: number;
+
+  name: string;
+
+  seatId?: string;
+
+  sectionId?: string;
+
+  quantity: number;
+
+  rowLabel: string;
+
+  seatNumber: number;
+
+  price: number;
+
+  createdAt: Date;
+
+  updatedAt: Date;
 }

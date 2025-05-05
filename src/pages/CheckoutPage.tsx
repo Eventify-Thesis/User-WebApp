@@ -14,11 +14,10 @@ import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import ProgressBar from '@/components/checkout/ProgressBar/ProgressBar';
 import styled from 'styled-components';
 import { EventDetails } from '@/components/checkout/EventDetails/EventDetails';
-import { QuestionnaireForm } from '@/components/checkout/QuestionnaireForm/QuestionnaireForm';
 import { TicketInfo } from '@/components/checkout/TicketInfo/TicketInfo';
 import { ExpiredBookingModal } from '@/components/checkout/ExpiredBookingModal/ExpiredBookingModal';
 import { LeaveCheckoutModal } from '@/components/checkout/LeaveCheckoutModal/LeaveCheckoutModal';
-import { Spin, notification } from 'antd';
+import { Loader, Container, Box, Group, Center } from '@mantine/core';
 import { useGetEventDetail } from '@/queries/useGetEventDetail';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
 import { useGetBookingStatus } from '@/queries/useGetBookingStatus';
@@ -26,8 +25,6 @@ import { getBookingCode } from '@/services/localStorage.service';
 import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
 import { useBookingMutations } from '@/mutations/useBookingMutations';
 import { useForm } from '@mantine/form';
-import { PaymentInfo } from '@/components/checkout/PaymentInfo/PaymentInfo';
-import { PaymentStep, QuestionStep } from '@/components/checkout/steps';
 import { CheckoutContext } from '@/types/checkout';
 enum CheckoutStep {
   QUESTION_FORM = 'question-form',
@@ -169,9 +166,9 @@ const CheckoutPage: React.FC = () => {
 
   if (isLoadingEvent || isLoadingShow || isLoadingBooking) {
     return (
-      <LoadingContainer>
-        <Spin size="large" />
-      </LoadingContainer>
+      <Center h="100vh">
+        <Loader />
+      </Center>
     );
   }
 
@@ -241,22 +238,24 @@ const CheckoutPage: React.FC = () => {
           <EventDetails event={event} expireIn={remainingTime} />
         </EventDetailsRow>
       )}
-      <CheckoutContainer>
-        <MainContent>
-          <Outlet context={ctx} />
-        </MainContent>
-        <SideContent>
-          {bookingStatus?.result && (
-            <TicketInfo
-              showId={showId}
-              bookingCode={bookingCode}
-              bookingStatus={bookingStatus.result}
-              currentStep={step}
-              onContinue={handleQuestionnaireSubmit}
-            />
-          )}
-        </SideContent>
-      </CheckoutContainer>
+      <Container size="xl" p={24} bg="var(--background-color)">
+        <Group gap={24} align="flex-start" wrap="nowrap">
+          <Box style={{ flex: 1, width: '100%' }}>
+            <Outlet context={ctx} />
+          </Box>
+          <Box w={350} style={{ flexShrink: 0 }}>
+            {bookingStatus?.result && (
+              <TicketInfo
+                showId={showId}
+                bookingCode={bookingCode}
+                bookingStatus={bookingStatus.result}
+                currentStep={step}
+                onContinue={handleQuestionnaireSubmit}
+              />
+            )}
+          </Box>
+        </Group>
+      </Container>
       <ExpiredBookingModal
         isOpen={isExpiredModalOpen}
         eventId={eventId}
@@ -280,35 +279,8 @@ const ProgressRow = styled(BaseRow)`
   width: 100%;
 `;
 
-const CheckoutContainer = styled.div`
-  display: flex;
-  gap: 24px;
-  width: 100%;
-  padding: 24px;
-  background-color: var(--background-color);
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-  width: 100%;
-`;
-
-const SideContent = styled.div`
-  width: 350px;
-  flex-shrink: 0;
-`;
-
-const EventDetailsRow = styled(BaseRow)`
+const EventDetailsRow = styled.div`
   width: 100%;
   background-color: var(--background-color);
   padding: 24px 24px 0 24px;
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 `;

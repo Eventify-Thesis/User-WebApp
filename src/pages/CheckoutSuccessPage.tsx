@@ -105,7 +105,7 @@ const CheckoutSuccessContent: React.FC = () => {
           type="primary"
           icon={<IeOutlined />}
           size="large"
-          onClick={() => navigate('/order-history')}
+          onClick={() => navigate('/tickets')}
         >
           View My Orders
         </Button>,

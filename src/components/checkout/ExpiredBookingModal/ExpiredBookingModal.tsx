@@ -1,7 +1,7 @@
 import React from 'react';
-import { Modal, Button } from 'antd';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { Modal, Button, Text } from '@mantine/core';
 
 interface ExpiredBookingModalProps {
   isOpen: boolean;
@@ -23,18 +23,24 @@ export const ExpiredBookingModal: React.FC<ExpiredBookingModalProps> = ({
 
   return (
     <Modal
-      title={t('checkout.bookingExpired')}
-      open={isOpen}
-      closable={false}
-      maskClosable={false}
-      keyboard={false}
-      footer={[
-        <Button key="select" type="primary" onClick={handleSelectTickets}>
-          {t('checkout.selectTicketsAgain')}
-        </Button>,
-      ]}
+      opened={isOpen}
+      onClose={() => {}}
+      withCloseButton={false}
+      closeOnClickOutside={false}
+      closeOnEscape={false}
+      centered
+      size="md"
+      title={<Text fw={600}>{t('checkout.bookingExpired')}</Text>}
     >
-      <p>{t('checkout.bookingExpiredDescription')}</p>
+      <Text mb="xl">{t('checkout.bookingExpiredDescription')}</Text>
+      <Button
+        fullWidth
+        onClick={handleSelectTickets}
+        variant="filled"
+        color="blue"
+      >
+        {t('checkout.selectTicketsAgain')}
+      </Button>
     </Modal>
   );
 };

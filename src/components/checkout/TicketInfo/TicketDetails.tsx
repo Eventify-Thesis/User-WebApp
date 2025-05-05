@@ -1,17 +1,20 @@
 import React from 'react';
-import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
+import { Stack, Text, Box, Group, Badge } from '@mantine/core';
 
 interface TicketItem {
+  id: number;
   name: string;
   ticketTypeId: number;
-  seatId: string;
+  seatId?: string;
   quantity: number;
   sectionId?: string;
-  price: string;
+  price: number;
   seatNumber?: string;
   rowLabel?: string;
   color?: string;
+  discount: number;
+  discountCode: string;
 }
 
 interface GroupedTickets {
@@ -19,7 +22,7 @@ interface GroupedTickets {
     name: string;
     id: number;
     quantity: number;
-    price: string;
+    price: number;
     seats: { id: string; rowLabel?: string; seatNumber?: string }[];
   };
 }
@@ -54,109 +57,45 @@ export const TicketDetails: React.FC<TicketDetailsProps> = ({ items }) => {
   }, {});
 
   return (
-    <TicketDetailsWrapper>
-      <Title>{t('checkout.ticketDetails')}</Title>
-      <TicketList>
+    <Stack gap="md">
+      <Text fw={600} size="sm">{t('checkout.ticketDetails')}</Text>
+      <Stack gap="sm">
         {Object.values(groupedTickets).map((ticket) => (
-          <div key={ticket.id}>
-            <TicketItem>
-              <TicketTypeInfo>
-                <TicketName>{ticket.name}</TicketName>
-                <TicketQuantity>x{ticket.quantity}</TicketQuantity>
-              </TicketTypeInfo>
-              <PriceInfo>
-                <UnitPrice>
+          <Box key={ticket.id}>
+            <Group justify="space-between" mb="xs">
+              <Group gap="xs">
+                <Text size="sm" fw={500}>{ticket.name}</Text>
+                <Text size="sm" c="dimmed">x{ticket.quantity}</Text>
+              </Group>
+              <Stack gap={4} align="flex-end">
+                <Text size="sm" c="dimmed">
                   {Number(ticket.price).toLocaleString('vi-VN')} đ
-                </UnitPrice>
-                <TotalPrice>
-                  {(Number(ticket.price) * ticket.quantity).toLocaleString(
-                    'vi-VN',
-                  )}{' '}
-                  đ
-                </TotalPrice>
-              </PriceInfo>
-            </TicketItem>
+                </Text>
+                <Text size="sm" fw={500}>
+                  {(Number(ticket.price) * ticket.quantity).toLocaleString('vi-VN')} đ
+                </Text>
+              </Stack>
+            </Group>
             {ticket.seats.length > 0 && (
-              <SeatList>
+              <Group gap="xs">
                 {ticket.seats.map((seat) => (
-                  <SeatTag key={seat.id}>
+                  <Badge
+                    key={seat.id}
+                    variant="light"
+                    color="blue"
+                    size="sm"
+                    radius="sm"
+                  >
                     {seat.rowLabel
                       ? `${seat.rowLabel} - ${seat.seatNumber}`
                       : seat.seatNumber}
-                  </SeatTag>
+                  </Badge>
                 ))}
-              </SeatList>
+              </Group>
             )}
-          </div>
+          </Box>
         ))}
-      </TicketList>
-    </TicketDetailsWrapper>
+      </Stack>
+    </Stack>
   );
 };
-
-const TicketDetailsWrapper = styled.div`
-  margin: 16px 0;
-`;
-
-const Title = styled.h3`
-  font-size: 16px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: #27272a;
-`;
-
-const TicketList = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-`;
-
-const TicketItem = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-`;
-
-const TicketTypeInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #27272a;
-`;
-
-const TicketName = styled.div`
-  font-weight: 500;
-`;
-
-const TicketQuantity = styled.div`
-  font-weight: 500;
-`;
-
-const PriceInfo = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #71717a;
-  font-size: 14px;
-`;
-
-const UnitPrice = styled.div``;
-
-const TotalPrice = styled.div`
-  font-weight: 500;
-`;
-
-const SeatList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: 8px;
-`;
-
-const SeatTag = styled.div`
-  padding: 4px 8px;
-  background-color: #f4f4f5;
-  border-radius: 4px;
-  font-size: 12px;
-  color: #52525b;
-`;

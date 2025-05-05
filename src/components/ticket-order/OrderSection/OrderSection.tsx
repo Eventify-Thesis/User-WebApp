@@ -1,95 +1,203 @@
-import { Table } from "antd";
-import { useTranslation } from "react-i18next";
-import { useGetBuyerByEmail } from "@/queries/useGetBuyer";
-import Order from "@/domain/OrderModel";
-import Ticket from "@/domain/TicketModel";
-import * as s from "./OrderSection.styles";
+import { useTranslation } from 'react-i18next';
+import { OrderModel } from '@/domain/OrderModel';
+import {
+  Box,
+  Title,
+  Text,
+  Group,
+  Badge,
+  Grid,
+  Table,
+  Stack,
+  Paper,
+  Divider,
+} from '@mantine/core';
+import {
+  IconUser,
+  IconMail,
+  IconTicket,
+  IconClock,
+  IconDiscount,
+} from '@tabler/icons-react';
+import '@mantine/core/styles.css';
 
 interface OrderSectionProps {
-  order: Order;
-  tickets: Ticket[];
+  order: OrderModel;
 }
 
-const OrderSection: React.FC<OrderSectionProps> = ({ order, tickets }) => {
+const OrderSection: React.FC<OrderSectionProps> = ({ order }) => {
   const { t } = useTranslation();
-  const { data: buyer, isLoading, isError } = useGetBuyerByEmail(order.buyerEmail);
-
-  const columns = [
-    { title: t("orderSection.ticketType"), dataIndex: "ticketType", key: "ticketType" },
-    { title: t("orderSection.quantity"), dataIndex: "quantity", key: "quantity" },
-    { 
-      title: t("orderSection.totalPrice"), 
-      dataIndex: "totalPrice", 
-      key: "totalPrice", 
-      render: (text: number) => `${text.toLocaleString()} đ` 
-    },
-  ];
-
-  // Group tickets by type for table display
-  const ticketSummary = tickets.reduce((acc, ticket) => {
-    const existing = acc.find((t) => t.ticketType === ticket.ticketType);
-    if (existing) {
-      existing.quantity += 1;
-      existing.totalPrice += 270000; // Assuming each ticket costs 270,000 đ
-    } else {
-      acc.push({
-        key: ticket.id,
-        ticketType: ticket.ticketType,
-        quantity: 1,
-        totalPrice: 270000,
-      });
-    }
-    return acc;
-  }, [] as { key: string; ticketType: string; quantity: number; totalPrice: number }[]);
 
   return (
-    <div>
-      {/* Order Info */}
-      <s.StyledCard title={`${t("orderSection.order")}: ${order.id}`} bordered={false} isTopCard={true}>
-        <Table
-          columns={[
-            { 
-              title: t("orderSection.orderDate"), 
-              dataIndex: "createdAt", 
-              key: "createdAt",
-              render: (date: Date) => date ? new Date(date).toLocaleString() : "-" 
-            },
-            { title: t("orderSection.paymentMethod"), dataIndex: "paymentMethod", key: "paymentMethod" },
-            { title: t("orderSection.orderStatus"), dataIndex: "orderStatus", key: "orderStatus" },
-          ]}
-          dataSource={[{ ...order, createdAt: order.createdAt.toISOString() }]}
-          pagination={false}
-          bordered
-          scroll={{ x: 300 }}
-        />
-      </s.StyledCard>
+    <Stack gap="xl">
+      {/* Order Status */}
+      <Box>
+        <Group justify="space-between" mb="md">
+          <Title order={3}>
+            {t('orderSection.order')}: #{order.publicId}
+          </Title>
+          <Badge
+            color={order.status === 'PAID' ? 'green' : 'yellow'}
+            variant="light"
+            size="lg"
+          >
+            {order.status}
+          </Badge>
+        </Group>
+
+        <Grid gutter="xl">
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <Group gap="xs">
+              <IconClock size={16} />
+              <Text size="sm" c="gray.7">
+                {t('orderSection.orderDate')}:
+              </Text>
+              <Text size="sm">
+                {new Date(order.createdAt).toLocaleString()}
+              </Text>
+            </Group>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <Group gap="xs">
+              <IconTicket size={16} />
+              <Text size="sm" c="gray.7">
+                {t('orderSection.paidAt')}:
+              </Text>
+              <Text size="sm">{new Date(order.paidAt).toLocaleString()}</Text>
+            </Group>
+          </Grid.Col>
+        </Grid>
+      </Box>
 
       {/* Buyer Info */}
-      <s.ScrollContainer>
-        <s.StyledCard title={t("orderSection.buyerInfo")} bordered={false}>
-          <Table
-            columns={[
-              { title: t("orderSection.name"), dataIndex: "name", key: "name" },
-              { title: t("orderSection.email"), dataIndex: "email", key: "email" },
-              { title: t("orderSection.phone"), dataIndex: "phone", key: "phone" },
-              { title: t("orderSection.address"), dataIndex: "address", key: "address" },
-            ]}
-            dataSource={[buyer]}
-            pagination={false}
-            bordered
-            scroll={{ x: 600 }}
-          />
-        </s.StyledCard>
-      </s.ScrollContainer>
+      <Box>
+        <Title order={3} mb="md">
+          {t('orderSection.buyerInfo')}
+        </Title>
+        <Grid gutter="xl">
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <Group gap="xs">
+              <IconUser size={16} />
+              <Text size="sm" c="gray.7">
+                {t('orderSection.name')}:
+              </Text>
+              <Text size="sm">
+                {order.firstName} {order.lastName}
+              </Text>
+            </Group>
+          </Grid.Col>
+          <Grid.Col span={{ base: 12, sm: 6 }}>
+            <Group gap="xs">
+              <IconMail size={16} />
+              <Text size="sm" c="gray.7">
+                {t('orderSection.email')}:
+              </Text>
+              <Text size="sm">{order.email}</Text>
+            </Group>
+          </Grid.Col>
+        </Grid>
+      </Box>
 
       {/* Order Summary */}
-      <s.StyledCard title={t("orderSection.orderSummary")} bordered={false}>
-        <Table columns={columns} dataSource={ticketSummary} pagination={false} bordered />
-        <h3 style={{ textAlign: "right", color: "green", marginTop: "10px" }}>
-          {t("orderSection.totalAmount")}: {order.totalAmount.toLocaleString()} đ
-        </h3>
-      </s.StyledCard>
-    </div>
+      <Box>
+        <Title order={3} mb="lg">
+          {t('orderSection.orderSummary')}
+        </Title>
+        <Paper withBorder radius="md" p="md">
+          <Table
+            verticalSpacing="sm"
+            styles={{
+              th: {
+                color: 'var(--mantine-color-gray-6)',
+                fontSize: 'var(--mantine-font-size-sm)',
+                fontWeight: 500,
+                padding: 'var(--mantine-spacing-xs) var(--mantine-spacing-sm)',
+                borderBottom: '1px solid var(--mantine-color-gray-3)',
+              },
+              td: {
+                fontSize: 'var(--mantine-font-size-sm)',
+                padding: 'var(--mantine-spacing-xs) var(--mantine-spacing-sm)',
+              },
+            }}
+          >
+            <thead>
+              <tr>
+                <th>{t('orderSection.ticketType')}</th>
+                <th>{t('orderSection.quantity')}</th>
+                <th style={{ textAlign: 'right' }}>
+                  {t('orderSection.price')}
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {order.items.map((item) => (
+                <tr key={item.id}>
+                  <td>
+                    <Group gap="xs">
+                      <IconTicket
+                        size={16}
+                        style={{ color: 'var(--mantine-color-blue-6)' }}
+                      />
+                      <Text>{item.name}</Text>
+                    </Group>
+                  </td>
+                  <td>
+                    <Badge variant="light" color="blue" size="sm">
+                      {item.quantity}
+                    </Badge>
+                  </td>
+                  <td style={{ textAlign: 'right' }}>
+                    <Text fw={500}>
+                      {Number(item.price).toLocaleString()} đ
+                    </Text>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+
+          <Divider my="md" variant="dashed" />
+
+          <Stack gap="xs" pl="sm" pr="sm">
+            <Group justify="space-between">
+              <Text size="sm" c="dimmed">
+                {t('orderSection.subtotal')}
+              </Text>
+              <Text size="sm">
+                {Number(
+                  order.subtotalAmount || order.totalAmount,
+                ).toLocaleString()}{' '}
+                đ
+              </Text>
+            </Group>
+
+            {order.platformDiscountAmount > 0 && (
+              <Group justify="space-between">
+                <Group gap="xs">
+                  <IconDiscount
+                    size={16}
+                    style={{ color: 'var(--mantine-color-green-6)' }}
+                  />
+                  <Text size="sm" c="dimmed">
+                    {t('orderSection.discount')}
+                  </Text>
+                </Group>
+                <Text size="sm" c="green.6">
+                  -{Number(order.platformDiscountAmount).toLocaleString()} đ
+                </Text>
+              </Group>
+            )}
+
+            <Group justify="space-between" mt="xs">
+              <Text fw={500}>{t('orderSection.total')}</Text>
+              <Text size="lg" fw={700} c="blue.7">
+                {Number(order.totalAmount).toLocaleString()} đ
+              </Text>
+            </Group>
+          </Stack>
+        </Paper>
+      </Box>
+    </Stack>
   );
 };
 

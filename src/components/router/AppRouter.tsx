@@ -53,8 +53,8 @@ export const AppRouter: React.FC = () => {
           <Route index element={<HomePage />} />
           <Route path="search-result" element={<SearchResult />} />
           <Route path="interested" element={<InterestedPage />} />
-          <Route path="order-history" element={<OrderHistory />} />
-          <Route path="ticket-order/:orderId" element={<TicketOrder />} />
+          <Route path="tickets" element={<OrderHistory />} />
+          <Route path="orders/:orderId" element={<TicketOrder />} />
           <Route path=":slug" element={<EventDetailPage />} />
 
           {/* protected subtree */}

@@ -1,11 +1,27 @@
-import { StepsProps } from 'antd';
-import * as S from './BaseSteps.styles';
+import { Stepper, StepperProps } from '@mantine/core';
 
-export type BaseStepsProps = StepsProps;
+export interface BaseStepsProps extends Omit<StepperProps, 'active' | 'children'> {
+  current?: number;
+  items?: Array<{ title: string; description?: string }>;
+}
 
 export const BaseSteps: React.FC<BaseStepsProps> = ({
-  children,
+  current = 0,
+  items = [],
   ...otherProps
 }) => {
-  return <S.Steps {...otherProps}>{children}</S.Steps>;
+  return (
+    <Stepper
+      active={current}
+      {...otherProps}
+    >
+      {items.map((item, index) => (
+        <Stepper.Step
+          key={index}
+          label={item.title}
+          description={item.description}
+        />
+      ))}
+    </Stepper>
+  );
 };
