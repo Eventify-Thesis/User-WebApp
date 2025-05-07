@@ -39,5 +39,20 @@ export const searchClient = {
   getRelatedEvents: async (eventId: string, limit: number = 4): Promise<EventModel[]> => {
     const response = await httpApi.get<any>(`/search/events/${eventId}/related`, { params: { limit } });
     return response.data.data.result;
-  }
+  },
+
+  getEventsThisMonth: async (): Promise<any[]> => {
+    const response = await httpApi.get<any>('/search/events/this-month');
+    return response.data.data.events;
+  },
+
+  getEventsThisWeek: async (): Promise<any[]> => {
+    const response = await httpApi.get<any>('/search/events/this-week');
+    return response.data.data.events;
+  },
+
+  getEventsByCategory: async (): Promise<any[]> => {
+    const response = await httpApi.get<any>('/search/events-by-category');
+    return response.data.data;
+  },
 };

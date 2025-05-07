@@ -117,7 +117,22 @@
     "technology": "Technology & Innovation",
     "travel": "Travel & Adventure",
     "upcomingEvents": "Upcoming Events",
-    "exploreCategories": "Explore Categories"
+    "exploreCategories": "Explore Categories",
+    "thisWeekend": "This weekend",
+    "thisMonth": "This month",
+    "viewMore": "View more",
+    "popularEventsThisMonth": "Popular Events This Month",
+    "popularEventsThisWeek": "Popular Events This Week",
+    "explore": "Explore and discover",
+    "locationSection": {
+      "title": "Discover Popular Events",
+      "locations": {
+        "hcm": "Ho Chi Minh City",
+        "hanoi": "Hanoi",
+        "dalat": "Da Lat",
+        "other": "Other"
+      }
+    }
   },
   "eventDetailPage": {
     "buyTicket": "Buy Ticket",

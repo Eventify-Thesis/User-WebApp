@@ -20,7 +20,6 @@ export default function SearchResults() {
   const categoryParam = useQueryParam("categories");
   const [selectedDates, setSelectedDates] = useState<[Dayjs | null, Dayjs | null]>([null, null]);
   const [filterData, setFilterData] = useState<FilterData>({
-    location: undefined,
     categories: categoryParam ? categoryParam.split(',') : [],
   });
 
