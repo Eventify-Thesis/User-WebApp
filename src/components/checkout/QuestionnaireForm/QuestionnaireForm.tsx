@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useGetEventQuestions } from '@/queries/useGetEventQuestions';
 import { Spin } from 'antd';
 import { useGetFormAnswers } from '@/queries/useGetFormAnswers';
-import { useForm } from '@mantine/form';
+import { useForm, UseFormReturnType } from '@mantine/form';
 import { useNavigate } from 'react-router-dom';
 import { QuestionModel } from '@/domain/QuestionModel';
 import { Button, TextInput } from '@mantine/core';
@@ -42,13 +42,13 @@ interface FormValues {
 }
 
 interface QuestionnaireFormProps {
+  form: UseFormReturnType<FormValues>;
   eventId: number;
   showId: number;
   bookingCode: string;
   ticketTypes: TicketTypeModel[];
   orderItems: any[];
   onSubmit: (values: any) => void;
-  onFormReady?: (form: ReturnType<typeof useForm<FormValues>>) => void;
 }
 
 export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
@@ -57,8 +57,7 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
   bookingCode,
   ticketTypes,
   orderItems,
-  onSubmit,
-  onFormReady,
+  form,
 }) => {
   const { isTablet, isDesktop } = useResponsive();
   const { t } = useTranslation();
@@ -82,27 +81,6 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
     (question) => question.belongsTo === 'ORDER',
   );
   let attendeeIndex = 0;
-
-  const form = useForm<FormValues>({
-    initialValues: {
-      order: {
-        first_name: '',
-        last_name: '',
-        email: '',
-        address: {},
-        questions: [],
-      },
-      attendees: [
-        {
-          first_name: '',
-          last_name: '',
-          email: '',
-          id: '',
-          questions: [],
-        },
-      ],
-    },
-  });
 
   const copyDetailsToAllAttendees = () => {
     const updatedAttendees = form.values.attendees.map((attendee) => {

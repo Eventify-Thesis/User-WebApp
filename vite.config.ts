@@ -12,6 +12,20 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
     },
   },
+  // css: {
+  //   modules: {
+  //     localsConvention: 'camelCase',
+  //   },
+  //   preprocessorOptions: {
+  //     scss: {
+  //       additionalData: `@import "@/styles/mixins.scss";`,
+  //     },
+  //   },
+  //   postcss: {
+  //     plugins: [postcssPresetMantine()],
+  //   },
+  // },
 });

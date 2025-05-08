@@ -28,6 +28,12 @@
   --tk-radius-xl: 15px;
 }
 
+.dark-input-number {
+  .ant-input-number-input {
+    color: white !important;
+  }
+}
+
 * {
   box-sizing: border-box;
 }

@@ -5,6 +5,8 @@ import {
   Navigate,
   useLocation,
   useNavigate,
+  Outlet,
+  useMatch,
 } from 'react-router-dom';
 import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { useResponsive } from '@/hooks/useResponsive';
@@ -12,26 +14,39 @@ import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import ProgressBar from '@/components/checkout/ProgressBar/ProgressBar';
 import styled from 'styled-components';
 import { EventDetails } from '@/components/checkout/EventDetails/EventDetails';
-import { QuestionnaireForm } from '@/components/checkout/QuestionnaireForm/QuestionnaireForm';
 import { TicketInfo } from '@/components/checkout/TicketInfo/TicketInfo';
 import { ExpiredBookingModal } from '@/components/checkout/ExpiredBookingModal/ExpiredBookingModal';
 import { LeaveCheckoutModal } from '@/components/checkout/LeaveCheckoutModal/LeaveCheckoutModal';
-import { Spin, notification } from 'antd';
+import { Loader, Container, Box, Group, Center } from '@mantine/core';
 import { useGetEventDetail } from '@/queries/useGetEventDetail';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
 import { useGetBookingStatus } from '@/queries/useGetBookingStatus';
 import { getBookingCode } from '@/services/localStorage.service';
 import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
 import { useBookingMutations } from '@/mutations/useBookingMutations';
-import { useForm } from '@/components/checkout/QuestionnaireForm/useForm';
-
+import { useForm } from '@mantine/form';
+import { CheckoutContext } from '@/types/checkout';
 enum CheckoutStep {
   QUESTION_FORM = 'question-form',
   PAYMENT_INFO = 'payment-info',
 }
 
 const CheckoutPage: React.FC = () => {
-  const { eventId, showId, step } = useParams();
+  const { eventId, showId } = useParams();
+
+  const isQuestion = useMatch(
+    '/events/:eventId/bookings/:showId/question-form',
+  );
+  const isPayment = useMatch('/events/:eventId/bookings/:showId/payment-info');
+
+  const step = isQuestion
+    ? 'question-form'
+    : isPayment
+    ? 'payment-info'
+    : 'question-form';
+
+  // now you know which step is active
+  const currentStep = isPayment ? 3 : 2;
   const location = useLocation();
   const navigate = useNavigate();
   const { isDesktop } = useResponsive();
@@ -43,6 +58,7 @@ const CheckoutPage: React.FC = () => {
     showModal: isLeaveModalOpen,
     handleConfirmNavigationClick,
     handleCancelNavigationClick,
+    unblock,
   } = useNavigationBlocker();
 
   // Get booking code from localStorage
@@ -58,9 +74,41 @@ const CheckoutPage: React.FC = () => {
 
   const { updateFormAnswer } = useBookingMutations();
 
-  const [formRef, setFormRef] = React.useState<ReturnType<
-    typeof useForm
-  > | null>(null);
+  const form = useForm<{
+    order: {
+      first_name: string;
+      last_name: string;
+      email: string;
+      address: any;
+      questions: any[];
+    };
+    attendees: Array<{
+      id: number;
+      first_name: string;
+      last_name: string;
+      email: string;
+      questions: any[];
+    }>;
+  }>({
+    initialValues: {
+      order: {
+        first_name: '',
+        last_name: '',
+        email: '',
+        address: {},
+        questions: [],
+      },
+      attendees: [
+        {
+          first_name: '',
+          last_name: '',
+          email: '',
+          id: '',
+          questions: [],
+        },
+      ],
+    },
+  });
 
   // Initialize timer when booking status is loaded
   useEffect(() => {
@@ -104,33 +152,23 @@ const CheckoutPage: React.FC = () => {
 
   // Redirect if no booking code
   if (!bookingCode) {
-    notification.error({
-      message: 'Error',
-      description: 'Invalid booking session. Please try again.',
-    });
-    return <Navigate to={`/events/${eventId}/shows/${showId}`} replace />;
+    // notification.error({
+    //   message: 'Error',
+    //   description: 'Invalid booking session. Please try again.',
+    // });
+    return (
+      <Navigate
+        to={`/events/${eventId}/bookings/${showId}/select-ticket`}
+        replace
+      />
+    );
   }
 
   if (isLoadingEvent || isLoadingShow || isLoadingBooking) {
     return (
-      <LoadingContainer>
-        <Spin size="large" />
-      </LoadingContainer>
-    );
-  }
-
-  // Validate step and redirect if invalid
-  if (
-    !step ||
-    ![CheckoutStep.QUESTION_FORM, CheckoutStep.PAYMENT_INFO].includes(
-      step as CheckoutStep,
-    )
-  ) {
-    return (
-      <Navigate
-        to={`/events/${eventId}/bookings/${showId}/${CheckoutStep.QUESTION_FORM}`}
-        replace
-      />
+      <Center h="100vh">
+        <Loader />
+      </Center>
     );
   }
 
@@ -139,10 +177,13 @@ const CheckoutPage: React.FC = () => {
   };
 
   const handleQuestionnaireSubmit = async () => {
-    if (!formRef) return;
+    if (!form) {
+      console.error('Form reference not available');
+      return;
+    }
 
     try {
-      const values = formRef.values;
+      const values = form.values;
 
       await updateFormAnswer({
         bookingCode: bookingCode!,
@@ -164,38 +205,26 @@ const CheckoutPage: React.FC = () => {
           })),
         },
       });
-
-      navigate('payment-info');
+      unblock();
+      navigate(
+        `/events/${eventId}/bookings/${showId}/${CheckoutStep.PAYMENT_INFO}`,
+        { replace: true },
+      );
     } catch (error) {
       // Error is handled by the mutation
+      console.error('Failed to submit form:', error);
     }
   };
 
-  const renderStepContent = () => {
-    switch (step) {
-      case CheckoutStep.QUESTION_FORM:
-        return (
-          <QuestionnaireRow>
-            <QuestionnaireForm
-              eventId={eventId}
-              showId={showId}
-              ticketTypes={show.ticketTypes}
-              bookingCode={bookingCode}
-              orderItems={bookingStatus?.result?.items}
-              onFormReady={setFormRef}
-            />
-          </QuestionnaireRow>
-        );
-      case CheckoutStep.PAYMENT_INFO:
-        return (
-          <PaymentRow>
-            {/* TODO: Implement PaymentForm component */}
-            <div>Payment form will be implemented here</div>
-          </PaymentRow>
-        );
-      default:
-        return null;
-    }
+  const onContinue = handleQuestionnaireSubmit; // your existing function
+
+  // now build the context payload
+  const ctx: CheckoutContext = {
+    event: event!,
+    show: show!,
+    bookingStatus: bookingStatus!.result,
+    form,
+    onContinue,
   };
 
   return (
@@ -209,20 +238,24 @@ const CheckoutPage: React.FC = () => {
           <EventDetails event={event} expireIn={remainingTime} />
         </EventDetailsRow>
       )}
-      <CheckoutContainer>
-        <MainContent>{renderStepContent()}</MainContent>
-        <SideContent>
-          {bookingStatus?.result && (
-            <TicketInfo
-              showId={showId}
-              bookingCode={bookingCode}
-              bookingStatus={bookingStatus.result}
-              currentStep={step}
-              onContinue={handleQuestionnaireSubmit}
-            />
-          )}
-        </SideContent>
-      </CheckoutContainer>
+      <Container size="xl" p={24} bg="var(--background-color)">
+        <Group gap={24} align="flex-start" wrap="nowrap">
+          <Box style={{ flex: 1, width: '100%' }}>
+            <Outlet context={ctx} />
+          </Box>
+          <Box w={350} style={{ flexShrink: 0 }}>
+            {bookingStatus?.result && (
+              <TicketInfo
+                showId={showId}
+                bookingCode={bookingCode}
+                bookingStatus={bookingStatus.result}
+                currentStep={step}
+                onContinue={handleQuestionnaireSubmit}
+              />
+            )}
+          </Box>
+        </Group>
+      </Container>
       <ExpiredBookingModal
         isOpen={isExpiredModalOpen}
         eventId={eventId}
@@ -246,45 +279,8 @@ const ProgressRow = styled(BaseRow)`
   width: 100%;
 `;
 
-const CheckoutContainer = styled.div`
-  display: flex;
-  gap: 24px;
-  width: 100%;
-  padding: 24px;
-  background-color: var(--background-color);
-  max-width: 1200px;
-  margin: 0 auto;
-`;
-
-const MainContent = styled.div`
-  flex: 1;
-  width: 100%;
-`;
-
-const SideContent = styled.div`
-  width: 350px;
-  flex-shrink: 0;
-`;
-
-const EventDetailsRow = styled(BaseRow)`
+const EventDetailsRow = styled.div`
   width: 100%;
   background-color: var(--background-color);
   padding: 24px 24px 0 24px;
-`;
-
-const QuestionnaireRow = styled(BaseRow)`
-  width: 100%;
-  min-width: 600px;
-`;
-
-const PaymentRow = styled(BaseRow)`
-  width: 100%;
-  min-width: 600px;
-`;
-
-const LoadingContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 `;

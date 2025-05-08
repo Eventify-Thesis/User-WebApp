@@ -1,20 +1,21 @@
-import React, {useEffect, useRef} from 'react';
+import React, { useEffect, useRef } from 'react';
 
-interface UserGeneratedContentProps extends React.HTMLAttributes<HTMLDivElement> {
-}
+interface UserGeneratedContentProps
+  extends React.HTMLAttributes<HTMLDivElement> {}
 
 export const UserGeneratedContent = (props: UserGeneratedContentProps) => {
-    const contentRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        if (contentRef.current) {
-            const anchors = contentRef.current.querySelectorAll<HTMLAnchorElement>('a');
-            anchors.forEach(anchor => {
-                anchor.setAttribute('rel', 'nofollow noopener noreferrer ugc');
-                anchor.setAttribute('target', '_blank');
-            });
-        }
-    }, [props.children]);
+  useEffect(() => {
+    if (contentRef.current) {
+      const anchors =
+        contentRef.current.querySelectorAll<HTMLAnchorElement>('a');
+      anchors.forEach((anchor) => {
+        anchor.setAttribute('rel', 'nofollow noopener noreferrer ugc');
+        anchor.setAttribute('target', '_blank');
+      });
+    }
+  }, [props.children]);
 
-    return <div ref={contentRef} {...props} />;
+  return <div ref={contentRef} {...props} />;
 };

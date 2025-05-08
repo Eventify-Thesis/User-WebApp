@@ -24,6 +24,7 @@ export interface QuestionResponse {
 
 export interface Question {
   question_id: number;
+  ticket_type_id: number;
   response: QuestionResponse;
 }
 
@@ -75,5 +76,10 @@ export const bookingClient = {
   updateAnswers: async (showId: number, bookingCode: string, answers: any) => {
     const response = await httpApi.put(`/bookings/answers?showId=${showId}&bookingCode=${bookingCode}`, answers);
     return response.data.data;
-  }
+  },
+
+  createPaymentIntent: async (orderId: number) => {
+    const response = await httpApi.post('/bookings/create-payment-intent', { orderId });
+    return response.data.data;
+  },
 };

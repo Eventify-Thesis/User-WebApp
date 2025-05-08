@@ -11,6 +11,7 @@ export default interface BookingModel {
   addressId: number;
   ticketPrintingFee?: number;
   shippingFee?: number;
+  orderId: number;
   step: string;
   platformDiscountAmount: number;
   items: {
