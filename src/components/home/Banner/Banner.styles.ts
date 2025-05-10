@@ -25,16 +25,7 @@ export const StyledCarousel = styled(Carousel)`
 
   .slick-prev::after,
   .slick-next::after {
-    font-size: 18px;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 50%;
-    height: 50%;
-    position: relative;
-    left: 0px;
-    top: -1.2px;
+    display: none !important;  /* Hide the default arrows */
   }
 `;
 

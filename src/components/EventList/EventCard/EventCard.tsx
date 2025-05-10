@@ -8,6 +8,7 @@ interface EventCardProps extends EventModel {
   minimumPrice?: number;
   startTime?: Date;
   isInterested?: boolean;
+  onClick?: () => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -18,6 +19,7 @@ const EventCard: React.FC<EventCardProps> = ({
   minimumPrice,
   startTime,
   isInterested: initialFavorited = false,
+  onClick,
 }) => {
   const { t } = useTranslation();
   const [isFavorited, setIsFavorited] = useState(initialFavorited);
@@ -27,12 +29,12 @@ const EventCard: React.FC<EventCardProps> = ({
   };
 
   return (
-    <s.Card>
+    <s.Card onClick={onClick} style={onClick ? { cursor: 'pointer' } : {}}>
       <s.ImageWrapper>
         <s.EventImage src={eventBannerUrl} alt={eventName} />
 
         {/* Bookmark/Favorite Icon */}
-        <s.BookmarkIcon onClick={toggleFavorite}>
+        <s.BookmarkIcon onClick={e => { e.stopPropagation(); toggleFavorite(); }}>
           {isFavorited ? (
             <StarFilled style={{ fontSize: '24px', color: '#FFD700' }} />
           ) : (
@@ -46,7 +48,8 @@ const EventCard: React.FC<EventCardProps> = ({
         {minimumPrice ? t('homePage.from') + ' ' + Math.floor(minimumPrice) : 'N/A'}
       </s.EventPrice>
       <s.EventDate>
-        {startTime ? '📅 ' + new Date(startTime).toDateString() : 'N/A'}
+        {/* Convert seconds to milliseconds by multiplying by 1000*/}
+        {startTime ? '📅 ' + new Date(Number(startTime) * 1000).toDateString() : 'N/A'}
       </s.EventDate>
     </s.Card>
   );

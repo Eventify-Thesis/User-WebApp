@@ -54,10 +54,8 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({
           onKeyDown={(e) => {
             if (e.key === 'Enter') {
               e.preventDefault();
-              if (query.trim()) {
-                onSearch(query);
-                setModalOpen?.(false);
-              }
+              onSearch(query);
+              setModalOpen?.(false);
             }
           }}
 

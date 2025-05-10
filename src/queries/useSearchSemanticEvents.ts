@@ -11,6 +11,7 @@ export const useSearchSemanticEvents = (params: SearchEventsParams) => {
     queryFn: async () => {
       const result = await searchClient.searchSemanticEvents({
         ...params,
+        query: params.query ?? '',
         userId: params.userId ?? authUserId ?? undefined,
       });
       return result ?? []; // Ensure fallback to [] if result is undefined

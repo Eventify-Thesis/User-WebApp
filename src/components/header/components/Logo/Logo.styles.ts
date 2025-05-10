@@ -7,6 +7,7 @@ export const LogoWrapper = styled.div`
 
 export const LogoImage = styled.img`
   height: 40px; /* Default size */
+  cursor: pointer;
 
   @media (max-width: 768px) {
     height: 28px; /* Smaller on tablets */

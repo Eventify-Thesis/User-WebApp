@@ -4,13 +4,19 @@ import { useState } from 'react';
 import { StarOutlined, StarFilled } from '@ant-design/icons';
 import EventModel from '@/domain/EventModel';
 
-const EventCard: React.FC<EventModel & { onUnbookmark: (id: string) => void; isFading: boolean }> = ({
+interface EventCardProps extends EventModel {
+  minimumPrice?: number;
+  startTime?: Date;
+  isInterested?: boolean;
+}
+
+const EventCard: React.FC<EventCardProps & { onUnbookmark: (id: string) => void; isFading: boolean }> = ({
   id,
   eventName,
-  eventLogoURL,
-  eventBannerURL,
-  price,
-  date,
+  eventLogoUrl,
+  eventBannerUrl,
+  minimumPrice,
+  startTime,
   isInterested: initialInterested = false,
   onUnbookmark,
   isFading,
@@ -26,7 +32,7 @@ const EventCard: React.FC<EventModel & { onUnbookmark: (id: string) => void; isF
   return (
     <s.Card className={isFading ? "fade-out" : ""}>
       <s.ImageWrapper>
-        <s.EventImage src={eventBannerURL} alt={eventName} />
+        <s.EventImage src={eventBannerUrl} alt={eventName} />
 
         {/* Bookmark/Interest Icon */}
         <s.BookmarkIcon onClick={toggleInterest}>
@@ -39,8 +45,8 @@ const EventCard: React.FC<EventModel & { onUnbookmark: (id: string) => void; isF
       </s.ImageWrapper>
 
       <s.EventTitle>{eventName}</s.EventTitle>
-      {price && <s.EventPrice>{t('homePage.from')} {price}</s.EventPrice>}
-      <s.EventDate>📅 {date.toDateString()}</s.EventDate>
+      {minimumPrice && <s.EventPrice>{t('homePage.from')} {minimumPrice}</s.EventPrice>}
+      <s.EventDate>📅 {startTime?.toDateString()}</s.EventDate>
     </s.Card>
   );
 };

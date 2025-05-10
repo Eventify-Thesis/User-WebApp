@@ -1,9 +1,9 @@
 import { Button, Input, Radio } from "antd";
 import styled from "styled-components";
 
-interface FilterData {
-  location: string;
-  isFree: boolean;
+export interface FilterData {
+  locationValue?: string;    // real value like "Da Nang"
+  locationDisplay?: string;  // shown in radio button: "Ho Chi Minh" or "other place"
   categories: string[];
 }
 

@@ -67,6 +67,9 @@ export const EventImage = styled.img`
 export const EventTitle = styled.h3`
   font-size: 16px;
   margin: 10px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 `;
 
 export const EventPrice = styled.p`

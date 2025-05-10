@@ -6,25 +6,53 @@ export interface SearchEventsParams {
   limit?: number;
   city?: string;
   categories?: string[];
-  start_date?: string;
-  end_date?: string;
+  startDate?: string;
+  endDate?: string;
   userId?: string;
 }
 
 export const searchClient = {
   searchSemanticEvents: async (params: SearchEventsParams): Promise<EventModel[]> => {
-    const { query, limit, city, categories, start_date, end_date, userId } = params;
+    let { query, limit, city, categories, startDate, endDate, userId } = params;
+    // If query is undefined or null, set to empty string
+    if (query === undefined || query === null) query = '';
+
     const response = await httpApi.get<any>("/search", {
       params: {
-        q: query,
+        ...(query !== undefined ? { q: query } : {}),
         ...(limit !== undefined ? { limit } : {}),
         ...(city ? { city } : {}),
         ...(categories ? { categories: categories.join(",") } : {}),
-        ...(start_date ? { start_date } : {}),
-        ...(end_date ? { end_date } : {}),
+        ...(startDate ? { startDate } : {}),
+        ...(endDate ? { endDate } : {}),
         ...(userId ? { user_id: userId } : {}),
       },
     });
     return response.data.data.result;
+  },
+
+  getSearchMetadata: async (): Promise<any> => {
+    const response = await httpApi.get<any>("/search/metadata");
+    return response.data.data;
+  },
+
+  getRelatedEvents: async (eventId: string, limit: number = 4): Promise<EventModel[]> => {
+    const response = await httpApi.get<any>(`/search/events/${eventId}/related`, { params: { limit } });
+    return response.data.data.result;
+  },
+
+  getEventsThisMonth: async (): Promise<any[]> => {
+    const response = await httpApi.get<any>('/search/events/this-month');
+    return response.data.data.events;
+  },
+
+  getEventsThisWeek: async (): Promise<any[]> => {
+    const response = await httpApi.get<any>('/search/events/this-week');
+    return response.data.data.events;
+  },
+
+  getEventsByCategory: async (): Promise<any[]> => {
+    const response = await httpApi.get<any>('/search/events-by-category');
+    return response.data.data;
   },
 };

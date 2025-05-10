@@ -1,92 +1,84 @@
 import styled from "styled-components";
 
+// SECTION
 export const Section = styled.section`
-  margin: 60px auto 0;
+  margin: 0 auto;
   width: 100%;
-  max-width: 1926px;
+  max-width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-
-  @media (max-width: 991px) {
-    margin-top: 40px;
-  }
+  background-color: #000; /* Black background */
+  padding: 0 0; /* Remove any left and right padding/margin */
+  overflow: hidden; /* Ensures cards don’t overflow container */
 `;
 
+// TITLE
 export const Title = styled.h2`
-  color: #000000;
+  color: #fff;
   font-family: Montserrat, sans-serif;
   font-size: 24px;
-  text-align: center;
+  text-align: left;
   font-weight: 700;
   margin-bottom: 20px;
   text-transform: uppercase;
   letter-spacing: 1px;
-  position: relative;
-
-  &::after {
-    content: "";
-    width: 50px;
-    height: 4px;
-    background-color: #007bff;
-    position: absolute;
-    bottom: -10px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-radius: 2px;
-  }
 `;
 
-export const CategoriesGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 30px;
-  justify-content: center;
-  text-align: center;
-  margin: 50px 0;
-  max-width: 100%;
-  
-  @media (max-width: 991px) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-`;
-
+// CARD STYLING
 export const CategoryCard = styled.article`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  width: 160px;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  align-items: flex-start;
+  width: 350px; /* Larger card width */
   cursor: pointer;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  background-color: transparent;
+  position: relative;
+  margin: 0 30px; /* Increased spacing between cards for infinity effect */
 
   &:hover {
-    transform: translateY(-8px);
+    transform: translateY(-5px);
   }
 `;
 
+// IMAGE STYLING
 export const CategoryImage = styled.div<{ imageUrl?: string }>`
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  background-image: ${({ imageUrl }) => (imageUrl ? `url(${imageUrl})` : "none")};
+  width: 100%;
+  height: 220px;
+  background-image: ${({ imageUrl }) =>
+    imageUrl ? `url(${imageUrl})` : "none"};
   background-size: cover;
   background-position: center;
+  border-radius: 12px;
   transition: transform 0.3s ease;
 
   ${CategoryCard}:hover & {
-    transform: scale(1.1);
+    transform: scale(1.05);
   }
 `;
 
+// CATEGORY NAME
 export const CategoryName = styled.h3`
-  margin-top: 15px;
-  font-size: 16px;
+  margin-top: 10px;
+  font-size: 18px;
   font-weight: 600;
-  color: #333;
-  transition: color 0.3s ease;
+  color: #fff;
+  position: absolute;
+  bottom: 15px;
+  left: 15px;
+  z-index: 1;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+`;
 
-  ${CategoryCard}:hover & {
-    color: #007bff;
-  }
+// DESCRIPTION (added placeholder)
+export const Description = styled.p`
+  color: #fff;
+  font-size: 14px;
+  font-weight: 400;
+  margin: 15px;
+  z-index: 1;
+  text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);
+  line-height: 1.4;
 `;

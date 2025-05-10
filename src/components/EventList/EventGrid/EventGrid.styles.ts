@@ -1,11 +1,12 @@
 import styled from "styled-components";
-import EventModel from "@/domain/EventModel";
+import ExtendedEventModel from "@/domain/ExtendedEventModel";
+
 export interface EventGridProps {
-    events: EventModel[];
+  events: ExtendedEventModel[];
 }
 
 export const EventGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
   gap: 20px;
 `;

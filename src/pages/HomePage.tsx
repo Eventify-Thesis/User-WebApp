@@ -1,23 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Banner } from '@/components/home/Banner/Banner';
 import { CategorySection } from '@/components/home/CategorySection/CategorySection';
-import { EventCardGrid } from '@/components/home/EventCardGrid/EventCardGrid';
+import { EventGrid } from '@/components/EventList/EventGrid/EventGrid';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 import { useResponsive } from '@/hooks/useResponsive';
 import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { LocationSection } from '@/components/home/LocationSection/LocationSection';
 import { Footer } from '@/components/home/Footer/Footer';
 import { Hero } from '@/components/home/Hero/Hero';
 import { useGetEvents } from '@/queries/useGetEvents';
-
-const categories = [
-  { name: "entertainment"},
-  { name: "education" },
-  { name: "cultural" },
-  { name: "sport" },
-  { name: "technology" },
-  { name: "travel" },
-];
+import { useSearchMetadata } from '@/queries/useSearchMetadata';
+import { useGetEventsThisMonth } from '@/queries/useGetEventsThisMonth';
+import { useGetEventsThisWeek } from '@/queries/useGetEventsThisWeek';
+import { useGetEventsByCategory } from '@/queries/useGetEventsByCategory';
+import { Loading } from '@/components/common/Loading/Loading';
+import ShowcaseEventSection from '@/components/EventList/ShowcaseEventSection/ShowcaseEventSection';
+import { formatEvents } from '@/utils/eventFormatter';
+import { Typography } from 'antd';
+import CategoryEventSection from '@/components/home/CategoryEventSection/CategoryEventSection';
 
 const images = [
   "https://salt.tkbcdn.com/ts/ds/6e/0c/af/7d24dc88c6955aa0caeca421046956ad.jpg",
@@ -26,26 +27,63 @@ const images = [
   "https://vnmedia.vn/file/8a10a0d36ccebc89016ce0c6fa3e1b83/042024/1._poster_30_anh_trai_say_hi_20240426164638.jpg",
 ];
 
-const eventCategory = "Upcoming Events";
-
 const HomePage: React.FC = () => {
+  const navigate = useNavigate();
   const { isTablet, isDesktop } = useResponsive();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const { data: events, isLoading } = useGetEvents();
-
-  const newCategory = categories.map(category => ({
-    name: (t('homePage.' + category.name)),
-    imageUrl: 'https://img.freepik.com/free-photo/black-silhouettes-music-concert-poster-concept_1194-617147.jpg?t=st=1740554758~exp=1740558358~hmac=2531f930e011ee92729f45a071e833c0772c9cd7cab164a553ecb14aa05b3d25&w=1800'
+  const { data: searchMetadata, isLoading: isSearchMetadataLoading } = useSearchMetadata();
+  const { data: eventsThisMonth, isLoading: isEventsThisMonthLoading } = useGetEventsThisMonth();
+  const { data: eventsThisWeek, isLoading: isEventsThisWeekLoading } = useGetEventsThisWeek();
+  const { data: eventsByCategory, isLoading: isEventsByCategoryLoading } = useGetEventsByCategory();
+  const lang = i18n.language;
+  if (isLoading || isSearchMetadataLoading) return <Loading/>;
+  
+  const newCategory = searchMetadata?.data.result.categories.map((category: any) => ({
+    name: category.name[lang] || category.name['en'], // fallback to English if current language not found
+    imageUrl: category.image,
+    code: category.code,
   }));
 
-  if (isLoading) return <p>Loading...</p>;
+  const formattedEventsThisMonth = formatEvents(eventsThisMonth || []);
+  const formattedEventsThisWeek = formatEvents(eventsThisWeek || []);
 
   const desktopLayout = (
     <>
       <Hero/>
       <Banner images={images} />
-      <CategorySection categories={newCategory} />
-      <EventCardGrid eventCategory={eventCategory} events={events || []} />
+      {eventsThisWeek && eventsThisMonth && <ShowcaseEventSection
+        eventsThisWeek={formattedEventsThisWeek}
+        eventsThisMonth={formattedEventsThisMonth}
+      />}
+      {newCategory && <CategorySection categories={newCategory} 
+        onCategoryClick={(code) => {
+          // Navigate to SearchResult with categories=code and empty query
+          navigate(`/search-result?query=&categories=${code}`);
+        }}
+      />}
+      {/* Render EventCardGrids for each category with at least one event */}
+      <div>
+      {eventsByCategory &&
+        Object.entries(eventsByCategory).map(([key, category]) => {
+          if (!category.events || category.events.length === 0) return null;
+          const title = category.title?.[i18n.language] || category.title?.en || key;
+          const formattedEvents = formatEvents(category.events).map(event => ({
+            ...event,
+            date: new Date(event.startTime * 1000),
+            eventBannerURL: event.eventBannerUrl,
+            price: event.minimumPrice,
+          }));
+
+          return (
+            <CategoryEventSection
+              key={key}
+              title={title} // Title of the section
+              events={formattedEvents} // Event data for carousel
+            />
+          );
+        })}
+    </div>
       <LocationSection/>
       <Footer/>
     </>
@@ -55,7 +93,29 @@ const HomePage: React.FC = () => {
     <>
       <Hero/>
       <Banner images={images} />
-      <EventCardGrid eventCategory={eventCategory} events={events || []} />
+      {eventsThisWeek && eventsThisMonth && <ShowcaseEventSection
+        eventsThisWeek={formattedEventsThisWeek}
+        eventsThisMonth={formattedEventsThisMonth}
+      />}
+      {eventsByCategory &&
+        Object.entries(eventsByCategory).map(([key, category]) => {
+          if (!category.events || category.events.length === 0) return null;
+          const title = category.title?.[i18n.language] || category.title?.en || key;
+          const formattedEvents = formatEvents(category.events).map(event => ({
+            ...event,
+            date: new Date(event.startTime * 1000),
+            eventBannerURL: event.eventBannerUrl,
+            price: event.minimumPrice,
+          }));
+
+          return (
+            <CategoryEventSection
+              key={key}
+              title={title} // Title of the section
+              events={formattedEvents} // Event data for carousel
+            />
+          );
+        })}
       <LocationSection/>
       <Footer/>
     </>;

@@ -32,10 +32,16 @@ export const Title = styled.h2`
 
 export const EventsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(3, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 30px;
+  justify-content: center;
+  max-width: 900px;
+  margin: 0 auto;
 
   @media (max-width: 991px) {
-    grid-template-columns: repeat(1, 1fr); /* Stack on small screens */
+    grid-template-columns: repeat(1, 1fr);
+    max-width: 100%;
+    justify-content: stretch;
+    width: 100%;
   }
 `;

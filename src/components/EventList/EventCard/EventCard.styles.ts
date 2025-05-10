@@ -1,13 +1,28 @@
 import styled from "styled-components";
 
 export const Card = styled.div`
-  background-color: #111;
+  background-color: #1a1a1a;
   border-radius: 10px;
   overflow: hidden;
   color: white;
   padding: 10px;
   text-align: left;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  width: 100%; /* Ensure the card takes full width of the container */
+  
+  &:hover {
+    transform: translateY(-5px); /* Elevate the card on hover */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    background-color: #333; /* Darken the background slightly on hover */
+  }
+  
+  /* Apply a subtle glowing effect */
+  &:hover {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+    background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.2));
+  }
 `;
+
 
 // Wrapper to apply hover effect
 export const ImageWrapper = styled.div`
@@ -53,24 +68,26 @@ export const EventImage = styled.img`
   width: 100%;
   display: block;
   border-radius: 10px;
-  height: 200px; /* Set a fixed height */
-  object-fit: cover;
   transition: transform 0.5s ease-in-out;
+  height: 150px; /* Set a fixed height */
+  object-fit: cover;
 `;
 
 export const EventTitle = styled.h3`
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin: 10px 0 6px 0;
-  color: #fff;
+  font-size: 18px;
+  margin: 10px 0;
+  font-weight: 700; /* Make the title bold */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  color: #fff; /* Ensure title stands out */
 `;
 
 export const EventPrice = styled.p`
   color: rgb(214, 205, 32);
   font-weight: bold;
+  font-size: 14px;
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8); /* Add text shadow to make price stand out */
 `;
 
 export const EventDate = styled.div`
@@ -79,7 +96,6 @@ export const EventDate = styled.div`
   font-size: 14px;
   color: #ccc;
 `;
-
 
 export const BookmarkIcon = styled.div`
   position: absolute;

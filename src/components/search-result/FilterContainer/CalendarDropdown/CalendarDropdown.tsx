@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dropdown, Button } from "antd";
 import { RangePickerProps } from "antd/es/date-picker";
 import { Dayjs } from "dayjs";
@@ -6,6 +6,7 @@ import dayjs from "dayjs";
 import { DatePicker } from "antd";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const { RangePicker } = DatePicker;
 
@@ -22,7 +23,10 @@ const CalendarDropdown: React.FC<CalendarDropdownProps> = ({
 }) => {
   const [visible, setVisible] = useState(false);
   const [tempDates, setTempDates] = useState<[Dayjs | null, Dayjs | null] | null>(selectedDates);
+  const [selectedFilter, setSelectedFilter] = useState<"today" | "week" | "month" | null>(null);
   const {t} = useTranslation();
+  const navigate = useNavigate();
+  const { search } = useLocation();
 
   // Handle date selection
   const handleDateChange: RangePickerProps["onChange"] = (dates) => {
@@ -47,14 +51,18 @@ const CalendarDropdown: React.FC<CalendarDropdownProps> = ({
     }
 
     setTempDates([start, end]);
-    setSelectedDates([start, end]);
-    setVisible(false);
+    setSelectedFilter(type);
+  };
+
+  const getButtonStyle = (type: "today" | "week" | "month") => {
+    return type === selectedFilter ? { backgroundColor: "#1890ff", color: "white" } : {};
   };
 
   // Handle Apply
   const handleApply = () => {
     if (tempDates) {
       setSelectedDates(tempDates);
+      updateURLParams(tempDates);
     }
     setVisible(false);
   };
@@ -62,8 +70,39 @@ const CalendarDropdown: React.FC<CalendarDropdownProps> = ({
   // Handle Reset
   const handleReset = () => {
     setTempDates([null, null]);
-    setSelectedDates([null, null]);
+    setSelectedFilter(null);
   };
+
+  const updateURLParams = (dates: [Dayjs | null, Dayjs | null]) => {
+    const searchParams = new URLSearchParams(window.location.search);
+    if (dates[0]) {
+      searchParams.set('startDate', dates[0].format('YYYY-MM-DD'));
+    } else {
+      searchParams.delete('startDate');
+    }
+    if (dates[1]) {
+      searchParams.set('endDate', dates[1].format('YYYY-MM-DD'));
+    } else {
+      searchParams.delete('endDate');
+    }
+    navigate({ search: searchParams.toString() });
+  };
+
+  useEffect(() => {
+    const searchParams = new URLSearchParams(search);
+    const startDate = searchParams.get('startDate');
+    const endDate = searchParams.get('endDate');
+
+    if (startDate && endDate) {
+      const newDates: [Dayjs | null, Dayjs | null] = [dayjs(startDate), dayjs(endDate)];
+      setTempDates(newDates);
+      setSelectedDates(newDates);
+      updateURLParams(newDates);
+    } else {
+      setTempDates([null, null]);
+      setSelectedDates([null, null]);
+    }
+  }, [search]);
 
   return (
     <Dropdown
@@ -74,9 +113,9 @@ const CalendarDropdown: React.FC<CalendarDropdownProps> = ({
         <DropdownContent>
           {/* Quick Select Buttons */}
           <QuickSelectButtons>
-            <Button onClick={() => handleDateSelection("today")}>{t('filters.today')}</Button>
-            <Button onClick={() => handleDateSelection("week")}>{t('filters.thisWeekend')}</Button>
-            <Button onClick={() => handleDateSelection("month")}>{t('filters.thisMonth')}</Button>
+            <Button style={getButtonStyle("today")} onClick={() => handleDateSelection("today")}>{t('filters.today')}</Button>
+            <Button style={getButtonStyle("week")} onClick={() => handleDateSelection("week")}>{t('filters.thisWeekend')}</Button>
+            <Button style={getButtonStyle("month")} onClick={() => handleDateSelection("month")}>{t('filters.thisMonth')}</Button>
           </QuickSelectButtons>
 
           {/* Date Picker */}

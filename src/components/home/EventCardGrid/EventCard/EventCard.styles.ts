@@ -17,7 +17,8 @@ export const CardWrapper = styled.article`
   background-color: #fff;
   overflow: hidden;
   width: 100%;
-  max-width: 450px;
+  max-width: 380px;
+  padding: 0;
   display: flex;
   flex-direction: column;
   transition:
@@ -46,7 +47,7 @@ export const EventImage = styled.img`
 
 export const ImageSection = styled.div`
   position: relative;
-  min-height: 254px;
+  min-height: 200px;
   overflow: hidden; /* Prevents overflow */
   
   &:hover ${EventImage} {
@@ -109,7 +110,7 @@ export const LocationBadge = styled.div`
   color: #fff;
   padding: 2px 10px;
   border-radius: 5px;
-  font-size: 20px;
+  font-size: 14px;
 `;
 
 export const CategoryBadge = styled.div`
@@ -120,7 +121,7 @@ export const CategoryBadge = styled.div`
   color: #2d2c3c;
   padding: 5px 10px;
   border-radius: 0 6px 0 0;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
 `;
 
@@ -128,14 +129,13 @@ export const ContentSection = styled.div`
   display: flex;
   justify-content: space-between; /* Ensures left and right alignment */
   align-items: center;
-  padding: 18px;
+  padding: 12px;
   position: relative; /* Allows absolute positioning inside */
 `;
 
 export const PriceAndInterestWrapper = styled.div`
   display: flex;
   align-items: center;
-  gap: 12px; /* Adds space between Price and InterestBadge */
   margin-left: auto; /* Pushes it to the right */
 `;
 
@@ -149,7 +149,7 @@ export const DateSection = styled.div`
 
 export const Month = styled.div`
   color: rgba(69, 57, 180, 1);
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
 `;
 
@@ -162,7 +162,7 @@ export const DateDisplay = styled.div`
 
 export const Day = styled.div`
   color: #2d2c3c;
-  font-size: 26px;
+  font-size: 20px;
   font-weight: 700;
 `;
 
@@ -178,19 +178,37 @@ export const EventDetails = styled.div`
 `;
 
 export const Title = styled.h3`
-  color: #2d2c3c;
-  font-size: 24px;
+  font-size: 18px;
   font-weight: 600;
-  margin: 0;
-  -webkit-line-clamp: 2;
-  display: -webkit-box;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  color: #1a1a1a;
+  white-space: nowrap;       /* Keep on one line */
+  overflow: hidden;          /* Hide overflowed text */
+  text-overflow: ellipsis;   /* Add ... if text is too long */
+  cursor: default;
+  position: relative;
+
+  &:hover::after {
+    content: attr(title);         /* Show full title */
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: max-content;
+    background: rgba(0, 0, 0, 0.85);
+    color: white;
+    padding: 4px 8px;
+    font-size: 14px;
+    white-space: normal;
+    z-index: 999;
+    border-radius: 4px;
+    word-break: break-word;
+    margin-top: 4px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
 `;
 
 export const Venue = styled.p`
   color: #5a5a5a;
-  font-size: 18px;
+  font-size: 14px;
   font-weight: 600;
   margin: 10px 0;
 `;
@@ -206,14 +224,6 @@ export const MetaInfo = styled.div`
 
   ${CardWrapper}:hover & {
     opacity: 1;
-  }
-
-  /* Make InterestBadge take a new row for specific widths */
-  @media (max-width: 1475px) and (min-width: 991px),
-         (max-width: 500px) {
-    flex-direction: column;
-    align-items: flex-start; /* Align content to the left */
-    gap: 8px; /* Adds spacing between rows */
   }
 `;
 
@@ -232,7 +242,7 @@ export const PriceIcon = styled.img`
 
 export const Price = styled.span`
   color: #ff5722; /* Brighter color for emphasis */
-  font-size: 22px; /* Increased font size */
+  font-size: 16px; /* Increased font size */
   font-weight: 700; /* Bolder font */
   padding: 4px 8px; /* Padding for better visibility */
   border-radius: 4px; /* Rounded corners */
@@ -251,29 +261,9 @@ export const InterestIcon = styled.img`
   border-radius: 1px;
 `;
 
-export const InterestBadge = styled.div`
-  color: #FFC107;
-  font-size: 20px;
-  font-weight: 700;
-  padding: 4px 12px;
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  height: 40px;
-  white-space: nowrap;
-
-  /* When in column mode, make it full-width */
-  @media (max-width: 1475px) and (min-width: 991px),
-         (max-width: 500px) {
-    align-self: flex-start; /* Align it to the left */
-  }
-`;
-
-
-
 
 export const InterestCount = styled.span`
-  font-size: 20px; /* Bigger size for emphasis */
+  font-size: 16px; /* Bigger size for emphasis */
   font-weight: 700; /* Extra bold */
   color: #FFC107; /* Bold yellow text */
 `;
