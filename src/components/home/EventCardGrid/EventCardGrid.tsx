@@ -5,12 +5,19 @@ import { SeeMoreButton } from "./SeeMoreButton/SeeMoreButton.styles";
 import { Section, Title, EventsGrid } from "./EventCardGrid.styles";
 import EventModel from "@/domain/EventModel.ts";
 
+import { useNavigate } from "react-router-dom";
+
 interface EventCardGridProps {
     eventCategory: string,
     events: EventModel[];
+    categoryKey: string;
 }
 
-export const EventCardGrid: React.FC<EventCardGridProps> = ({eventCategory, events }) => {
+export const EventCardGrid: React.FC<EventCardGridProps> = ({eventCategory, events, categoryKey }) => {
+    const navigate = useNavigate();
+    const handleSeeMore = () => {
+        navigate(`/search-result?query=&categories=${categoryKey}`);
+    };
     return (
         <Section>
         <Title>{eventCategory}</Title>
@@ -20,7 +27,7 @@ export const EventCardGrid: React.FC<EventCardGridProps> = ({eventCategory, even
             ))}
         </EventsGrid>
 
-        <SeeMoreButton>See More</SeeMoreButton>
+        <SeeMoreButton onClick={handleSeeMore}>See More</SeeMoreButton>
 
         </Section>
     );

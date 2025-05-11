@@ -27,6 +27,9 @@
     "recommendations": "Recommend events for you",
     "viewMore": "View more events"
   },
+  "searchResult": {
+    "noAvailableEvents": "There is no available event!"
+  },
   "interested": {
     "title": "Favourited Events",
     "searchPlaceholder": "Search for an event...",
@@ -87,6 +90,7 @@
     "hcm": "Ho Chi Minh",
     "hanoi": "Hanoi",
     "dalat": "Da Lat",
+    "otherPlaceholder": "charity,education",
     "otherLocation": "Other location",
     "enterLocation": "Enter desired location",
     "price": "Price",
@@ -121,7 +125,22 @@
     "technology": "Technology & Innovation",
     "travel": "Travel & Adventure",
     "upcomingEvents": "Upcoming Events",
-    "exploreCategories": "Explore Categories"
+    "exploreCategories": "Explore Categories",
+    "thisWeekend": "This weekend",
+    "thisMonth": "This month",
+    "viewMore": "View more",
+    "popularEventsThisMonth": "Popular Events This Month",
+    "popularEventsThisWeek": "Popular Events This Week",
+    "explore": "Explore and discover",
+    "locationSection": {
+      "title": "Discover Popular Events",
+      "locations": {
+        "hcm": "Ho Chi Minh City",
+        "hanoi": "Hanoi",
+        "dalat": "Da Lat",
+        "other": "Other"
+      }
+    }
   },
   "eventDetailPage": {
     "buyTicket": "Buy Ticket",
