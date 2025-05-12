@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
-import { ProfileDropdown } from '../components/profileDropdown/ProfileDropdown/ProfileDropdown';
 import { HeaderSearch } from '../components/HeaderSearch/HeaderSearch';
 import { SettingsDropdown } from '../components/settingsDropdown/SettingsDropdown';
 import * as S from '../Header.styles';
-import { BaseRow } from '@/components/common/BaseRow/BaseRow';
-import { BaseCol } from '@/components/common/BaseCol/BaseCol';
 import { Logo } from '../components/Logo/Logo';
 import { UserButton } from '@clerk/clerk-react';
+import { useNavigate } from 'react-router-dom';
+import { Box, Container, Flex, Tooltip } from '@mantine/core';
+import './DesktopHeader.css';
 interface DesktopHeaderProps {}
 
 export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1050);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -20,86 +21,70 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
+  const handleCreateEventClick = () => {
+    window.location.href = `${
+      import.meta.env.VITE_PLANNER_BASE_URL
+    }/create-event`;
+  };
+
   const leftSide = (
-    <S.SearchColumn xl={12} xxl={14}>
-      <BaseRow
-        justify="center"
-        align="middle"
-        wrap={false}
-        style={{ width: '100%' }}
-      >
-        <BaseCol
-          xl={9}
-          xxl={12}
-          style={{ display: 'flex', justifyContent: 'center' }}
-          onClick={() => (window.location.href = '/')}
-          onMouseEnter={(e) => (e.currentTarget.style.cursor = 'pointer')}
-          onMouseLeave={(e) => (e.currentTarget.style.cursor = 'default')}
-        >
-          <Logo />
-        </BaseCol>
-        <BaseCol
-          xl={15}
-          xxl={12}
-          style={{
-            paddingBlock: '0.5rem',
-          }}
-        >
-          <HeaderSearch />
-        </BaseCol>
-      </BaseRow>
-    </S.SearchColumn>
+    <Flex className="header-left-side" align="center">
+      <Box className="logo-container" onClick={handleLogoClick}>
+        <Logo />
+      </Box>
+      <Box className="search-container">
+        <HeaderSearch />
+      </Box>
+    </Flex>
   );
 
   return (
-    <BaseRow
-      justify="center"
-      align="middle"
-      style={{
-        height: '100%',
-      }}
-    >
-      {leftSide}
-      <BaseCol>
-        <S.CEButton />
-      </BaseCol>
-
-      <S.ProfileColumn
-        xl={8}
-        xxl={7}
-        style={{
-          display: 'flex',
-          justifyContent: 'flex-end',
-          height: '100%',
-        }}
+    <Container fluid className="desktop-header-container">
+      <Flex
+        className="desktop-header-content"
+        align="center"
+        justify="space-between"
       >
-        <BaseRow align="middle" justify="end" gutter={[4, 4]}>
-          <S.NavRow gutter={[12, 0]} align="middle">
-            <S.NavItem
-              onMouseEnter={(e) => (e.currentTarget.style.cursor = 'pointer')}
-              onMouseLeave={(e) => (e.currentTarget.style.cursor = 'default')}
-              onClick={() => (window.location.href = '/tickets')}
+        {leftSide}
+
+        <Flex className="header-right-side" align="center" gap="md">
+          <Box className="create-event-button" onClick={handleCreateEventClick}>
+            <S.CEButton />
+          </Box>
+
+          <Flex className="nav-items" align="center" gap="md">
+            <Tooltip label="Tickets" position="bottom" disabled={isLargeScreen}>
+              <Box className="nav-item" onClick={() => navigate('/tickets')}>
+                <S.NavIcon icon="ion:ticket-outline" />
+                <span className="nav-text">Tickets</span>
+              </Box>
+            </Tooltip>
+
+            <Tooltip
+              label="Interested"
+              position="bottom"
+              disabled={isLargeScreen}
             >
-              <S.NavIcon icon="ion:ticket-outline" />
-              Tickets
-            </S.NavItem>
-            <S.NavItem>
-              <S.NavIcon icon="teenyicons:star-outline" />
-              Interested
-            </S.NavItem>
-            <BaseCol>
+              <Box className="nav-item">
+                <S.NavIcon icon="teenyicons:star-outline" />
+                <span className="nav-text">Interested</span>
+              </Box>
+            </Tooltip>
+
+            <Box className="user-button">
               <UserButton showName={isLargeScreen} appearance={{}} />
-            </BaseCol>
-          </S.NavRow>
-          <BaseCol>
-            <BaseRow gutter={[{ xxl: 5 }, { xxl: 5 }]}>
-              <BaseCol>
-                <SettingsDropdown />
-              </BaseCol>
-            </BaseRow>
-          </BaseCol>
-        </BaseRow>
-      </S.ProfileColumn>
-    </BaseRow>
+            </Box>
+
+            <Box className="settings-dropdown">
+              <SettingsDropdown />
+            </Box>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Container>
   );
 };

@@ -14,7 +14,6 @@ export const EventCard: React.FC<EventModel> = ({
   venueName,
   price,
   isInterested,
-  interestedCount,
 }) => {
   
   // Format Date
@@ -47,7 +46,7 @@ export const EventCard: React.FC<EventModel> = ({
 
       <s.ContentSection>
   <s.EventDetails>
-    <s.Title>{eventName}</s.Title>
+    <s.Title title={eventName}>{eventName}</s.Title>
     <s.Venue>{venueName}</s.Venue>
     <s.Time>{formattedDay + " " + formattedMonth + " " + formattedYear}</s.Time>
 
@@ -61,11 +60,6 @@ export const EventCard: React.FC<EventModel> = ({
                 <s.Price> {price != "FREE" ?  t('homePage.from') + " " + price : t('homePage.free')}</s.Price>
     </s.PriceSection>
   )}
-
-  {/* InterestBadge on the right */}
-  <s.InterestBadge>
-    <s.InterestCount>{interestedCount ?? 0} interested</s.InterestCount>
-  </s.InterestBadge>
 
 </s.MetaInfo>
 

@@ -33,6 +33,7 @@ const CheckoutSuccessPage = React.lazy(
 import { withLoading } from '@/hocs/withLoading.hoc';
 import { SignIn, SignUp } from '@clerk/clerk-react';
 import { PaymentStep, QuestionStep } from '../checkout/steps';
+import ScrollToTop from '@/components/common/ScrollToTop';
 
 const AuthLayoutFallback = withLoading(AuthLayout);
 export const HOME_PATH = '/';
@@ -46,6 +47,7 @@ export const AppRouter: React.FC = () => {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         {/* everything lives under the same MainLayout */}
         <Route path="/" element={<MainLayout />}>

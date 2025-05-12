@@ -1,44 +1,37 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Header } from '../../../header/Header';
-import MainContent from '../MainContent/MainContent';
-import { MainHeader } from '../MainHeader/MainHeader';
-import * as S from './MainLayout.styles';
 import { Outlet } from 'react-router-dom';
 import { UnauthHeader } from '@/components/header/UnauthHeader';
 import { useAuth } from '@clerk/clerk-react';
+import { AppShell, Box } from '@mantine/core';
+import './MainLayout.css';
 
 const MainLayout: React.FC = () => {
   const [siderCollapsed, setSiderCollapsed] = useState(true);
   const toggleSider = () => setSiderCollapsed(!siderCollapsed);
   const { isLoaded, isSignedIn } = useAuth();
+
   if (!isLoaded) return null;
 
   return (
-    <S.LayoutMaster>
-      {/* <MainSider
-        isCollapsed={siderCollapsed}
-        setCollapsed={setSiderCollapsed}
-      /> */}
-      <S.LayoutMain>
+    <AppShell header={{ height: 70 }} padding={0} className="main-layout">
+      <AppShell.Header className="main-header">
         {isSignedIn ? (
-          <MainHeader>
-            <Header/>
-          </MainHeader>
+          <Header />
         ) : (
-          <MainHeader>
-            <UnauthHeader
-              isSiderOpened={!siderCollapsed}
-              toggleSider={toggleSider}
-            />
-          </MainHeader>
+          <UnauthHeader
+            isSiderOpened={!siderCollapsed}
+            toggleSider={toggleSider}
+          />
         )}
-        <MainContent id="main-content">
-          <div>
-            <Outlet />
-          </div>
-        </MainContent>
-      </S.LayoutMain>
-    </S.LayoutMaster>
+      </AppShell.Header>
+
+      <AppShell.Main className="main-content">
+        <Box className="content-container">
+          <Outlet />
+        </Box>
+      </AppShell.Main>
+    </AppShell>
   );
 };
 
