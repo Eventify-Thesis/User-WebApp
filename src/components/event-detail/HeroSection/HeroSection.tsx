@@ -1,13 +1,14 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import { useTranslation } from 'react-i18next';
-import * as S from './HeroSection.styles';
-import './HeroSection.styles.css';
 import { EventDetailResponse } from '@/domain/EventModel';
 import dayjs from 'dayjs';
 import 'dayjs/locale/vi';
 import 'dayjs/locale/en';
 import { ShowModel } from '@/domain/ShowModel';
 import { TicketTypeModel } from '@/domain/TicketTypeModel';
+import { Box, Title, Text, Button, Image, Group, Stack } from '@mantine/core';
+import { IconCalendar, IconMapPin } from '@tabler/icons-react';
+import './HeroSection.css';
 
 interface HeroSectionProps {
   event: EventDetailResponse;
@@ -15,16 +16,8 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
   const { t, i18n } = useTranslation();
-  const { isTablet, isDesktop } = useResponsive();
-  const {
-    price,
-    startTime,
-    endTime,
-    eventName,
-    venueName,
-    address,
-    eventBannerUrl,
-  } = event;
+  const { isDesktop } = useResponsive();
+  const { startTime, eventName, venueName, address, eventBannerUrl } = event;
 
   let formattedAddress;
   if (i18n.language === 'vi') {
@@ -49,69 +42,85 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
   );
 
   const desktopLayout = (
-    <S.HeroSectionWrapper>
-      <S.EventContent>
+    <Box className="hero-section-wrapper">
+      <Box className="event-content">
         <div id="circle1" className="circle"></div>
         <div id="circle2" className="circle"></div>
-        <S.EventInfo>
-          <S.EventTitle>{eventName}</S.EventTitle>
-          <S.EventDate>
-            <S.IC icon="mdi:calendar" width="24" height="24" />
-            {formattedStartTime}
-          </S.EventDate>
-          <S.VenueInfo>
-            <S.IC icon="mdi:map-marker" width="24" height="24" />
-            <S.VenueName>{venueName}</S.VenueName>
-          </S.VenueInfo>
-          <S.Address>{formattedAddress}</S.Address>
-        </S.EventInfo>
-        <S.PriceSection>
-          <S.PriceInfo>
-            <S.PriceLabel>{t('eventDetailPage.priceFrom')}</S.PriceLabel>
-            <S.Price>{minPrice}</S.Price>
-          </S.PriceInfo>
-          <S.BuyTicketButton>
+        <Stack className="event-info">
+          <Title className="event-title">{eventName}</Title>
+          <Group className="event-date">
+            <IconCalendar size={20} stroke={1.5} />
+            <Text>{formattedStartTime}</Text>
+          </Group>
+          <Box>
+            <Group className="venue-info">
+              <IconMapPin size={20} stroke={1.5} />
+              <Text className="venue-name">{venueName}</Text>
+            </Group>
+            <Text className="address">{formattedAddress}</Text>
+          </Box>
+        </Stack>
+        <Box className="price-section">
+          <Box className="price-info">
+            <Text className="price-label">
+              {t('eventDetailPage.priceFrom')}
+            </Text>
+            <Text className="price">{Math.round(minPrice)} Đ</Text>
+          </Box>
+          <Button className="buy-ticket-button">
             {t('eventDetailPage.buyTicket')}
-          </S.BuyTicketButton>
-        </S.PriceSection>
-      </S.EventContent>
-      <div id="img-wrapper-banner">
-        <S.EventImage src={eventBannerUrl} alt="Event banner" />
-      </div>
-    </S.HeroSectionWrapper>
+          </Button>
+        </Box>
+      </Box>
+      <Box className="event-image-container">
+        <Image
+          src={eventBannerUrl}
+          alt="Event banner"
+          className="event-image"
+        />
+      </Box>
+    </Box>
   );
 
   const mobileAndTabletLayout = (
-    <S.HeroSectionWrapper>
-      <S.EventContent>
+    <Box className="hero-section-wrapper">
+      <Box className="event-content">
         <div id="circle1" className="circle"></div>
         <div id="circle2" className="circle"></div>
-        <S.EventInfo>
-          <S.EventTitle>{eventName}</S.EventTitle>
-          <S.EventDate>
-            <S.IC icon="mdi:calendar" width="24" height="24" />
-            {formattedStartTime}
-          </S.EventDate>
-          <S.VenueInfo>
-            <S.IC icon="mdi:map-marker" width="24" height="24" />
-            <S.VenueName>{venueName}</S.VenueName>
-          </S.VenueInfo>
-          <S.Address>{formattedAddress}</S.Address>
-        </S.EventInfo>
-        <S.PriceSection>
-          <S.PriceInfo>
-            <S.PriceLabel>{t('eventDetailPage.priceFrom')}</S.PriceLabel>
-            <S.Price>{minPrice}</S.Price>
-          </S.PriceInfo>
-          <S.BuyTicketButton>
+        <Stack className="event-info">
+          <Title className="event-title">{eventName}</Title>
+          <Group className="event-date">
+            <IconCalendar size={20} stroke={1.5} />
+            <Text>{formattedStartTime}</Text>
+          </Group>
+          <Box>
+            <Group className="venue-info">
+              <IconMapPin size={20} stroke={1.5} />
+              <Text className="venue-name">{venueName}</Text>
+            </Group>
+            <Text className="address">{formattedAddress}</Text>
+          </Box>
+        </Stack>
+        <Box className="price-section">
+          <Box className="price-info">
+            <Text className="price-label">
+              {t('eventDetailPage.priceFrom')}
+            </Text>
+            <Text className="price">{minPrice} Đ</Text>
+          </Box>
+          <Button className="buy-ticket-button">
             {t('eventDetailPage.buyTicket')}
-          </S.BuyTicketButton>
-        </S.PriceSection>
-      </S.EventContent>
-      <div id="img-wrapper-banner">
-        <S.EventImage src={eventBannerUrl} alt="Event banner" />
-      </div>
-    </S.HeroSectionWrapper>
+          </Button>
+        </Box>
+      </Box>
+      <Box className="event-image-container">
+        <Image
+          src={eventBannerUrl}
+          alt="Event banner"
+          className="event-image"
+        />
+      </Box>
+    </Box>
   );
 
   return <>{isDesktop ? desktopLayout : mobileAndTabletLayout}</>;
