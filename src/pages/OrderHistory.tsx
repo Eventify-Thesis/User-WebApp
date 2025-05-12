@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import OrderTabs from '@/components/order-history/OrderTabs/OrderTabs';
 import OrderInfo from '@/components/order-history/OrderInfo/OrderInfo';
 import NoOrders from '@/components/order-history/NoOrders/NoOrders';
@@ -8,37 +7,17 @@ import { EventGrid } from '@/components/EventList/EventGrid/EventGrid';
 import { useTranslation } from 'react-i18next';
 import { IdParam } from '@/types/types';
 import { useGetEventOrders } from '@/queries/useGetOrders';
-
-const Container = styled.div`
-  background: #18181b;
-  color: white;
-  padding: 20px;
-  min-height: 100vh;
-`;
-
-const Title = styled.h3`
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 16px;
-`;
-
-const OrderCard = styled.div`
-  margin-bottom: 12px;
-  cursor: pointer;
-  &:hover {
-    opacity: 0.8;
-  }
-`;
-
-const LoadingText = styled.p`
-  color: #fff;
-  font-size: 16px;
-`;
-
-const ErrorText = styled.p`
-  color: red;
-  font-size: 16px;
-`;
+import {
+  Container,
+  Title,
+  Box,
+  Paper,
+  Text,
+  Loader,
+  Stack,
+  Divider,
+} from '@mantine/core';
+import './OrderHistory.css';
 
 // Simulate userId (should be dynamically fetched from auth context)
 const userId: IdParam = 'U123';
@@ -74,46 +53,76 @@ const OrderHistory = () => {
   const orders = orderData?.docs;
 
   return (
-    <Container>
-      <Title>{t('orderHistory.title')}</Title>
+    <Container fluid className="order-history-container">
+      <Box className="order-content">
+        <Title order={1} className="page-title">
+          {t('orderHistory.title')}
+        </Title>
 
-      <OrderTabs
-        activeTab={activeTab}
-        setActiveTab={setActiveTab}
-        subTab={subTab}
-        setSubTab={setSubTab}
-      />
+        <Paper shadow="md" className="order-tabs-container">
+          <OrderTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            subTab={subTab}
+            setSubTab={setSubTab}
+          />
+        </Paper>
 
-      {isLoading && <LoadingText>{t('orderHistory.loading')}</LoadingText>}
-      {isError && <ErrorText>{t('orderHistory.error')}</ErrorText>}
+        {isLoading && (
+          <Box className="loading-container">
+            <Loader color="yellow" size="lg" variant="dots" />
+            <Text c="dimmed" mt="lg" size="md" fw={500}>
+              {t('orderHistory.loading')}
+            </Text>
+          </Box>
+        )}
 
-      {!isLoading && !isError && orders && orders.length > 0
-        ? orders.map((order) => (
-            <OrderCard
-              key={order.id}
-              onClick={() => navigate(`/orders/${order.publicId}`)}
-            >
-              <OrderInfo
-                date={new Date(order.createdAt).toLocaleDateString()}
-                title={order.event.eventName}
-                status={order.orderStatus}
-                OrderType="STRIPE"
-                time={`${new Date(
-                  order.show.startTime,
-                ).toLocaleTimeString()} - ${new Date(
-                  order.show.endTime,
-                ).toLocaleTimeString()}`}
-                location={order.event.venueName}
-                imageUrl={order.event.eventBannerUrl}
-              />
-            </OrderCard>
-          ))
-        : !isLoading && !isError && <NoOrders />}
+        {isError && (
+          <Paper className="error-message" shadow="sm">
+            <Text size="md" fw={500}>
+              {t('orderHistory.error')}
+            </Text>
+          </Paper>
+        )}
 
-      <Title>{t('orderHistory.recommended')}</Title>
+        <Stack className="orders-list">
+          {!isLoading && !isError && orders && orders.length > 0
+            ? orders.map((order) => (
+                <Paper
+                  key={order.id}
+                  className="order-card"
+                  shadow="sm"
+                  p="md"
+                  withBorder
+                  onClick={() => navigate(`/orders/${order.publicId}`)}
+                >
+                  <OrderInfo
+                    date={new Date(order.createdAt).toLocaleDateString()}
+                    title={order.event.eventName}
+                    status={order.orderStatus}
+                    OrderType="STRIPE"
+                    time={`${new Date(
+                      order.show.startTime,
+                    ).toLocaleTimeString()} - ${new Date(
+                      order.show.endTime,
+                    ).toLocaleTimeString()}`}
+                    location={order.event.venueName}
+                    imageUrl={order.event.eventBannerUrl}
+                  />
+                </Paper>
+              ))
+            : !isLoading && !isError && <NoOrders />}
+        </Stack>
 
-      {/* Integrate event api later */}
-      <EventGrid events={[]} />
+        <Divider className="section-divider" />
+
+        <Title order={2} className="section-title">
+          {t('orderHistory.recommended')}
+        </Title>
+        <Box className="recommended-events">
+          <EventGrid events={[]} />
+        </Box>
+      </Box>
     </Container>
   );
 };

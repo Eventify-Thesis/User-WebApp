@@ -1,0 +1,102 @@
+/* DesktopHeader.css */
+.desktop-header-container {
+  background-color: #1a1a1a;
+  padding: 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.desktop-header-content {
+  height: 70px;
+  padding: 0 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header-left-side {
+  flex: 1;
+  gap: 20px;
+}
+
+.logo-container {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.logo-container:hover {
+  opacity: 0.9;
+}
+
+.search-container {
+  flex: 1;
+  max-width: 500px;
+  padding: 8px 0;
+}
+
+.header-right-side {
+  display: flex;
+  align-items: center;
+}
+
+.create-event-button {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.create-event-button:hover {
+  transform: translateY(-2px);
+}
+
+.nav-items {
+  display: flex;
+  align-items: center;
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.nav-item:hover {
+  transform: translateY(-2px);
+  opacity: 0.9;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.nav-text {
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+/* Hide text on smaller screens */
+@media (max-width: 1050px) {
+  .nav-text {
+    display: none;
+  }
+}
+
+.user-button {
+  margin: 0 5px;
+}
+
+.settings-dropdown {
+  margin-left: 5px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .desktop-header-content {
+    height: 60px;
+    padding: 0 10px;
+  }
+  
+  .header-left-side {
+    gap: 10px;
+  }
+}
