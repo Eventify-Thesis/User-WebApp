@@ -1,14 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Tag } from 'antd';
-import {
-  CheckCircleOutlined,
-  CalendarOutlined,
-  EnvironmentOutlined,
-} from '@ant-design/icons';
 import { FastAverageColor } from 'fast-average-color';
-import * as s from './OrderInfo.styles';
-import { countReset } from 'console';
 import { formatDate } from '@/utils/dates';
+import { Box, Text, Badge, Group, Flex } from '@mantine/core';
+import { IconCheck, IconCalendar, IconMapPin } from '@tabler/icons-react';
+import './OrderInfo.css';
 
 interface OrderInfoProps {
   date: string;
@@ -68,32 +63,61 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
   const textColor = isLightColor(primaryColor) ? '#000' : '#fff';
 
   return (
-    <s.OrderContainer $primaryColor={primaryColor}>
-      <s.DateBox $primaryColor={primaryColor} $textColor={textColor}>
-        <div>{formatDate(date, 'dd', 'Asia/Bangkok')}</div>
-        <div>{formatDate(date, 'MM', 'Asia/Bangkok')}</div>
-        <div>{formatDate(date, 'yyyy', 'Asia/Bangkok')}</div>
-      </s.DateBox>
-      <s.OrderInfoContainer
-        $imageUrl={imageUrl}
-        $primaryColor={primaryColor}
-        $textColor={textColor}
+    <Box
+      className="order-container"
+      style={{
+        backgroundColor: primaryColor,
+        color: textColor,
+      }}
+    >
+      <Box
+        className="date-box"
+        style={{
+          backgroundColor: primaryColor,
+          color: textColor,
+        }}
       >
-        <h3>{title}</h3>
-        <s.TagsContainer>
-          <Tag color="green">
-            <CheckCircleOutlined /> {status}
-          </Tag>
-          <Tag color="blue">{OrderType}</Tag>
-        </s.TagsContainer>
-        <p>
-          <CalendarOutlined /> {time}
-        </p>
-        <p>
-          <EnvironmentOutlined /> {location}
-        </p>
-      </s.OrderInfoContainer>
-    </s.OrderContainer>
+        <Text className="date-day">
+          {formatDate(date, 'dd', 'Asia/Bangkok')}
+        </Text>
+        <Text className="date-month">
+          {formatDate(date, 'MM', 'Asia/Bangkok')}
+        </Text>
+        <Text className="date-year">
+          {formatDate(date, 'yyyy', 'Asia/Bangkok')}
+        </Text>
+      </Box>
+      <Box
+        className="order-info-container"
+        style={{
+          backgroundImage: imageUrl ? `url(${imageUrl})` : 'none',
+          backgroundColor: primaryColor,
+          color: textColor,
+        }}
+      >
+        <Text className="order-title">{title}</Text>
+        <Group className="tags-container">
+          <Badge
+            color="green"
+            leftSection={<IconCheck size={14} />}
+            variant="filled"
+          >
+            {status}
+          </Badge>
+          <Badge color="blue" variant="filled">
+            {OrderType}
+          </Badge>
+        </Group>
+        <Flex className="order-detail">
+          <IconCalendar size={16} />
+          <Text>{time}</Text>
+        </Flex>
+        <Flex className="order-detail">
+          <IconMapPin size={16} />
+          <Text>{location}</Text>
+        </Flex>
+      </Box>
+    </Box>
   );
 };
 

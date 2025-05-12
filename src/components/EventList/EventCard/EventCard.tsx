@@ -43,7 +43,7 @@ const EventCard: React.FC<EventCardProps> = ({
       className="event-card-main"
       onClick={onClick}
       style={onClick ? { cursor: 'pointer' } : {}}
-      padding="sm"
+      padding={0}
       radius="md"
       withBorder
     >
@@ -70,8 +70,8 @@ const EventCard: React.FC<EventCardProps> = ({
         </ActionIcon>
       </Card.Section>
 
-      <Box className="card-content" p="xs">
-        <Box mb="xs">
+      <Box className="card-content" p="md">
+        <Box mb="sm">
           <Title
             order={4}
             lineClamp={1}
@@ -82,20 +82,27 @@ const EventCard: React.FC<EventCardProps> = ({
           </Title>
         </Box>
 
-        {minimumPrice && (
-          <Badge color="yellow" variant="light" className="price-badge">
-            {t('homePage.from')} {Math.floor(minimumPrice)}
-          </Badge>
-        )}
+        <Box className="event-details">
+          {minimumPrice && (
+            <Badge
+              color="yellow"
+              variant="filled"
+              size="md"
+              className="price-badge"
+            >
+              {t('homePage.from')} {Math.floor(minimumPrice)} Đ
+            </Badge>
+          )}
 
-        {startTime && (
-          <Group gap="xs" className="date-display">
-            <IconCalendar size={16} color="#ccc" stroke={1.5} />
-            <Text size="sm" c="dimmed">
-              {new Date(Number(startTime) * 1000).toDateString()}
-            </Text>
-          </Group>
-        )}
+          {startTime && (
+            <Group gap="xs" className="date-display">
+              <IconCalendar size={18} stroke={1.5} />
+              <Text size="sm" fw={500}>
+                {new Date(Number(startTime) * 1000).toLocaleDateString()}
+              </Text>
+            </Group>
+          )}
+        </Box>
       </Box>
     </Card>
   );
