@@ -9,7 +9,6 @@ import { TicketTypeModel } from '@/domain/TicketTypeModel';
 import { Box, Title, Text, Button, Image, Group, Stack } from '@mantine/core';
 import { IconCalendar, IconMapPin } from '@tabler/icons-react';
 import './HeroSection.css';
-import { useNavigate } from 'react-router-dom';
 
 interface HeroSectionProps {
   event: EventDetailResponse;
@@ -70,14 +69,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
             </Text>
             <Text className="price">{Math.round(minPrice)} Đ</Text>
           </Box>
-          <Button
-            className="buy-ticket-button"
-            onClick={() =>
-              navigate(
-                `/events/${event.id}/bookings/${event.shows[0].id}/select-ticket`,
-              )
-            }
-          >
+          <Button className="buy-ticket-button">
             {t('eventDetailPage.buyTicket')}
           </Button>
         </Box>
