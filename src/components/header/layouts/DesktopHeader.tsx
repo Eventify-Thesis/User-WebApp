@@ -7,10 +7,12 @@ import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import { BaseCol } from '@/components/common/BaseCol/BaseCol';
 import { Logo } from '../components/Logo/Logo';
 import { UserButton } from '@clerk/clerk-react';
+import { useNavigate } from 'react-router-dom';
 interface DesktopHeaderProps {}
 
 export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1050);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -60,7 +62,13 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
       }}
     >
       {leftSide}
-      <BaseCol>
+      <BaseCol
+        onClick={() =>
+          (window.location.href = `${
+            import.meta.env.VITE_PLANNER_BASE_URL
+          }/create-event`)
+        }
+      >
         <S.CEButton />
       </BaseCol>
 

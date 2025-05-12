@@ -1,16 +1,18 @@
 import React from 'react';
 import Slider from 'react-slick';
 import { useTranslation } from 'react-i18next';
-import * as s from './CategoryEventSection.styles'; 
-import EventCard from '@/components/EventList/EventCard/EventCard'; 
+import * as s from './CategoryEventSection.styles';
+import EventCard from '@/components/EventList/EventCard/EventCard';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
-  title: string; 
-  events: any[]; 
+  title: string;
+  events: any[];
 }
 
 const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const slidesToShow = events.length < 6 ? events.length : 6;
 
@@ -22,8 +24,8 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
     pauseOnHover: true,
     cssEase: 'linear',
     arrows: showArrows,
-    infinite: false, 
-    centerMode: false, 
+    infinite: false,
+    centerMode: false,
     focusOnSelect: true,
     responsive: [
       {
@@ -48,7 +50,16 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
       {showCarousel ? (
         <Slider {...settings}>
           {events.map((event, index) => (
-            <s.EventCardWrapper key={index}>
+            <s.EventCardWrapper
+              key={index}
+              onClick={() => {
+                if (event.url) {
+                  navigate(`${event.url}-${event.id}`);
+                } else {
+                  navigate(`${event.eventName}-${event.id}`);
+                }
+              }}
+            >
               <EventCard {...event} />
             </s.EventCardWrapper>
           ))}
