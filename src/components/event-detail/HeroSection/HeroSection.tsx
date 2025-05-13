@@ -9,6 +9,7 @@ import { TicketTypeModel } from '@/domain/TicketTypeModel';
 import { Box, Title, Text, Button, Image, Group, Stack } from '@mantine/core';
 import { IconCalendar, IconMapPin } from '@tabler/icons-react';
 import './HeroSection.css';
+import { useNavigate } from 'react-router-dom';
 
 interface HeroSectionProps {
   event: EventDetailResponse;
