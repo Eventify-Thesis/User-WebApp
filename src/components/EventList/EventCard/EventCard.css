@@ -3,26 +3,29 @@
   background-color: #1a1a1a;
   color: white;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
-  width: 100%;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  height: 320px; /* Increased height for better proportions */
+  border: none;
+  height: 20rem;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  position: relative;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  margin: 0;
+  width: 100%;
 }
 
 .event-card-main:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.4);
   background: linear-gradient(145deg, rgba(40, 40, 40, 0.9), rgba(60, 60, 60, 0.9));
-  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .image-section {
   position: relative;
-  overflow: hidden;
-  height: 180px; /* Increased height for image section */
+  height: 12rem;
   width: 100%;
+  overflow: hidden;
 }
 
 .event-image {
@@ -36,7 +39,6 @@
   transform: scale(1.05);
 }
 
-/* Shine effect on hover */
 .image-section::after {
   content: "";
   position: absolute;
@@ -59,33 +61,23 @@
   left: 100%;
 }
 
-/* Add overlay gradient to image for better text contrast */
 .image-section::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.1),
-    rgba(0, 0, 0, 0.5)
-  );
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.5));
   z-index: 1;
   pointer-events: none;
 }
 
 .bookmark-icon {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 12px;
+  right: 12px;
   z-index: 10;
-  background-color: rgba(0, 0, 0, 0.5);
-  border-radius: 50%;
-  width: 36px;
-  height: 36px;
+  background-color: rgba(0, 0, 0, 0.6);
   transition: transform 0.2s ease, background-color 0.2s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
 }
 
 .bookmark-icon:hover {
@@ -94,20 +86,21 @@
 }
 
 .event-title {
-  font-size: 18px;
-  margin-bottom: 12px;
-  line-height: 1.3;
+  font-size: 1.5rem;
   font-weight: 600;
   position: relative;
-  display: inline-block;
+  display: block;
+  margin-bottom: 10px;
+  color: #ffffff;
+  padding-bottom: 6px;
 }
 
 .event-title::after {
   content: '';
   position: absolute;
   left: 0;
-  bottom: -6px;
-  width: 40px;
+  bottom: 0;
+  width: 30px;
   height: 2px;
   background-color: #facc15;
   border-radius: 2px;
@@ -118,35 +111,71 @@
   width: 60px;
 }
 
-.price-badge {
-  font-weight: 600;
-  letter-spacing: 0.5px;
+.price-display {
+  margin-bottom: 0.6rem;
+  font-size: 1.2rem;
+  font-weight: 700;
 }
 
-.date-display {
-  margin-top: 12px;
+.price-amount {
+  color: #facc15;
+}
+
+.date-display,
+.address-display {
   color: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.4rem;
+  font-size: 0.8rem;
+}
+
+.address-text {
+  color: rgba(255, 255, 255, 0.8);
+  transition: color 0.2s ease;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+.event-card-main:hover .address-text {
+  color: rgba(255, 255, 255, 1);
 }
 
 .event-details {
   margin-top: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.35rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.875rem;
 }
 
 .card-content {
-  padding: 16px;
-  flex-grow: 1;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  padding-bottom: 8px;
+  flex-grow: 1;
+  position: relative;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .event-card-main {
-    max-width: 100%;
-    height: 280px; /* Maintain height on mobile */
+    height: 18rem;
+    margin: 0;
+  }
+  
+  .image-section {
+    height: 9rem;
+  }
+  
+  .card-content {
+    padding: 0.8rem;
+  }
+  
+  .event-title {
+    font-size: 0.85rem;
   }
 }

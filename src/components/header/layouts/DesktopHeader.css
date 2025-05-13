@@ -2,6 +2,7 @@
 .desktop-header-container {
   background-color: #1a1a1a;
   padding: 0;
+  width: 100%;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
@@ -28,7 +29,7 @@
 
 .search-container {
   flex: 1;
-  max-width: 500px;
+  max-width: 400px;
   padding: 8px 0;
 }
 

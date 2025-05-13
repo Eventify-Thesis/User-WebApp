@@ -51,10 +51,25 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
     }
   };
 
+  const eventsWithAddress = events.map((event) => ({
+    ...event,
+    address:
+      event.street +
+      ', ' +
+      event.ward +
+      ', ' +
+      'District ' +
+      event.district +
+      ', ' +
+      event.city +
+      ', ' +
+      event.country,
+  }));
+
   // Show carousel only if more than 3 events, otherwise use a grid/flex row
   const showCarousel = events.length > 3;
   return (
-    <Box 
+    <Box
       py={{ base: 40, md: 80 }}
       px={{ base: 16, sm: 20, md: 40 }}
       bg="#1a1a1a"
@@ -71,27 +86,18 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
       {showCarousel ? (
         <div className="slider-container">
           <Slider {...settings}>
-            {events.map((event, index) => (
+            {eventsWithAddress.map((event, index) => (
               <div key={index} className="event-card-wrapper">
-                <div 
-                  className="event-card"
-                  onClick={() => handleEventClick(event)}
-                >
-                  <EventCard {...event} />
-                </div>
+                <EventCard {...event} onClick={() => handleEventClick(event)} />
               </div>
             ))}
           </Slider>
         </div>
       ) : (
         <div className="grid-wrapper">
-          {events.map((event, index) => (
-            <div 
-              key={index}
-              className="event-card"
-              onClick={() => handleEventClick(event)}
-            >
-              <EventCard {...event} />
+          {eventsWithAddress.map((event, index) => (
+            <div key={index} className="event-card-wrapper">
+              <EventCard {...event} onClick={() => handleEventClick(event)} />
             </div>
           ))}
         </div>

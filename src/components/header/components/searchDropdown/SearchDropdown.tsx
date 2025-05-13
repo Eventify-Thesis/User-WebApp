@@ -17,23 +17,24 @@ interface SearchDropdownProps {
 export const SearchDropdown: React.FC<SearchDropdownProps> = ({
   query,
   setQuery,
-  onSearch}) => {
+  onSearch,
+}) => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [isFilterOpen, setFilterOpen] = useState(false);
   const inputRef = useRef<InputRef>(null);
   const { t } = useTranslation();
-  
+
   useEffect(() => {
     if (isModalOpen) {
       inputRef.current?.focus();
     }
   }, [isModalOpen]);
-  
+
   return (
     <>
       <HeaderActionWrapper>
         <InputSearch
-          ref={inputRef} // ✅ Keep reference to input
+          ref={inputRef}
           width="100%"
           value={query}
           height="max-content"
@@ -58,11 +59,13 @@ export const SearchDropdown: React.FC<SearchDropdownProps> = ({
               setModalOpen?.(false);
             }
           }}
-
         />
       </HeaderActionWrapper>
 
-      <SearchPopover visible={isModalOpen} onClose={() => setModalOpen(false)} />
+      <SearchPopover
+        visible={isModalOpen}
+        onClose={() => setModalOpen(false)}
+      />
     </>
   );
 };

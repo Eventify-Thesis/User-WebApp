@@ -14,30 +14,13 @@ export const HeaderSearch: React.FC = () => {
 
   const [query, setQuery] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
-  const [triggerSearch, setTriggerSearch] = useState(false);
-
-  // const {
-  //   data: searchResults,
-  //   isLoading,
-  //   refetch,
-  // } = useSearchSemanticEvents({query, limit: 4});
 
   const handleSearch = (text: string) => {
     setQuery(text);
-    setTriggerSearch(true);
     if (text.trim()) {
       navigate(`/search-result?query=${encodeURIComponent(text.trim())}`);
     }
   };
-
-  // useEffect(() => {
-  //   if (triggerSearch && query) {
-  //     refetch();
-  //     setTriggerSearch(false);
-  //   }
-  // }, [triggerSearch, query, refetch]);
-
-  // Close modal on route change
   useEffect(() => {
     setModalOpen(false);
   }, [pathname]);

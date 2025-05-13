@@ -1,4 +1,4 @@
-/* MobileHeader.css */
+MobileHeader.css
 .mobile-header-container {
   background-color: #1a1a1a;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
@@ -22,11 +22,6 @@
 
 .logo-container:hover {
   opacity: 0.9;
-}
-
-.search-container {
-  flex: 1;
-  max-width: 200px;
 }
 
 .header-right-side {

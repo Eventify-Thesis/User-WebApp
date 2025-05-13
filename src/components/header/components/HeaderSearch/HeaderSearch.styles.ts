@@ -27,10 +27,13 @@ export const InputSearch = styled(SearchInput)`
     display: none;
   }
 
+    border-radius: 0.25rem !important;
+
+
   @media only screen and ${media.md} {
     .ant-input-group .ant-input-affix-wrapper:not(:last-child) {
-      border-radius: 3.125rem;
       border: 0;
+      border-radius: 0.25rem !important;
       padding: 0.5625rem 1.25rem;
     }
 
