@@ -1,4 +1,5 @@
 import { QuestionType, Ticket } from '@/types/types.ts';
+import { useTranslation } from 'react-i18next';
 import { UseFormReturnType } from '@mantine/form';
 import {
   Box,
@@ -47,6 +48,10 @@ const DropDownInput = ({ question, name, form }: QuestionInputProps) => {
   });
   return (
     <Select
+      styles={{
+        label: { color: '#000000' },
+        description: { color: '#000000' },
+      }}
       classNames={{
         description: classes.descriptionWithNoStyle,
       }}
@@ -67,6 +72,10 @@ const MultiLineTextInput = ({ question, name, form }: QuestionInputProps) => {
   return (
     <>
       <Textarea
+        styles={{
+          label: { color: '#000000' },
+          description: { color: '#000000' },
+        }}
         classNames={{
           description: classes.descriptionWithNoStyle,
         }}
@@ -91,6 +100,7 @@ const DateInput = ({ question, name, form }: QuestionInputProps) => {
         type="date"
         {...form.getInputProps(`${name}.answer`)}
         label={question.title}
+        styles={{ label: { color: '#000000' } }}
       />
     </>
   );
@@ -100,6 +110,10 @@ const SingleLineTextInput = ({ question, name, form }: QuestionInputProps) => {
   return (
     <>
       <TextInput
+        styles={{
+          label: { color: '#000000' },
+          description: { color: '#000000' },
+        }}
         classNames={{
           description: classes.descriptionWithNoStyle,
         }}
@@ -119,6 +133,10 @@ const SingleLineTextInput = ({ question, name, form }: QuestionInputProps) => {
 const RadioInput = ({ question, name, form }: QuestionInputProps) => {
   return (
     <Radio.Group
+      styles={{
+        label: { color: '#000000' },
+        description: { color: '#000000' },
+      }}
       classNames={{
         description: classes.descriptionWithNoStyle,
       }}
@@ -149,6 +167,10 @@ const RadioInput = ({ question, name, form }: QuestionInputProps) => {
 const CheckBoxInput = ({ question, name, form }: QuestionInputProps) => {
   return (
     <Checkbox.Group
+      styles={{
+        label: { color: '#000000' },
+        description: { color: '#000000' },
+      }}
       classNames={{
         description: classes.descriptionWithNoStyle,
       }}
@@ -177,11 +199,18 @@ const CheckBoxInput = ({ question, name, form }: QuestionInputProps) => {
 };
 
 const AddressInput = ({ question, name, form }: QuestionInputProps) => {
+  const { t } = useTranslation();
+  // Define styles for text to ensure visibility on white background
+  const textStyles = {
+    color: '#000000',
+  };
+
   return (
     <>
-      <h4>{question.title}</h4>
+      <h4 style={textStyles}>{question.title}</h4>
       <div
         className={classes.description}
+        style={textStyles}
         dangerouslySetInnerHTML={{ __html: question.description || '' }}
       />
 
@@ -189,22 +218,26 @@ const AddressInput = ({ question, name, form }: QuestionInputProps) => {
         withAsterisk={question.required}
         {...form.getInputProps(`${name}.address_line_1`)}
         label={t('questions.address.line1')}
+        styles={{ label: { color: '#000000' } }}
       />
       <TextInput
         mt={20}
         {...form.getInputProps(`${name}.address_line_2`)}
         label={t('questions.address.line2')}
+        styles={{ label: { color: '#000000' } }}
       />
       <InputGroup>
         <TextInput
           withAsterisk={question.required}
           {...form.getInputProps(`${name}.city`)}
           label={t('questions.address.city')}
+          styles={{ label: { color: '#000000' } }}
         />
         <TextInput
           withAsterisk={question.required}
           {...form.getInputProps(`${name}.postal_code`)}
           label={t('questions.address.postal_code')}
+          styles={{ label: { color: '#000000' } }}
         />
       </InputGroup>
       <NativeSelect
@@ -213,12 +246,14 @@ const AddressInput = ({ question, name, form }: QuestionInputProps) => {
         {...form.getInputProps(`${name}.country`)}
         label={t('questions.address.country')}
         data={countries}
+        styles={{ label: { color: '#000000' } }}
       />
     </>
   );
 };
 
 export const QuestionInput = ({ question, name, form }: QuestionInputProps) => {
+  // All form elements have text color applied directly
   let input;
   switch (question.type) {
     case QuestionType.ADDRESS:
@@ -248,7 +283,11 @@ export const QuestionInput = ({ question, name, form }: QuestionInputProps) => {
       break;
   }
 
-  return <Box mt={20}>{input}</Box>;
+  return (
+    <Box mt={20} style={{ color: '#000000' }}>
+      {input}
+    </Box>
+  );
 };
 
 export const CheckoutOrderQuestions = ({

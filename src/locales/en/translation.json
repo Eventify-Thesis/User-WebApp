@@ -147,7 +147,19 @@
     "priceFrom": "Price from",
     "organizer": "Organizer",
     "description": "Description",
-    "ticketInfo": "Ticket Info"
+    "tickets": "Tickets",
+    "ticketInfo": "Ticket Info",
+    "showMore": "Show More",
+    "showLess": "Show Less",
+    "venue": "Venue",
+    "date": "Date",
+    "time": "Time",
+    "price": "Price",
+    "available": "Available",
+    "soldOut": "Sold Out",
+    "quantity": "Quantity",
+    "addToCart": "Add to Cart",
+    "selectTickets": "Select Tickets"
   },
   "checkout": {
     "finishOrderIn": "Finish order in",

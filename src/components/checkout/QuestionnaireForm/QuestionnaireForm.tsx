@@ -262,6 +262,23 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
   //     </>
   //   );
   // }
+  // Define styles for text to ensure visibility on white background
+  const textStyles = {
+    color: '#000000',
+  };
+
+  const headingStyles = {
+    color: '#000000',
+    marginTop: '16px',
+    marginBottom: '8px',
+  };
+
+  const subheadingStyles = {
+    color: '#000000',
+    marginTop: 0,
+    marginBottom: '16px',
+  };
+
   return (
     <form style={{ width: '100%' }}>
       <CheckoutContent>
@@ -271,12 +288,14 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
               withAsterisk
               label={t`First Name`}
               placeholder={t`First name`}
+              styles={{ label: textStyles }}
               {...form.getInputProps('order.first_name')}
             />
             <TextInput
               withAsterisk
               label={t`Last Name`}
               placeholder={t`Last Name`}
+              styles={{ label: textStyles }}
               {...form.getInputProps('order.last_name')}
             />
           </InputGroup>
@@ -286,6 +305,7 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
             type={'email'}
             label={t`Email Address`}
             placeholder={t`Email Address`}
+            styles={{ label: textStyles }}
             {...form.getInputProps('order.email')}
           />
 
@@ -316,11 +336,11 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
 
           return (
             <div key={orderItem.ticket_id + orderItem.id}>
-              <h3>{orderItem?.item_name}</h3>
+              <h3 style={headingStyles}>{orderItem?.item_name}</h3>
               {Array.from(Array(orderItem?.quantity)).map((_, index) => {
                 const attendeeInputs = (
                   <Card key={`${orderItem.id} ${index}`}>
-                    <h4 style={{ marginTop: 0 }}>
+                    <h4 style={subheadingStyles}>
                       {t`Attendee`} {index + 1} {t`Details`}
                     </h4>
                     <InputGroup>
@@ -328,6 +348,7 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
                         withAsterisk
                         label={t`First Name`}
                         placeholder={t`First name`}
+                        styles={{ label: textStyles }}
                         {...form.getInputProps(
                           `attendees.${attendeeIndex}.first_name`,
                         )}
@@ -336,6 +357,7 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
                         withAsterisk
                         label={t`Last Name`}
                         placeholder={t`Last Name`}
+                        styles={{ label: textStyles }}
                         {...form.getInputProps(
                           `attendees.${attendeeIndex}.last_name`,
                         )}
@@ -346,6 +368,7 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
                       withAsterisk
                       label={t`Email Address`}
                       placeholder={t`Email Address`}
+                      styles={{ label: textStyles }}
                       {...form.getInputProps(
                         `attendees.${attendeeIndex}.email`,
                       )}
