@@ -16,6 +16,7 @@ import { enUS } from '@clerk/localizations';
 import { QueryClientProvider } from '@tanstack/react-query';
 import './styles/global.scss';
 import { queryClient } from './utils/queryClient';
+import { AuthTokenProvider } from './components/auth/AuthTokenProvider';
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -50,9 +51,11 @@ function App() {
               />
             </Helmet>
 
-            <ConfigProvider locale={language === 'en' ? en : vnVN}>
-              <AppRouter />
-            </ConfigProvider>
+            <AuthTokenProvider>
+              <ConfigProvider locale={language === 'en' ? en : vnVN}>
+                <AppRouter />
+              </ConfigProvider>
+            </AuthTokenProvider>
           </HelmetProvider>
         </QueryClientProvider>
       </ClerkProvider>
