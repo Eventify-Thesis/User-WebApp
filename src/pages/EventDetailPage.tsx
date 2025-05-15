@@ -24,7 +24,7 @@ const EventDetailPage: React.FC = () => {
   const { eventDescription, orgName, orgLogoUrl, orgDescription } = event || {};
 
   const desktopLayout = (
-    <BaseRow align="middle" gutter={[16, 24]} style={{ width: '100%' }}>
+    <BaseRow align="middle" gutter={[16, 24]} style={{ width: '100%', flexDirection: 'column' }}>
       <Box className="event-banner">
         <HeroSection event={event} />
       </Box>
@@ -33,7 +33,7 @@ const EventDetailPage: React.FC = () => {
           <DescriptionSection description={eventDescription} />
         </Box>
         <Box className="section-container">
-          <TicketsInfoSection shows={event?.shows || []} />
+          <TicketsInfoSection shows={event?.shows || []} eventId={event?.id} />
         </Box>
         <Box className="section-container">
           <OrganizerInfoSection
@@ -47,7 +47,7 @@ const EventDetailPage: React.FC = () => {
   );
 
   const mobileAndTabletLayout = (
-    <BaseRow align="middle" gutter={[16, 24]} style={{ width: '100%' }}>
+    <BaseRow align="middle" gutter={[16, 24]} style={{ width: '100%', flexDirection: 'column' }}>
       <Box className="event-banner">
         <HeroSection event={event} />
       </Box>
@@ -56,7 +56,7 @@ const EventDetailPage: React.FC = () => {
           <DescriptionSection description={eventDescription} />
         </Box>
         <Box className="section-container">
-          <TicketsInfoSection shows={event?.shows || []} />
+          <TicketsInfoSection shows={event?.shows || []} eventId={event?.id} />
         </Box>
         <Box className="section-container">
           <OrganizerInfoSection
@@ -76,7 +76,5 @@ const EventDetailPage: React.FC = () => {
     </Container>
   );
 };
-
-
 
 export default EventDetailPage;

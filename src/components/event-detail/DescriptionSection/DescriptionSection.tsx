@@ -36,7 +36,7 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
               width: '100%',
               bottom: 0,
               height: '120px',
-              background: 'linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.9) 100%)',
+              background: 'linear-gradient(rgba(25, 25, 40, 0) 0%, rgba(25, 25, 40, 0.95) 100%)',
               zIndex: 3,
             }}
           />
@@ -52,9 +52,10 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
       >
         <Button
           variant="subtle"
-          color="gray"
+          color="yellow"
           onClick={toggleExpand}
-          rightSection={isExpanded ? <IconChevronUp size={16} /> : <IconChevronDown size={16} />}
+          rightSection={isExpanded ? <IconChevronUp size={18} /> : <IconChevronDown size={18} />}
+          style={{ color: '#facc15', fontSize: '16px', fontWeight: 600 }}
         >
           {isExpanded ? t('eventDetailPage.showLess') : t('eventDetailPage.showMore')}
         </Button>

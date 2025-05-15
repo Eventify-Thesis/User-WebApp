@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import React, { useState } from 'react';
+import React from 'react';
 import dayjs from 'dayjs';
 import { ShowModel } from '@/domain/ShowModel';
 import { useNavigate } from 'react-router-dom';
@@ -12,13 +12,11 @@ import {
   Accordion,
   Badge,
   Image,
-  ActionIcon,
 } from '@mantine/core';
 import {
   IconCalendar,
-  IconPlus,
-  IconMinus,
   IconTicket,
+  IconCurrencyDollar,
 } from '@tabler/icons-react';
 import './TicketsInfoSection.css';
 
@@ -33,23 +31,11 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [quantities, setQuantities] = useState<Record<string, number>>({});
-
-  const handleQuantityChange = (ticketId: string, newValue: number) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [ticketId]: Math.max(0, newValue),
-    }));
-  };
-
-  const handleAddToCart = (
-    ticket: ShowModel['ticketTypes'][0],
-    showId: string,
-  ) => {
-    const quantity = quantities[ticket.id] || 0;
-    if (quantity > 0 && eventId && showId) {
+  
+  const handleBuyTicket = (showId: string | undefined) => {
+    if (eventId && showId) {
       navigate(
-        `/checkout?eventId=${eventId}&showId=${showId}&ticketId=${ticket.id}&quantity=${quantity}`,
+        `/checkout?eventId=${eventId}&showId=${showId}`,
       );
     }
   };
@@ -60,7 +46,10 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
         <Accordion.Control>
           <Group justify="space-between" style={{ width: '100%' }}>
             <Text className="ticket-title">{ticket.name}</Text>
-            <Text className="ticket-price">{Math.round(ticket.price)} Đ</Text>
+            <Group gap="xs">
+              <IconCurrencyDollar size={16} stroke={1.5} color="#facc15" />
+              <Text className="ticket-price" fw={600}>{Math.round(ticket.price)} Đ</Text>
+            </Group>
           </Group>
         </Accordion.Control>
         <Accordion.Panel>
@@ -99,53 +88,10 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                 </Text>
               </Group>
               {ticket.description && (
-                <Text mt="sm" size="sm" color="rgba(0, 0, 0, 0.7)">
+                <Text mt="sm" size="sm" className="ticket-description" style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                   {ticket.description}
                 </Text>
               )}
-            </Box>
-
-            <Box className="ticket-actions">
-              <Group className="quantity-selector">
-                <ActionIcon
-                  className="quantity-button"
-                  onClick={() =>
-                    handleQuantityChange(
-                      ticket.id,
-                      (quantities[ticket.id] || 0) - 1,
-                    )
-                  }
-                  disabled={
-                    (quantities[ticket.id] || 0) <= 0 || ticket.quantity <= 0
-                  }
-                >
-                  <IconMinus size={16} />
-                </ActionIcon>
-                <Text className="quantity-value">
-                  {quantities[ticket.id] || 0}
-                </Text>
-                <ActionIcon
-                  className="quantity-button"
-                  onClick={() =>
-                    handleQuantityChange(
-                      ticket.id,
-                      (quantities[ticket.id] || 0) + 1,
-                    )
-                  }
-                  disabled={ticket.quantity <= 0}
-                >
-                  <IconPlus size={16} />
-                </ActionIcon>
-              </Group>
-              <Button
-                className="add-to-cart-button"
-                onClick={() => handleAddToCart(ticket, show.id)}
-                disabled={
-                  (quantities[ticket.id] || 0) <= 0 || ticket.quantity <= 0
-                }
-              >
-                {t('eventDetailPage.addToCart')}
-              </Button>
             </Box>
           </Box>
         </Accordion.Panel>
@@ -161,31 +107,40 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
 
       {shows.length > 0 ? (
         <Accordion
-          defaultValue={shows[0]?.id ? String(shows[0].id) : undefined}
+          defaultValue={shows[0]?.id ? String(shows[0].id) : ''}
           variant="contained"
           radius="md"
           styles={{
             item: {
-              borderColor: 'rgba(0, 0, 0, 0.1)',
-              marginBottom: '12px',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
+              marginBottom: '16px',
+              borderRadius: '12px',
+              overflow: 'hidden',
               '&[data-active]': {
-                backgroundColor: '#f8f8f8',
+                backgroundColor: 'rgba(80, 60, 120, 0.2)',
+                borderColor: 'rgba(250, 204, 21, 0.2)',
               },
             },
             control: {
               padding: '16px',
-              backgroundColor: '#ffffff',
+              backgroundColor: 'rgba(25, 25, 40, 0.7)',
+              backdropFilter: 'blur(12px)',
               '&:hover': {
-                backgroundColor: '#f8f8f8',
+                backgroundColor: 'rgba(60, 50, 90, 0.8)',
               },
             },
             label: {
               fontWeight: 600,
-              color: '#000000',
+              color: '#ffffff',
             },
             panel: {
               padding: '0',
-              backgroundColor: '#ffffff',
+              backgroundColor: 'rgba(45, 35, 70, 0.7)',
+              color: '#ffffff',
+              boxShadow: 'inset 0 5px 10px rgba(0, 0, 0, 0.1)',
+            },
+            content: {
+              color: '#ffffff',
             },
           }}
         >
@@ -195,13 +150,25 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                 <Group justify="space-between" style={{ width: '100%' }}>
                   <Group>
                     <IconCalendar size={18} />
-                    <Text fw={500}>
+                    <Text fw={600}>
                       {dayjs(show.startTime).format('ddd, DD MMM YYYY')}
                     </Text>
                   </Group>
-                  <Text size="sm" c="dimmed">
-                    {dayjs(show.startTime).format('HH:mm')}
-                  </Text>
+                  <Group>
+                    <Text size="sm" c="dimmed" mr="sm">
+                      {dayjs(show.startTime).format('HH:mm')}
+                    </Text>
+                    <Button 
+                      className="buy-ticket-button"
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleBuyTicket(show.id);
+                      }}
+                    >
+                      {t('eventDetailPage.buyTicket')}
+                    </Button>
+                  </Group>
                 </Group>
               </Accordion.Control>
               <Accordion.Panel>
@@ -210,15 +177,34 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                   radius="sm"
                   styles={{
                     item: {
-                      borderColor: 'rgba(0, 0, 0, 0.1)',
-                      marginBottom: '8px',
+                      borderColor: 'rgba(255, 255, 255, 0.1)',
+                      marginBottom: '10px',
+                      borderRadius: '8px',
+                      overflow: 'hidden',
+                      '&[data-active]': {
+                        backgroundColor: 'rgba(90, 70, 130, 0.2)',
+                        borderColor: 'rgba(250, 204, 21, 0.15)',
+                      },
                     },
                     control: {
-                      padding: '12px',
-                      backgroundColor: '#ffffff',
+                      padding: '14px',
+                      backgroundColor: 'rgba(50, 40, 80, 0.5)',
+                      color: '#ffffff',
+                      '&:hover': {
+                        backgroundColor: 'rgba(70, 55, 100, 0.6)',
+                      },
                     },
                     panel: {
                       padding: '0',
+                      backgroundColor: 'rgba(60, 45, 90, 0.5)',
+                      color: '#ffffff',
+                      boxShadow: 'inset 0 4px 8px rgba(0, 0, 0, 0.1)',
+                    },
+                    label: {
+                      color: '#ffffff',
+                    },
+                    content: {
+                      color: '#ffffff',
                     },
                   }}
                 >

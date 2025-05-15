@@ -1,8 +1,34 @@
 /* EventDetailPage.css */
 .event-detail-container {
   min-height: 100vh;
-  background-color: #121212;
+  background-color: #0c0c14;
+  background-image: 
+    linear-gradient(135deg, rgba(50, 25, 90, 0.15) 25%, transparent 25%),
+    linear-gradient(225deg, rgba(50, 25, 90, 0.15) 25%, transparent 25%),
+    linear-gradient(45deg, rgba(50, 25, 90, 0.15) 25%, transparent 25%),
+    linear-gradient(315deg, rgba(50, 25, 90, 0.15) 25%, transparent 25%);
+  background-position: 40px 0, 40px 0, 0 0, 0 0;
+  background-size: 80px 80px;
+  background-repeat: repeat;
   color: white;
+  position: relative;
+}
+
+.event-detail-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(12, 12, 20, 0.95) 0%, rgba(12, 12, 20, 0.8) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.event-detail-container > * {
+  position: relative;
+  z-index: 2;
 }
 
 .event-banner {
@@ -17,7 +43,8 @@
   color: white;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  border-radius: 0 0 30px 30px;
 }
 
 .event-banner::before {
@@ -29,7 +56,7 @@
   height: 100%;
   background: radial-gradient(
     circle at 50% 50%,
-    rgba(250, 204, 21, 0.1) 0%,
+    rgba(250, 204, 21, 0.15) 0%,
     transparent 70%
   );
   pointer-events: none;
@@ -39,35 +66,44 @@
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
   width: 100%;
   max-width: 1200px;
   margin: 0 auto;
+  align-items: flex-start; /* Align sections to the left */
+  position: relative;
+  left: 0;
+  right: 0;
 }
 
 .section-container {
-  background-color: #ffffff;
-  border-radius: 12px;
-  padding: 24px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  background-color: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  width: 100%;
+  color: #f5f5f7;
 }
 
 .section-container:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-  border-color: rgba(250, 204, 21, 0.5);
-  background-color: #ffffff;
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.25);
+  border-color: rgba(250, 204, 21, 0.3);
+  background-color: rgba(255, 255, 255, 0.05);
 }
 
 .section-title {
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin-bottom: 16px;
-  color: #000000;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 18px;
+  color: #ffffff;
   position: relative;
   display: inline-block;
+  letter-spacing: 0.02em;
 }
 
 .section-title::after {
@@ -75,32 +111,57 @@
   position: absolute;
   left: 0;
   bottom: -8px;
-  width: 40px;
-  height: 2px;
-  background-color: #facc15;
-  border-radius: 2px;
+  width: 50px;
+  height: 3px;
+  background: linear-gradient(90deg, #facc15, #fb923c);
+  border-radius: 4px;
+}
+
+/* Glass morphism texture */
+.glass-texture {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.01));
+  pointer-events: none;
+  z-index: -1;
 }
 
 /* Responsive styles */
 @media (min-width: 768px) {
   .main-info-section {
-    padding: 2rem 4rem;
+    padding: 3rem 2rem;
+  }
+  
+  .section-container {
+    padding: 32px;
   }
 }
 
 @media (min-width: 992px) {
   .main-info-section {
-    padding: 3rem 6rem;
-    width: 75%;
+    padding: 4rem 2rem;
+    margin-left: auto; /* Center the section */
+    margin-right: auto;
+    width: 85%;
+    max-width: 1200px;
   }
   
   .event-banner {
-    padding: 4rem 3rem;
+    padding: 0;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: center;
   }
 }
 
 @media (min-width: 1200px) {
   .main-info-section {
-    padding: 3rem 8rem;
+    padding: 4rem 2rem;
+    width: 75%;
+    margin-left: auto;
+    margin-right: auto;
   }
 }
