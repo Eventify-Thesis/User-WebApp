@@ -87,6 +87,9 @@ const CheckoutPage: React.FC = () => {
       first_name: string;
       last_name: string;
       email: string;
+      seatId: string | undefined;
+      rowLabel: string | undefined;
+      seatNumber: string | undefined;
       questions: any[];
     }>;
   }>({
@@ -104,6 +107,9 @@ const CheckoutPage: React.FC = () => {
           last_name: '',
           email: '',
           id: '',
+          seatId: undefined,
+          rowLabel: undefined,
+          seatNumber: undefined,
           questions: [],
         },
       ],
@@ -185,6 +191,8 @@ const CheckoutPage: React.FC = () => {
     try {
       const values = form.values;
 
+      console.log('values', values);
+
       await updateFormAnswer({
         bookingCode: bookingCode!,
         showId: Number(showId),
@@ -201,6 +209,9 @@ const CheckoutPage: React.FC = () => {
             first_name: attendee.first_name,
             last_name: attendee.last_name,
             email: attendee.email,
+            seatId: attendee.seatId,
+            rowLabel: attendee.rowLabel,
+            seatNumber: attendee.seatNumber,
             questions: attendee.questions,
           })),
         },

@@ -8,6 +8,7 @@ import {
 import Canvas from './components/Canvas';
 import './EventSeatMap.css';
 import { useGetSeatingPlanDetail } from '@/queries/useSeatingPlanQueries';
+import { Loading } from '../common/Loading/Loading';
 const { Content } = Layout;
 
 interface SeatAvailability {
@@ -145,7 +146,7 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
           />
         </Content>
       ) : (
-        <div>No seating plan data available</div>
+        <Loading />
       )}
     </Layout>
   );

@@ -1,11 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { Typography, Space, Button, Row, Divider, theme } from 'antd';
+import { Typography, Space, Button, Row, Divider } from 'antd';
 import { CalendarOutlined, EnvironmentOutlined } from '@ant-design/icons';
 import dayjs from 'dayjs';
 import { useResponsive } from '@/hooks/useResponsive';
-import { useNavigate } from 'react-router-dom';
-import { bookingClient, ItemInfo } from '@/api/booking.client';
-import { notification } from 'antd';
 
 const { Title, Text } = Typography;
 
@@ -27,7 +24,7 @@ interface SummaryPanelProps {
   ticketTypes: TicketType[];
   ticketTypesMapping: Record<string, any>;
   theme?: 'light' | 'dark';
-  id: number;
+  hasSeatingPlan?: boolean;
 }
 
 const SummaryPanel: React.FC<SummaryPanelProps> = ({
@@ -42,8 +39,6 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
   theme: themeProp = 'light',
 }) => {
   const { isDesktop } = useResponsive();
-  const { token } = theme.useToken();
-  const navigate = useNavigate();
 
   const [totalTickets, setTotalTickets] = useState(0);
 
@@ -60,15 +55,13 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
 
   const isDark = themeProp === 'dark';
   const styles = {
-    background: isDark ? '#1f1f1f' : '#fff',
-    textColor: isDark ? '#fff' : 'rgba(0, 0, 0, 0.88)',
-    secondaryColor: isDark
-      ? 'rgba(255, 255, 255, 0.45)'
-      : 'rgba(0, 0, 0, 0.45)',
-    borderColor: isDark ? '#303030' : '#f0f0f0',
-    gradientBg: isDark
-      ? 'linear-gradient(180deg, #1f1f1f 0%, #141414 100%)'
-      : '#fff',
+    background: '#fff',
+    textColor: '#212529',
+    secondaryColor: '#6c757d',
+    borderColor: '#e9ecef',
+    gradientBg: 'linear-gradient(180deg, #ffffff 0%, #f8f9fa 100%)',
+    accentColor: '#495057',
+    buttonColor: '#212529',
   };
 
   const actionButton = (
@@ -106,11 +99,12 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         style={{
           height: '48px',
           fontSize: '16px',
-          background: token.colorPrimary,
+          background: '#212529',
+          border: 'none',
         }}
       >
         {hasSelections
-          ? `Continue • $${totalPrice.toFixed(2)}`
+          ? `Continue • ${totalPrice} Dong`
           : 'Please choose ticket'}
       </Button>
     </div>
@@ -124,8 +118,9 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
           level={4}
           style={{
             margin: 0,
-            color: token.colorPrimary,
+            color: '#212529',
             fontSize: '24px',
+            fontWeight: 700,
           }}
         >
           {eventName}
@@ -134,13 +129,13 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         <Space direction="vertical" size="small" style={{ marginTop: 16 }}>
           {venueName && (
             <Space>
-              <EnvironmentOutlined style={{ color: token.colorPrimary }} />
+              <EnvironmentOutlined style={{ color: styles.accentColor }} />
               <Text style={{ color: styles.textColor }}>{venueName}</Text>
             </Space>
           )}
           {startTime && (
             <Space>
-              <CalendarOutlined style={{ color: token.colorPrimary }} />
+              <CalendarOutlined style={{ color: styles.accentColor }} />
               <Text style={{ color: styles.textColor }}>
                 {dayjs(startTime).format('MMM D, YYYY - h:mm A')}
               </Text>
@@ -153,7 +148,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         />
 
         {/* Ticket Types */}
-        <Title level={5} style={{ color: token.colorPrimary, marginTop: 0 }}>
+        <Title level={5} style={{ color: '#212529', marginTop: 0, fontWeight: 600 }}>
           Available Tickets
         </Title>
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
@@ -169,7 +164,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
               }}
             >
               <div>
-                <Text style={{ color: styles.textColor, fontSize: '16px' }}>
+                <Text style={{ color: styles.textColor, fontSize: '16px', fontWeight: 500 }}>
                   {ticket.name}
                 </Text>
                 {ticket.description && (
@@ -187,11 +182,11 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
               <Text
                 strong
                 style={{
-                  color: token.colorPrimary,
+                  color: styles.accentColor,
                   fontSize: '16px',
                 }}
               >
-                ${ticket.price}
+                {Math.round(ticket.price)} Dong
               </Text>
             </Row>
           ))}
@@ -249,7 +244,8 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
           style={{
             height: '44px',
             fontSize: '16px',
-            background: token.colorPrimary,
+            background: styles.buttonColor,
+            border: 'none',
           }}
         >
           {hasSelections ? 'Continue' : 'Please choose ticket'}

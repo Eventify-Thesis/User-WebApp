@@ -144,12 +144,14 @@ const EventSelectTicketPage: React.FC = () => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: '100vh',
-        background: '#141414',
+        background: '#f8f9fa',
       }}
     >
       <PageTitle>{t('eventSelectTicketPage.title')}</PageTitle>
       {isLoadingEvent || isLoadingShow ? (
-        <Spin />
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <Spin style={{ color: '#212529' }} />
+        </div>
       ) : (
         <div style={{ display: 'flex', flex: 1 }}>
           <div
@@ -158,15 +160,16 @@ const EventSelectTicketPage: React.FC = () => {
               flexDirection: 'column',
               flex: 1,
               maxWidth: isDesktop ? 'calc(100% - 400px)' : '100%',
-              background: '#141414',
-              color: '#fff',
+              background: '#f8f9fa',
+              color: '#212529',
             }}
           >
             <Header />
             <div
               style={{
                 flex: 1,
-                background: 'linear-gradient(180deg, #1f1f1f 0%, #141414 100%)',
+                background: 'linear-gradient(180deg, #f1f3f5 0%, #f8f9fa 100%)',
+                padding: '0 20px',
               }}
             >
               {event.id && show?.seatingPlanId ? (
@@ -212,7 +215,7 @@ const EventSelectTicketPage: React.FC = () => {
                 hasSeatingPlan={!!show.seatingPlanId}
                 ticketTypes={show.ticketTypes}
                 ticketTypesMapping={ticketTypesMapping}
-                theme="dark"
+                theme="light"
               />
             </div>
           )}
@@ -228,7 +231,7 @@ const EventSelectTicketPage: React.FC = () => {
               hasSeatingPlan={!!show.seatingPlanId}
               ticketTypes={show.ticketTypes}
               ticketTypesMapping={ticketTypesMapping}
-              theme="dark"
+              theme="light"
             />
           )}
         </div>

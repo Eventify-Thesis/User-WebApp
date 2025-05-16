@@ -38,6 +38,9 @@ interface FormValues {
       question_id: number;
       response: Record<string, any>;
     }>;
+    seatId: string;
+    rowLabel: string;
+    seatNumber: string;
   }>;
 }
 
@@ -119,10 +122,16 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
   ) => {
     const attendees: any = [];
 
+    console.log(orderItems);
+
     orderItems?.forEach((orderItem) => {
       Array.from(Array(orderItem?.quantity)).map(() => {
         attendees.push({
           id: orderItem?.id,
+          seatId: orderItem?.seatId,
+          ticketTypeId: orderItem?.ticketTypeId,
+          rowLabel: orderItem?.rowLabel,
+          seatNumber: orderItem?.seatNumber,
           first_name: '',
           last_name: '',
           email: '',
@@ -165,7 +174,7 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
         createTicketIdToQuestionMap(),
       );
       const formOrderQuestions = createFormOrderQuestions();
-
+      console.log(attendees);
       // Initialize form with existing answers if available
       if (formAnswers?.result) {
         const { order, attendees: existingAttendees } = formAnswers.result;
@@ -186,6 +195,10 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
             email: existingAttendees?.[index]?.email || '',
             questions:
               existingAttendees?.[index]?.questions || attendee.questions,
+            seatId: existingAttendees?.[index]?.seatId || '',
+            ticketTypeId: existingAttendees?.[index]?.ticketTypeId || '',
+            rowLabel: existingAttendees?.[index]?.rowLabel || '',
+            seatNumbers: existingAttendees?.[index]?.seatNumbers || '',
           })),
         });
       } else {

@@ -51,12 +51,25 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
     }
   };
 
-  const eventsWithAddress = events.map((event) => ({
-    ...event,
-    address:
-      event.street +
-      ', ' +
-      event.ward +
+  const eventsWithAddress = events.map((event) => {
+    if (
+      !event.street ||
+      !event.ward ||
+      !event.district ||
+      !event.city ||
+      !event.country
+    ) {
+      return {
+        ...event,
+        address: 'Online',
+      };
+    }
+    return {
+      ...event,
+      address:
+        event.street +
+        ', ' +
+        event.ward +
       ', ' +
       'District ' +
       event.district +
@@ -64,7 +77,8 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
       event.city +
       ', ' +
       event.country,
-  }));
+    };
+  });
 
   // Show carousel only if more than 3 events, otherwise use a grid/flex row
   const showCarousel = events.length > 3;

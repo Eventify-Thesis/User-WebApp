@@ -77,7 +77,7 @@
 }
 
 .section-container {
-  background-color: rgba(255, 255, 255, 0.03);
+  background-color: white !important;
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-radius: 16px;
@@ -100,7 +100,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 18px;
-  color: #ffffff;
+  color: black !important;
   position: relative;
   display: inline-block;
   letter-spacing: 0.02em;
