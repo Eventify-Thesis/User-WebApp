@@ -22,6 +22,8 @@ const SearchResult = React.lazy(() => import('@/pages/SearchResult'));
 const InterestedPage = React.lazy(() => import('@/pages/InterestedPage'));
 const OrderHistory = React.lazy(() => import('@/pages/OrderHistory'));
 const TicketOrder = React.lazy(() => import('@/pages/TicketOrder'));
+const QuizPage = React.lazy(() => import('@/pages/QuizPage'));
+const QuizResultPage = React.lazy(() => import('@/pages/QuizResultPage'));
 const EventSelectTicketPage = React.lazy(
   () => import('@/pages/EventSelectTicketPage'),
 );
@@ -58,6 +60,8 @@ export const AppRouter: React.FC = () => {
           <Route path="tickets" element={<OrderHistory />} />
           <Route path="orders/:orderId" element={<TicketOrder />} />
           <Route path=":slug" element={<EventDetailPage />} />
+          <Route path="quiz/:showId" element={<QuizPage />} />
+          <Route path="quiz-result/:showId" element={<QuizResultPage />} />
 
           {/* protected subtree */}
           <Route
