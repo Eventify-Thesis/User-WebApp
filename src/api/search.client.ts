@@ -4,6 +4,7 @@ import EventModel from '@/domain/EventModel';
 export interface SearchEventsParams {
   query: string;
   limit?: number;
+  page?: number;
   city?: string;
   categories?: string[];
   startDate?: string;
@@ -13,7 +14,7 @@ export interface SearchEventsParams {
 
 export const searchClient = {
   searchSemanticEvents: async (params: SearchEventsParams): Promise<EventModel[]> => {
-    let { query, limit, city, categories, startDate, endDate, userId } = params;
+    let { query, limit, page, city, categories, startDate, endDate, userId } = params;
     // If query is undefined or null, set to empty string
     if (query === undefined || query === null) query = '';
 
@@ -21,6 +22,7 @@ export const searchClient = {
       params: {
         ...(query !== undefined ? { q: query } : {}),
         ...(limit !== undefined ? { limit } : {}),
+        ...(page !== undefined ? { page } : {}),
         ...(city ? { city } : {}),
         ...(categories ? { categories: categories.join(",") } : {}),
         ...(startDate ? { startDate } : {}),
