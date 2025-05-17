@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import * as s from './ShowcaseEventSection.styles';
 import EventCard from '../EventCard/EventCard';
-
+import { useNavigate } from 'react-router-dom';
 interface Props {
   eventsThisWeek: any[];
   eventsThisMonth: any[];
@@ -11,11 +11,19 @@ interface Props {
 const ShowcaseEventSection: React.FC<Props> = ({ eventsThisWeek, eventsThisMonth }) => {
   const [activeTab, setActiveTab] = useState<'weekend' | 'month'>('weekend');
   const { t } = useTranslation();
+  const navigate = useNavigate();
 
   const currentEvents = activeTab === 'weekend' ? eventsThisWeek : eventsThisMonth;
 
+  const handleEventClick = (event: any) => {
+    if (event.url) {
+      navigate(`${event.url}-${event.id}`);
+    } else {
+      navigate(`${event.eventName}-${event.id}`);
+    }
+  };
   return (
-    <s.Section>
+    <s.Section style={{ backgroundColor: '#27272A' }}> 
       <s.TabSelector>
         <s.Tab active={activeTab === 'weekend'} onClick={() => setActiveTab('weekend')}>
           {t('homePage.thisWeekend')}
@@ -39,7 +47,7 @@ const ShowcaseEventSection: React.FC<Props> = ({ eventsThisWeek, eventsThisMonth
         {/* Event Cards */}
         {(currentEvents || []).map((event) => (
           <s.CardWrapper key={event.id}>
-            <EventCard {...event} />
+            <EventCard {...event} onClick={() => handleEventClick(event)} />
           </s.CardWrapper>
         ))}
       </s.Grid>

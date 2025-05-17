@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const LocationWrapper = styled.section`
   padding: 30px 80px;
-  margin-top: 24px;
 
   @media (max-width: 991px) {
     padding: 0 20px;
@@ -10,7 +9,7 @@ export const LocationWrapper = styled.section`
 `;
 
 export const SectionTitle = styled.h2`  
-  color: #000000;
+  color: white;
   font-family:
     Inter,
     -apple-system,

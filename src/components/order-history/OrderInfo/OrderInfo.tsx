@@ -86,7 +86,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
         <Box 
           w={{ base: '100%', sm: 80 }}
           style={{
-            background: `linear-gradient(135deg, ${accentColor} 0%, rgba(0,0,0,0.8) 120%)`,
+            background: `linear-gradient(135deg, ${accentColor} 0%, rgba(255,255,255,0.9) 120%)`,
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
@@ -94,22 +94,38 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
             padding: rem(16),
             position: 'relative',
             zIndex: 2,
+            borderRight: '1px solid rgba(0,0,0,0.1)'
           }}
         >
           <Text 
             fw={800} 
             size="xl" 
-            c="white" 
+            c="dark" 
             ta="center"
-            style={{ textShadow: '0 2px 4px rgba(0,0,0,0.3)' }}
           >
-            {date}
+            {date.split('/')[0]}
+          </Text>
+          <Text
+            fw={800} 
+            size="xl" 
+            c="dark" 
+            ta="center"
+          >
+            {date.split('/')[1]}
+          </Text>
+          <Text
+            fw={800} 
+            size="xl" 
+            c="dark" 
+            ta="center"
+          >
+            {date.split('/')[2]}
           </Text>
         </Box>
 
         {/* Right side - Content with image background */}
         <Box style={{ flex: 1, position: 'relative', minHeight: 160 }}>
-          {/* Background image with proper aspect ratio and gradient overlay */}
+          {/* Background image with enhanced gradient overlay for better text visibility */}
           <BackgroundImage 
             src={imageUrl || 'https://placehold.co/600x400/222/ccc?text=No+Image'}
             style={{
@@ -120,18 +136,9 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
               bottom: 0,
               backgroundSize: 'cover',
               backgroundPosition: 'center',
-              '&::after': {
-                content: '""',
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                background: 'linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.85))',
-                zIndex: 1
-              }
             }}
           />
+          {/* Removed full-width overlay to allow image to be fully visible */}
 
           {/* Content overlay */}
           <Box 
@@ -144,60 +151,111 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
               flexDirection: 'column',
               justifyContent: 'space-between'
             }}
+            className="order-info-content"
           >
             <Stack gap="xs" justify="flex-start">
-              {/* Title with subtle text shadow for better readability */}
-              <Text 
-                fw={700} 
-                size="lg" 
-                lh={1.2} 
-                c="white"
-                style={{ 
-                  textShadow: '0 2px 4px rgba(0,0,0,0.5)',
-                  marginBottom: rem(8)
+              {/* Title with background container that fits content */}
+              <Box
+                style={{
+                  display: 'inline-block',
+                  marginBottom: rem(4),
                 }}
               >
-                {title}
-              </Text>
+                <Text 
+                  fw={700} 
+                  size="lg" 
+                  lh={1.2} 
+                  c="dark"
+                  p="xs"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                    borderRadius: rem(6),
+                    backdropFilter: 'blur(2px)',
+                    display: 'inline-block'
+                  }}
+                >
+                  {title}
+                </Text>
+              </Box>
 
               {/* Status badges */}
               <Group gap="xs">
                 <Badge
                   color={getStatusColor(status)}
                   leftSection={<IconCheck size={14} />}
-                  variant="filled"
+                  variant="light"
                   radius="md"
                   size="md"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                    backdropFilter: 'blur(2px)'
+                  }}
                 >
                   {status}
                 </Badge>
                 <Badge 
                   color="blue" 
-                  variant="filled"
+                  variant="light"
                   leftSection={<IconTicket size={14} />}
                   radius="md"
                   size="md"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                    backdropFilter: 'blur(2px)'
+                  }}
                 >
                   {OrderType}
                 </Badge>
               </Group>
             </Stack>
 
-            {/* Bottom info section */}
+            {/* Bottom info section with individual content wrapping */}
             <Stack gap="xs" mt="md">
-              <Flex align="center" gap="xs">
-                <IconCalendar size={16} style={{ color: 'white', opacity: 0.9 }} />
-                <Text size="sm" c="white" style={{ opacity: 0.9, fontWeight: 'bold' }}>
-                  {dateRange}
-                </Text>
-              </Flex>
+              <Box
+                style={{
+                  display: 'inline-block'
+                }}
+              >
+                <Flex 
+                  align="center" 
+                  gap="xs"
+                  p="xs"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                    borderRadius: rem(6),
+                    backdropFilter: 'blur(2px)',
+                    display: 'inline-flex'
+                  }}
+                >
+                  <IconCalendar size={16} style={{ color: 'rgba(0,0,0,0.8)' }} />
+                  <Text size="sm" c="dark" fw={600}>
+                    {dateRange}
+                  </Text>
+                </Flex>
+              </Box>
               
-              <Flex align="center" gap="xs">
-                <IconMapPin size={16} style={{ color: 'white', opacity: 0.9 }} />
-                <Text size="sm" c="white" style={{ opacity: 0.9, fontWeight: 'bold' }}>
-                  {location && location.length > 0 ? location : 'Online'}
-                </Text>
-              </Flex>
+              <Box
+                style={{
+                  display: 'inline-block'
+                }}
+              >
+                <Flex 
+                  align="center" 
+                  gap="xs"
+                  p="xs"
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                    borderRadius: rem(6),
+                    backdropFilter: 'blur(2px)',
+                    display: 'inline-flex'
+                  }}
+                >
+                  <IconMapPin size={16} style={{ color: 'rgba(0,0,0,0.8)' }} />
+                  <Text size="sm" c="dark" fw={600}>
+                    {location && location.length > 0 ? location : 'Online'}
+                  </Text>
+                </Flex>
+              </Box>
             </Stack>
           </Box>
         </Box>

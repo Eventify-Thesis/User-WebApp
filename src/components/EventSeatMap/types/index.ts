@@ -38,14 +38,23 @@ export interface Shape {
   uuid: string;
   type: 'rectangle' | 'circle' | 'text' | 'polygon' | 'ellipse';
   position: Point;
-  size: Size;
+  size?: Size;
   rotation: number;
-  fill: string;
-  stroke: string;
+  fill?: string;
+  stroke?: string;
+  strokeWidth?: number;
+  radius?: number;
+  points?: Point[];
+  fontSize?: number;
+  fontFamily?: string;
   text: {
-    position: Point;
-    color: string;
+    position?: Point;
+    color?: string;
     text: string;
+    fontSize?: number;
+    fontFamily?: string;
+    align?: string;
+    verticalAlign?: string;
   };
 }
 

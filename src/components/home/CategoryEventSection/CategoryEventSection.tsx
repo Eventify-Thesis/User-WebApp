@@ -86,7 +86,7 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
     <Box
       py={{ base: 40, md: 80 }}
       px={{ base: 16, sm: 20, md: 40 }}
-      bg="#1a1a1a"
+      bg="#27272A"
       w="100%"
     >
       <Box mb={30} ml={{ base: 0, sm: 30 }}>

@@ -20,7 +20,7 @@ export enum EventRole {
 
 export enum OrganizerType {
   ORGANIZER = 'ORGANIZER',
-  INDIVIDUAL = 'INDIVIDUAL',
+  PERSONAL = 'PERSONAL',
 }
 
 export enum AgeRestriction {
@@ -31,6 +31,6 @@ export enum AgeRestriction {
 
 export enum BusinessType {
   ORGANIZER = 'ORGANIZER',
-  INDIVIDUAL = 'INDIVIDUAL',
+  PERSONAL = 'PERSONAL',
   COMPANY = 'COMPANY',
 }

@@ -246,6 +246,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             fontSize: '16px',
             background: styles.buttonColor,
             border: 'none',
+            color: 'white !important'
           }}
         >
           {hasSelections ? 'Continue' : 'Please choose ticket'}

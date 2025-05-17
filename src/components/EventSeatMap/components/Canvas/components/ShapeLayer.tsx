@@ -1,8 +1,7 @@
-import React, { memo } from 'react';
+import { memo } from 'react';
 import { Layer, Text, Rect, Circle, Ellipse, Line, Group } from 'react-konva';
 import { SeatingPlan, Shape, Point } from '../../../types/index';
 import { getShapeStyles } from '../utils/styleUtils';
-import { getMousePosition } from '../utils/mouseUtils';
 
 interface ShapeLayerProps {
   seatingPlan: SeatingPlan;
@@ -87,7 +86,6 @@ const ShapeText = memo(({ text, shape }: ShapeTextProps) => {
       }
       onDragMove={(e) => {
         // Update text position when dragged
-        const stage = e.target.getStage();
         const position = {
           x: e.target.x(),
           y: e.target.y(),
@@ -103,6 +101,8 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
     <Layer>
       {seatingPlan.zones.flatMap((zone) =>
         zone.areas.map((area) => {
+          const isSelected = false; // Not implementing selection in user app
+          const shapeStyles = getShapeStyles(area, isSelected);
           // const isSelected = selection.selectedItems.areas.includes(area.uuid);
           // const commonProps = {
           //   draggable:
@@ -136,6 +136,9 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
                     y={area.position.y}
                     width={area.size?.width || 0}
                     height={area.size?.height || 0}
+                    fill={shapeStyles.fill}
+                    stroke={shapeStyles.stroke}
+                    strokeWidth={shapeStyles.strokeWidth}
                   />
                   <ShapeText text={area.text} shape={area} />
                 </Group>
@@ -147,7 +150,8 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
                     id={area.uuid}
                     x={area.position.x}
                     y={area.position.y}
-                    radius={area.radius || 0}
+                    radius={area.radius || 15}
+                    {...shapeStyles}
                   />
                   <ShapeText text={area.text} shape={area} />
                 </Group>
@@ -161,6 +165,9 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
                     y={area.position.y}
                     radiusX={area.size?.width ? area.size.width / 2 : 0}
                     radiusY={area.size?.height ? area.size.height / 2 : 0}
+                    fill={'white'}
+                    stroke={'white'}
+                    strokeWidth={1}
                   />
                   <ShapeText text={area.text} shape={area} />
                 </Group>
@@ -170,8 +177,11 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
                 <Group key={area.uuid} rotationDeg={area.rotation || 0}>
                   <Line
                     id={area.uuid}
-                    points={area.points || []}
+                    points={area.points ? area.points.flatMap(p => [p.x, p.y]) : []}
                     closed={true}
+                    fill={'white'}
+                    stroke={'white'}
+                    strokeWidth={1}
                   />
                   <ShapeText text={area.text} shape={area} />
                 </Group>
@@ -187,7 +197,7 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
                     text={area.text.text || ''}
                     fontSize={area.fontSize || 16}
                     fontFamily={area.fontFamily || 'Arial'}
-                    fill={area.fill || '#000'}
+                    fill={'white'}
                   />
                 </Group>
               );

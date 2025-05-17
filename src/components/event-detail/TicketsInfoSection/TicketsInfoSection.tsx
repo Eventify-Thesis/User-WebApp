@@ -50,10 +50,10 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
       <Accordion.Item key={ticket.id} value={String(ticket.id)}>
         <Accordion.Control>
           <Group justify="space-between" style={{ width: '100%' }}>
-            <Text className="ticket-title">{ticket.name}</Text>
+            <Text className="ticket-title" color="white">{ticket.name}</Text>
             <Group gap="xs">
-              <IconCurrencyDollar size={16} stroke={1.5} color="#228be6" />
-              <Text className="ticket-price" fw={600}>{Math.round(ticket.price).toLocaleString()} Đ</Text>
+              <IconCurrencyDollar size={16} stroke={1.5} color="#FFD700" />
+              <Text className="ticket-price" fw={600} color="white">{Math.round(ticket.price).toLocaleString()} Đ</Text>
             </Group>
           </Group>
         </Accordion.Control>
@@ -71,8 +71,8 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                 />
               </Box>
             ) : (
-              <Box className="ticket-image-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#e9ecef', borderRadius: '6px', height: '80px' }}>
-                <IconTicket size={32} stroke={1.5} color="#adb5bd" />
+              <Box className="ticket-image-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#373a40', borderRadius: '6px', height: '80px' }}>
+                <IconTicket size={32} stroke={1.5} color="#FFD700" />
               </Box>
             )}
             
@@ -81,7 +81,7 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
               <Group justify="flex-end" mb="xs">
                 <Badge
                   color={ticket.quantity > 0 ? 'teal' : 'red'}
-                  variant="light"
+                  variant="filled"
                   size="md"
                 >
                   {ticket.quantity > 0
@@ -92,23 +92,23 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
               
               <Stack gap="xs">
                 <Group className="ticket-detail" gap="xs">
-                  <IconTicket size={16} stroke={1.5} color="#228be6" />
-                  <Text size="sm" fw={500}>{t('eventDetailPage.ticketInfo')}</Text>
+                  <IconTicket size={16} stroke={1.5} color="#FFD700" />
+                  <Text size="sm" fw={500} color="white">{t('eventDetailPage.ticketInfo')}</Text>
                 </Group>
                 <Group className="ticket-detail" gap="xs">
-                  <IconCalendar size={16} stroke={1.5} color="#228be6" />
-                  <Text size="sm">
+                  <IconCalendar size={16} stroke={1.5} color="#FFD700" />
+                  <Text size="sm" color="#c1c2c5">
                     {dayjs(show.startTime).format('DD MMM YYYY')}
                   </Text>
                 </Group>
                 <Group className="ticket-detail" gap="xs">
-                  <IconClock size={16} stroke={1.5} color="#228be6" />
-                  <Text size="sm">
+                  <IconClock size={16} stroke={1.5} color="#FFD700" />
+                  <Text size="sm" color="#c1c2c5">
                     {dayjs(show.startTime).format('HH:mm')}
                   </Text>
                 </Group>
                 {ticket.description && (
-                  <Text className="ticket-description">
+                  <Text className="ticket-description" color="#c1c2c5">
                     {ticket.description}
                   </Text>
                 )}
@@ -121,8 +121,8 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
   };
 
   return (
-    <Paper p="xl" radius="lg" shadow="sm" className="tickets-section">
-      <Title order={2} className="section-title">
+    <>
+      <Title order={2} className="section-title" style={{ color: '#333333' }}>
         {t('eventDetailPage.tickets')}
       </Title>
 
@@ -133,37 +133,37 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
           radius="md"
           styles={{
             item: {
-              borderColor: 'rgba(0, 0, 0, 0.05)',
+              borderColor: 'rgba(255, 255, 255, 0.1)',
               marginBottom: '16px',
               borderRadius: '12px',
               overflow: 'hidden',
               '&[data-active]': {
-                backgroundColor: 'rgba(34, 139, 230, 0.05)',
-                borderColor: 'rgba(34, 139, 230, 0.2)',
+                backgroundColor: 'rgba(255, 215, 0, 0.05)',
+                borderColor: 'rgba(255, 215, 0, 0.2)',
               },
             },
             control: {
               padding: '16px',
-              backgroundColor: '#f8f9fa',
+              backgroundColor: '#1a1b1e',
               '&:hover': {
-                backgroundColor: '#e9ecef',
+                backgroundColor: '#25262b',
               },
             },
             label: {
               fontWeight: 600,
-              color: '#212529',
+              color: '#ffffff',
             },
             panel: {
               padding: '0',
-              backgroundColor: '#f1f3f5',
-              color: '#495057',
-              boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.03)',
+              backgroundColor: '#25262b',
+              color: '#c1c2c5',
+              boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.2)',
             },
             content: {
-              color: '#495057',
+              color: '#c1c2c5',
             },
             chevron: {
-              color: '#4dabf7'
+              color: '#FFD700'
             }
           }}
         >
@@ -172,20 +172,24 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
               <Accordion.Control>
                 <Group justify="space-between" style={{ width: '100%' }}>
                   <Group gap="xs">
-                    <IconCalendar size={18} stroke={1.5} color="#228be6" />
-                    <Text fw={600}>
+                    <IconCalendar size={18} stroke={1.5} color="#FFD700" />
+                    <Text fw={600} color="white">
                       {dayjs(show.startTime).format('ddd, DD MMM YYYY')}
                     </Text>
                   </Group>
                   <Group>
                     <Group gap="xs">
-                      <IconClock size={16} stroke={1.5} color="#4dabf7" />
-                      <Text size="sm" c="dimmed">
+                      <IconClock size={16} stroke={1.5} color="#FFD700" />
+                      <Text size="sm" color="#c1c2c5">
                         {dayjs(show.startTime).format('HH:mm')}
                       </Text>
                     </Group>
                     <Button 
                       className="buy-ticket-button"
+                      style={{
+                        background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)',
+                        color: '#000000',
+                      }}
                       size="sm"
                       leftSection={<IconTicket size={14} />}
                       radius="md"
@@ -205,37 +209,37 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                   radius="sm"
                   styles={{
                     item: {
-                      borderColor: 'rgba(0, 0, 0, 0.05)',
+                      borderColor: 'rgba(255, 255, 255, 0.05)',
                       marginBottom: '10px',
                       borderRadius: '8px',
                       overflow: 'hidden',
                       '&[data-active]': {
-                        backgroundColor: 'rgba(34, 139, 230, 0.03)',
-                        borderColor: 'rgba(34, 139, 230, 0.1)',
+                        backgroundColor: 'rgba(255, 215, 0, 0.03)',
+                        borderColor: 'rgba(255, 215, 0, 0.1)',
                       },
                     },
                     control: {
                       padding: '14px',
-                      backgroundColor: '#f8f9fa',
-                      color: '#495057',
+                      backgroundColor: '#2c2e33',
+                      color: '#e9ecef',
                       '&:hover': {
-                        backgroundColor: '#e9ecef',
+                        backgroundColor: '#373a40',
                       },
                     },
                     panel: {
                       padding: '0',
-                      backgroundColor: '#ffffff',
-                      color: '#495057',
-                      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.03)',
+                      backgroundColor: '#373a40',
+                      color: '#c1c2c5',
+                      boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.2)',
                     },
                     label: {
-                      color: '#212529',
+                      color: '#e9ecef',
                     },
                     content: {
-                      color: '#495057',
+                      color: '#c1c2c5',
                     },
                     chevron: {
-                      color: '#4dabf7'
+                      color: '#FFD700'
                     }
                   }}
                 >
@@ -247,13 +251,13 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
         </Accordion>
       ) : (
         <Flex direction="column" align="center" py="xl" mt="md">
-          <IconInfoCircle size={48} stroke={1.5} color="#adb5bd" />
-          <Text c="dimmed" size="lg" mt="md">
+          <IconInfoCircle size={48} stroke={1.5} color="#333333" />
+          <Text c="dimmed" size="lg" mt="md" color="#333333">
             {t('eventDetailPage.noTicketsAvailable')}
           </Text>
         </Flex>
       )}
-    </Paper>
+    </>
   );
 };
 

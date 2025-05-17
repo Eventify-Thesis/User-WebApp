@@ -33,7 +33,7 @@ const OrderHistory = () => {
     all: 'ALL',
     success: 'PAID',
     processing: 'PENDING',
-    canceled: 'CANCELLED  ',
+    canceled: 'CANCELLED',
   };
 
   const timeframeMap: Record<string, 'UPCOMING' | 'PAST'> = {
