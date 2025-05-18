@@ -48,6 +48,23 @@
     "upcoming": "Upcoming",
     "past": "Past"
   },
+  "quiz": {
+    "invalidShowId": "Invalid show ID",
+    "loadingQuiz": "Loading quiz...",
+    "quizNotFound": "Quiz not found",
+    "submitQuiz": "Submit Quiz",
+    "nextQuestion": "Next Question",
+    "questionInfo": "Question {{current}} of {{total}}"
+  },
+  "quizResult": {
+    "invalidQuizId": "Invalid quiz ID",
+    "loadingLeaderboard": "Loading leaderboard...",
+    "couldNotLoadLeaderboard": "Could not load leaderboard.",
+    "notEnoughData": "Not enough data for podium.",
+    "quizResults": "Quiz Results",
+    "correctOutOf": "{{correct}} out of {{total}}",
+    "correctSlashTotal": "{{correct}}/{{total}}"
+  },
   "ticketSection": {
     "tickets": "Tickets",
     "venue": "Venue",
