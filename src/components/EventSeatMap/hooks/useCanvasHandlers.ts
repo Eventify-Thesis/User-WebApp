@@ -424,6 +424,7 @@ export const useCanvasHandlers = (
             },
             fill: '#808080',
             stroke: '#000',
+            rotation: 0,
             size: {
               width,
               height,

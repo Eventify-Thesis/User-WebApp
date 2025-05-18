@@ -1,5 +1,9 @@
 import { useMutation } from '@tanstack/react-query';
-import { bookingClient, QuestionAnswerDto, SubmitTicketInfoDto } from '@/api/booking.client';
+import {
+  bookingClient,
+  QuestionAnswerDto,
+  SubmitTicketInfoDto,
+} from '@/api/booking.client';
 import { notification } from 'antd';
 
 export const useBookingMutations = () => {
@@ -16,8 +20,16 @@ export const useBookingMutations = () => {
   });
 
   const updateFormAnswerMutation = useMutation({
-    mutationFn: (data: { showId: number, bookingCode: string, data: QuestionAnswerDto }) => {
-      return bookingClient.updateAnswers(data.showId, data.bookingCode, data.data);
+    mutationFn: (data: {
+      showId: number;
+      bookingCode: string;
+      data: QuestionAnswerDto;
+    }) => {
+      return bookingClient.updateAnswers(
+        data.showId,
+        data.bookingCode,
+        data.data,
+      );
     },
     onError: (error: Error) => {
       notification.error({
@@ -44,4 +56,4 @@ export const useBookingMutations = () => {
     updateFormAnswer: updateFormAnswerMutation.mutateAsync,
     createPaymentIntent: createPaymentIntent.mutateAsync,
   };
-}
+};

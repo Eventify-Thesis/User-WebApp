@@ -1,5 +1,5 @@
 // PaymentInfo.tsx
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
 import {
   Elements,
@@ -32,6 +32,7 @@ import { VoucherModal } from '../VoucherModal/VoucherModal';
 import { PlusOutlined, DeleteOutlined, TagOutlined } from '@ant-design/icons';
 import { useVoucherMutations } from '@/mutations/useVoucherMutations';
 import BookingModel from '@/domain/BookingModel';
+import { Loading } from '@/components/common/Loading/Loading';
 
 const { Title, Text } = Typography;
 
@@ -44,12 +45,44 @@ interface PaymentIntentResponse {
 
 interface PaymentInfoProps {
   bookingStatus: BookingModel;
+  eventId: string;
+  showId: string;
 }
 
-export const PaymentInfo: React.FC<PaymentInfoProps> = ({ bookingStatus }) => {
+export const PaymentInfo: React.FC<PaymentInfoProps> = ({
+  bookingStatus,
+  eventId,
+  showId,
+}) => {
+  const hasShownModal = useRef(false);
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (
+      !bookingStatus ||
+      !bookingStatus.bookingCode ||
+      !bookingStatus.orderId
+    ) {
+      if (!hasShownModal.current) {
+        hasShownModal.current = true;
+        Modal.info({
+          title: 'No Booking Found',
+          content: 'Please select a ticket first to proceed with the checkout.',
+          okText: 'Select Ticket',
+          onOk: () =>
+            navigate(`/events/${eventId}/bookings/${showId}/select-ticket`),
+        });
+      }
+    }
+  }, [bookingStatus]);
+
+  if (!bookingStatus) {
+    return null;
+  }
+
   const orderId = bookingStatus.orderId;
   const { createPaymentIntent } = useBookingMutations();
-  const { eventId, showId } = useParams();
   const [pi, setPi] = useState<PaymentIntentResponse | null>(null);
   const [voucherModalOpen, setVoucherModalOpen] = useState(false);
   const [appliedVoucher, setAppliedVoucher] = useState<{

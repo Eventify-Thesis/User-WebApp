@@ -29,6 +29,7 @@ interface EventSeatMapProps {
   selectedSeats: any[];
   setSelectedSeats: (seats: any[]) => void;
   setTicketTypesMapping: (ticketTypes: Record<string, any>) => void;
+  onSelectSection: (section: any) => void;
 }
 
 const EventSeatMap: React.FC<EventSeatMapProps> = ({
@@ -38,6 +39,7 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
   selectedSeats,
   setSelectedSeats,
   setTicketTypesMapping,
+  onSelectSection,
 }) => {
   const { data: seatingPlanData, isLoading: isLoadingPlan } =
     useGetSeatingPlanDetail(eventId!, seatingPlanId!);
@@ -143,6 +145,7 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
             onSeatSelect={handleSeatSelect}
             selectedSeats={selectedSeats}
             availableSeats={availableSeats}
+            onSelectSection={onSelectSection}
           />
         </Content>
       ) : (
