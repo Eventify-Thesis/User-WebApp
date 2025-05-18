@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { useShowQuiz } from '@/queries/useShowQuiz';
 import { useSubmitAnswer } from '@/mutations/useSubmitAnswer';
-import { useSubmitQuiz } from '@/mutations/useSubmitQuiz';
 import QuizHeader from '@/components/quiz/QuizHeader';
 import Timer from '@/components/quiz/Timer';
 import QuestionCard from '@/components/quiz/QuestionCard';
@@ -24,13 +24,13 @@ const Container = styled.div`
 
 import { useRef } from 'react';
 export default function QuizPage() {
-  const { showId } = useParams<{ showId: string }>();
+  const { eventId, showId } = useParams<{ eventId: string; showId: string }>();
+  const eventIdNumber = eventId ? parseInt(eventId) : NaN;
   const showIdNumber = showId ? parseInt(showId) : NaN;
 
   // hooks
-  const { data: quiz, isLoading } = useShowQuiz(showIdNumber);
+  const { data: quiz, isLoading } = useShowQuiz(eventIdNumber, showIdNumber);
   const { mutate: submitAnswer } = useSubmitAnswer();
-  const { mutate: submitQuiz } = useSubmitQuiz();
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [timeLeft, setTimeLeft] = useState<number>(30);
@@ -69,16 +69,18 @@ export default function QuizPage() {
     }
   }, [quiz, currentQuestionIndex]);
 
+  const { t } = useTranslation();
+
   if (isNaN(showIdNumber)) {
-    return <Container>Invalid show ID</Container>;
+    return <Container>{t('quiz.invalidShowId')}</Container>;
   }
 
   if (isLoading) {
-    return <Container>Loading quiz...</Container>;
+    return <Container>{t('quiz.loadingQuiz')}</Container>;
   }
 
   if (!quiz || !quiz.questions) {
-    return <Container>Quiz not found</Container>;
+    return <Container>{t('quiz.quizNotFound')}</Container>;
   }
 
   const currentQuestion = quiz.questions[currentQuestionIndex];
@@ -114,6 +116,7 @@ export default function QuizPage() {
   const handleTimeUp = () => {
     if (currentQuestion) {
       submitAnswer({
+        quizId: quiz.id,
         questionId: currentQuestion.id,
         selectedOption: selectedOption ?? -1, // -1 means no answer
         userId: 'current-user-id',
@@ -135,6 +138,7 @@ export default function QuizPage() {
     if (!currentQuestion || selectedOption === null) return;
 
     submitAnswer({
+      quizId: quiz.id,
       questionId: currentQuestion.id,
       selectedOption: selectedOption,
       userId: 'current-user-id',

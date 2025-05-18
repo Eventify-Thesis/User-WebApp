@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { QuizApi } from '@/api/quiz.client';
+import { quizClient } from '@/api/quiz.client';
 import { LeaderboardEntry } from '@/domain/QuizModel';
 
-export const useLeaderboard = (showId: number) => {
+export const useLeaderboard = (quizId: number) => {
   return useQuery<LeaderboardEntry[]>({
-    queryKey: ['quizLeaderboard', showId],
-    queryFn: () => QuizApi.getLeaderboard(showId),
-    enabled: !!showId
+    queryKey: ['quizLeaderboard', quizId],
+    queryFn: () => quizClient.getLeaderboard(quizId),
+    enabled: !!quizId
   });
 };

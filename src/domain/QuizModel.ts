@@ -41,5 +41,10 @@ export interface Quiz {
   
   export interface LeaderboardEntry {
     userId: string;
-    totalScore: number;
+    score: number;
+    userName: string;
+    totalQuestions: number;
+    correctAnswers: number;
+    timeTaken: number;
+    rank: number;
   }

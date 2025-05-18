@@ -31,12 +31,17 @@ interface QuizControlsProps {
   isLastQuestion: boolean;
 }
 
-const QuizControls: React.FC<QuizControlsProps> = ({ onSubmit, hasSelected, isLastQuestion }) => (
-  <ControlsWrapper>
-    <SubmitButton disabled={!hasSelected} onClick={onSubmit}>
-      {isLastQuestion ? 'Submit Quiz' : 'Next Question'}
-    </SubmitButton>
-  </ControlsWrapper>
-);
+import { useTranslation } from 'react-i18next';
+
+const QuizControls: React.FC<QuizControlsProps> = ({ onSubmit, hasSelected, isLastQuestion }) => {
+  const { t } = useTranslation();
+  return (
+    <ControlsWrapper>
+      <SubmitButton disabled={!hasSelected} onClick={onSubmit}>
+        {isLastQuestion ? t('quiz.submitQuiz') : t('quiz.nextQuestion')}
+      </SubmitButton>
+    </ControlsWrapper>
+  );
+};
 
 export default QuizControls;

@@ -33,15 +33,20 @@ interface QuizHeaderProps {
   totalQuestions: number;
 }
 
-const QuizHeader: React.FC<QuizHeaderProps> = ({ title, currentQuestion, totalQuestions }) => (
-  <HeaderWrapper>
-    <TitleBox>
-      <Title>{title}</Title>
-    </TitleBox>
-    <QuestionInfo>
-      Question {currentQuestion} of {totalQuestions}
-    </QuestionInfo>
-  </HeaderWrapper>
-);
+import { useTranslation } from 'react-i18next';
+
+const QuizHeader: React.FC<QuizHeaderProps> = ({ title, currentQuestion, totalQuestions }) => {
+  const { t } = useTranslation();
+  return (
+    <HeaderWrapper>
+      <TitleBox>
+        <Title>{title}</Title>
+      </TitleBox>
+      <QuestionInfo>
+        {t('quiz.questionInfo', { current: currentQuestion, total: totalQuestions })}
+      </QuestionInfo>
+    </HeaderWrapper>
+  );
+};
 
 export default QuizHeader;
