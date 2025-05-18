@@ -33,7 +33,7 @@ const OrderHistory = () => {
     all: 'ALL',
     success: 'PAID',
     processing: 'PENDING',
-    canceled: 'CANCELLED  ',
+    canceled: 'CANCELLED',
   };
 
   const timeframeMap: Record<string, 'UPCOMING' | 'PAST'> = {
@@ -101,11 +101,8 @@ const OrderHistory = () => {
                     title={order.event.eventName}
                     status={order.orderStatus}
                     OrderType="STRIPE"
-                    time={`${new Date(
-                      order.show.startTime,
-                    ).toLocaleTimeString()} - ${new Date(
-                      order.show.endTime,
-                    ).toLocaleTimeString()}`}
+                    startTime={order.show.startTime}
+                    endTime={order.show.endTime}
                     location={order.event.venueName}
                     imageUrl={order.event.eventBannerUrl}
                   />

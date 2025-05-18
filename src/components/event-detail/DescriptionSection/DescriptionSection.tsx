@@ -26,7 +26,7 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
           position: 'relative',
         }}
       >
-        <div dangerouslySetInnerHTML={{ __html: description || '' }} />
+        <div style={{ color: '#f5f5f7' }} dangerouslySetInnerHTML={{ __html: description || '' }} />
         
         {/* Fade-out Effect */}
         {!isExpanded && (

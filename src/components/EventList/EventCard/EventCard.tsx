@@ -37,7 +37,6 @@ const EventCard: React.FC<EventCardProps> = ({
   const theme = useMantineTheme();
 
   const toggleFavorite = () => setIsFavorited((prev) => !prev);
-  console.log(address);
   return (
     <Box
       className="event-card-main"

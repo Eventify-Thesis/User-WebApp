@@ -37,6 +37,7 @@
   },
   "orderHistory": {
     "title": "Purchased Tickets",
+    "noOrders": "You have no orders yet",
     "loading": "🔄 Loading tickets...",
     "error": "Unable to load tickets. Please try again.",
     "noTickets": "No tickets available",
@@ -182,6 +183,7 @@
     "finishOrderIn": "Finish order in",
     "chooseTicket": "Choose ticket",
     "payment": "Payment",
+    "total": "Total",
     "questionnaire": "Questionnaire",
     "questionnaireForm": "Questionnaire form",
     "orderInformation": "Order information",

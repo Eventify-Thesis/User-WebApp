@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 export const LocationSection: React.FC = () => {
   const { t } = useTranslation();
   return (
-    <s.LocationWrapper>
+    <s.LocationWrapper style={{ backgroundColor: '#27272A' }} >
       <s.SectionTitle>{t('homePage.locationSection.title')}</s.SectionTitle>
       <s.LocationGrid>
         <s.LocationCard>

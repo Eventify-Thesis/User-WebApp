@@ -4,6 +4,7 @@ export interface ItemInfo {
   quantity: number;
   id: number;
   sectionId?: number;
+  sectionName?: string;
   seats?: {
     id: number;
     quantity: number;
@@ -58,28 +59,39 @@ export const bookingClient = {
   },
 
   getBookingStatus: async (showId: number, bookingCode: string) => {
-    const response = await httpApi.get(`/bookings/status?showId=${showId}&bookingCode=${bookingCode}`);
+    const response = await httpApi.get(
+      `/bookings/status?showId=${showId}&bookingCode=${bookingCode}`,
+    );
     console.log(response);
     return response.data.data;
   },
 
   cancelBooking: async (showId: number, bookingCode: string) => {
-    const response = await httpApi.delete(`/bookings/cancel-booking?showId=${showId}&bookingCode=${bookingCode}`);
+    const response = await httpApi.delete(
+      `/bookings/cancel-booking?showId=${showId}&bookingCode=${bookingCode}`,
+    );
     return response.data;
   },
 
   getAnswer: async (showId: number, bookingCode: string) => {
-    const response = await httpApi.get(`/bookings/answers?showId=${showId}&bookingCode=${bookingCode}`);
+    const response = await httpApi.get(
+      `/bookings/answers?showId=${showId}&bookingCode=${bookingCode}`,
+    );
     return response.data.data;
   },
 
   updateAnswers: async (showId: number, bookingCode: string, answers: any) => {
-    const response = await httpApi.put(`/bookings/answers?showId=${showId}&bookingCode=${bookingCode}`, answers);
+    const response = await httpApi.put(
+      `/bookings/answers?showId=${showId}&bookingCode=${bookingCode}`,
+      answers,
+    );
     return response.data.data;
   },
 
   createPaymentIntent: async (orderId: number) => {
-    const response = await httpApi.post('/bookings/create-payment-intent', { orderId });
+    const response = await httpApi.post('/bookings/create-payment-intent', {
+      orderId,
+    });
     return response.data.data;
   },
 };

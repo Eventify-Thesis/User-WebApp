@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Typography, Space, InputNumber, Row, theme, Button } from 'antd';
+import { Card, Typography, Space, InputNumber, Row, Button } from 'antd';
 import {
   MinusOutlined,
   PlusOutlined,
@@ -26,7 +26,6 @@ const TicketCard: React.FC<TicketCardProps> = ({
   quantity,
   onQuantityChange,
 }) => {
-  const { token } = theme.useToken();
 
   const handleQuantityChange = (value: number | null) => {
     const newValue = value ?? 0;
@@ -39,9 +38,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
     <Card
       style={{
         width: '100%',
-        background: '#1f1f1f',
-        border: '1px solid #303030',
+        background: '#ffffff',
+        border: '1px solid #e9ecef',
         borderRadius: '12px',
+        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.05)',
       }}
       bodyStyle={{ padding: '24px' }}
     >
@@ -55,8 +55,9 @@ const TicketCard: React.FC<TicketCardProps> = ({
             level={5}
             style={{
               margin: 0,
-              color: token.colorPrimary,
+              color: '#212529',
               fontSize: '18px',
+              fontWeight: 600,
             }}
           >
             {ticket.name}
@@ -65,7 +66,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             strong
             style={{
               fontSize: '20px',
-              color: '#fff',
+              color: '#495057',
             }}
           >
             ${ticket.price}
@@ -73,7 +74,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
         </Space>
         <Space
           style={{
-            background: '#141414',
+            background: '#f1f3f5',
             borderRadius: '8px',
             padding: '4px',
           }}
@@ -83,7 +84,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             icon={<MinusOutlined />}
             onClick={() => handleQuantityChange(quantity - 1)}
             disabled={quantity <= 0}
-            style={{ color: quantity <= 0 ? '#666' : token.colorPrimary }}
+            style={{ color: quantity <= 0 ? '#adb5bd' : '#212529' }}
           />
           <InputNumber
             min={0}
@@ -95,10 +96,10 @@ const TicketCard: React.FC<TicketCardProps> = ({
               width: '50px',
               background: 'transparent',
               border: 'none',
-              color: 'white',
+              color: '#212529',
               textAlign: 'center',
             }}
-            className="dark-input-number"
+            className="light-input-number"
           />
           <Button
             type="text"
@@ -108,8 +109,8 @@ const TicketCard: React.FC<TicketCardProps> = ({
             style={{
               color:
                 quantity >= ticket.maxTicketPurchase
-                  ? '#666'
-                  : token.colorPrimary,
+                  ? '#adb5bd'
+                  : '#212529',
             }}
           />
         </Space>
@@ -118,18 +119,20 @@ const TicketCard: React.FC<TicketCardProps> = ({
       {ticket.description && (
         <div
           style={{
-            background: '#141414',
+            background: '#f8f9fa',
             borderRadius: '8px',
             padding: '12px 16px',
+            marginTop: '16px',
+            border: '1px solid #e9ecef',
           }}
         >
           <Space align="start">
             <InfoCircleOutlined
-              style={{ color: token.colorPrimary, marginTop: '3px' }}
+              style={{ color: '#495057', marginTop: '3px' }}
             />
             <Text
               style={{
-                color: 'rgba(255, 255, 255, 0.45)',
+                color: '#6c757d',
                 fontSize: '14px',
               }}
             >
@@ -145,7 +148,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             display: 'block',
             marginTop: '12px',
             fontSize: '12px',
-            color: 'rgba(255, 255, 255, 0.45)',
+            color: '#6c757d',
           }}
         >
           Maximum {ticket.maxTicketPurchase} tickets per order

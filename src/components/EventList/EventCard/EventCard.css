@@ -32,7 +32,7 @@
   transition: transform 0.5s ease;
   object-fit: cover;
   height: 100%;
-  width: 100%;
+  width: 25rem;
 }
 
 .image-section:hover .event-image {
@@ -127,10 +127,11 @@
   display: flex;
   align-items: center;
   margin-bottom: 0.4rem;
-  font-size: 0.8rem;
+  font-size: 2rem !important;
 }
 
 .address-text {
+  font-size: 1rem !important;
   color: rgba(255, 255, 255, 0.8);
   transition: color 0.2s ease;
   overflow: hidden;

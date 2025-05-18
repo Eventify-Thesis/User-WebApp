@@ -7,6 +7,10 @@ import path from 'path';
 export default defineConfig({
   server: {
     port: 5173,
+    https: {
+      key: './localhost-key.pem',
+      cert: './localhost.pem',
+    },
   },
   plugins: [react(), tailwindcss()],
   resolve: {

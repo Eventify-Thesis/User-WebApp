@@ -12,11 +12,16 @@ export const PaymentStep: React.FC = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!bookingStatus) {
+    console.log(bookingStatus);
+    if (
+      !bookingStatus ||
+      !bookingStatus.bookingCode ||
+      !bookingStatus.orderId
+    ) {
       if (!hasShownModal.current) {
         hasShownModal.current = true;
         Modal.info({
-          title: 'No Ticket Selected',
+          title: 'No Booking Found',
           content: 'Please select a ticket first to proceed with the checkout.',
           okText: 'Select Ticket',
           onOk: () =>
@@ -32,7 +37,11 @@ export const PaymentStep: React.FC = () => {
         minWidth: 600,
       }}
     >
-      <PaymentInfo bookingStatus={bookingStatus} />
+      <PaymentInfo
+        bookingStatus={bookingStatus}
+        eventId={event.id}
+        showId={show.id}
+      />
     </BaseRow>
   );
 };

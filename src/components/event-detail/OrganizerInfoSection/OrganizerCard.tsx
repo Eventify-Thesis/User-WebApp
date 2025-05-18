@@ -31,7 +31,7 @@ export const OrganizerCard: React.FC<OrganizerCardProps> = ({
           <Text 
             fw={700} 
             fz="xl" 
-            c="white" 
+            c="black" 
             style={{ 
               textShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
               letterSpacing: '0.01em'
@@ -41,7 +41,7 @@ export const OrganizerCard: React.FC<OrganizerCardProps> = ({
           </Text>
           <Text 
             fz="md" 
-            c="rgba(255, 255, 255, 0.85)" 
+            c="black" 
             style={{ lineHeight: 1.6 }}
           >
             {organizerDescription}

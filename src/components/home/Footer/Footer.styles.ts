@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export const FooterWrapper = styled.footer`
   width: 100%;
-  margin-top: 24px;
 `;
 
 export const MainFooter = styled.div`

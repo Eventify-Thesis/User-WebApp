@@ -1,10 +1,11 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { Stage, Layer } from 'react-konva';
+import { Stage } from 'react-konva';
 import { SeatingPlan } from '../../types/index';
 import { ShapeLayer } from './components/ShapeLayer';
 import { RowLayer } from './components/RowLayer';
 import './Canvas.css';
 import BackgroundLayer from './components/BackgroundLayer';
+import { SectionLayer } from './components/SectionLayer';
 
 interface CanvasProps {
   seatingPlan: SeatingPlan;
@@ -12,6 +13,7 @@ interface CanvasProps {
   onSeatSelect: (seats: any[]) => void;
   selectedSeats: any[];
   availableSeats: Set<string>;
+  onSelectSection: (section: any) => void;
 }
 
 const Canvas: React.FC<CanvasProps> = ({
@@ -20,6 +22,7 @@ const Canvas: React.FC<CanvasProps> = ({
   onSeatSelect,
   selectedSeats,
   availableSeats,
+  onSelectSection,
 }) => {
   const stageRef = useRef<any>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -100,19 +103,27 @@ const Canvas: React.FC<CanvasProps> = ({
         position={stagePosition}
       >
         <BackgroundLayer
-          background={seatingPlan.background}
+          backgroundImage={seatingPlan.backgroundImage}
           stageSize={{
             width: dimensions.width,
             height: dimensions.height,
           }}
         />
         <ShapeLayer seatingPlan={seatingPlan} />
-        <RowLayer
-          availableSeats={availableSeats}
-          seatingPlan={seatingPlan}
-          onSeatSelect={onSeatSelect}
-          selectedSeats={selectedSeats}
-        />
+
+        {seatingPlan.mode === 'seat' ? (
+          <RowLayer
+            availableSeats={availableSeats}
+            seatingPlan={seatingPlan}
+            onSeatSelect={onSeatSelect}
+            selectedSeats={selectedSeats}
+          />
+        ) : (
+          <SectionLayer
+            seatingPlan={seatingPlan}
+            onSelectSection={onSelectSection}
+          />
+        )}
       </Stage>
     </div>
   );

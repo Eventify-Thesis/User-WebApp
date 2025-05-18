@@ -8,6 +8,7 @@ import {
 import Canvas from './components/Canvas';
 import './EventSeatMap.css';
 import { useGetSeatingPlanDetail } from '@/queries/useSeatingPlanQueries';
+import { Loading } from '../common/Loading/Loading';
 const { Content } = Layout;
 
 interface SeatAvailability {
@@ -28,6 +29,7 @@ interface EventSeatMapProps {
   selectedSeats: any[];
   setSelectedSeats: (seats: any[]) => void;
   setTicketTypesMapping: (ticketTypes: Record<string, any>) => void;
+  onSelectSection: (section: any) => void;
 }
 
 const EventSeatMap: React.FC<EventSeatMapProps> = ({
@@ -37,6 +39,7 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
   selectedSeats,
   setSelectedSeats,
   setTicketTypesMapping,
+  onSelectSection,
 }) => {
   const { data: seatingPlanData, isLoading: isLoadingPlan } =
     useGetSeatingPlanDetail(eventId!, seatingPlanId!);
@@ -142,10 +145,11 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
             onSeatSelect={handleSeatSelect}
             selectedSeats={selectedSeats}
             availableSeats={availableSeats}
+            onSelectSection={onSelectSection}
           />
         </Content>
       ) : (
-        <div>No seating plan data available</div>
+        <Loading />
       )}
     </Layout>
   );
