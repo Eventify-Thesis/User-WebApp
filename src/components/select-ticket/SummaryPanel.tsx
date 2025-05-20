@@ -49,6 +49,8 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
       );
     } else if (selectedSeats && selectedSeats.length > 0) {
       setTotalTickets(selectedSeats.length);
+    } else {
+      setTotalTickets(0);
     }
   }, [selectedTickets, selectedSeats]);
   const hasSelections = totalTickets > 0;
@@ -99,7 +101,9 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         style={{
           height: '48px',
           fontSize: '16px',
-          background: '#212529',
+          background: 'var(--primary-color)', 
+          color: 'black', 
+          fontWeight: 600,
           border: 'none',
         }}
       >
@@ -182,11 +186,13 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
               <Text
                 strong
                 style={{
-                  color: styles.accentColor,
-                  fontSize: '16px',
+                  color: '#2CC275',
+                  fontSize: '20px',
                 }}
               >
-                {Math.round(ticket.price)} Dong
+                {`${new Intl.NumberFormat('vi-VN').format(
+                  Number(ticket.price),
+                )} ₫`}
               </Text>
             </Row>
           ))}
