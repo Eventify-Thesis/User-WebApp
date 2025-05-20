@@ -6,6 +6,7 @@ import {
   ActionIcon,
   Box,
   useMantineTheme,
+  Tooltip,
 } from '@mantine/core';
 import {
   IconStar,
@@ -22,6 +23,7 @@ interface EventCardProps extends EventModel {
   isInterested?: boolean;
   onClick?: () => void;
   address?: string;
+  className?: string;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
@@ -32,14 +34,15 @@ const EventCard: React.FC<EventCardProps> = ({
   address,
   isInterested: initialFavorited = false,
   onClick,
+  className = '',
 }) => {
   const [isFavorited, setIsFavorited] = useState(initialFavorited);
   const theme = useMantineTheme();
-
+  console.log('Minimum price: ', minimumPrice);
   const toggleFavorite = () => setIsFavorited((prev) => !prev);
   return (
     <Box
-      className="event-card-main"
+      className={`event-card-main ${className}`}
       role={onClick ? 'button' : undefined}
       aria-label={eventName}
       style={{ cursor: onClick ? 'pointer' : 'default' }}
@@ -74,14 +77,41 @@ const EventCard: React.FC<EventCardProps> = ({
       </Box>
 
       <Box className="card-content" p="md">
-        <Text lineClamp={1} title={eventName} className="event-title" size="xs">
-          {eventName}
-        </Text>
+        <Tooltip 
+          label={eventName} 
+          position="top" 
+          withArrow 
+          transitionProps={{ transition: 'fade', duration: 200 }}
+          // disabled={eventName.length <= 20} // Only show tooltip if text is long
+        >
+          <Text 
+            lineClamp={1} 
+            className="event-title" 
+            size="xs"
+            style={{ 
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
+              display: '-webkit-box',
+              WebkitLineClamp: 1,
+              WebkitBoxOrient: 'vertical'
+            }}
+          >
+            {eventName}
+          </Text>
+        </Tooltip>
 
         <Box className="event-details">
           {minimumPrice !== undefined && (
             <Text className="price-display">
-              <span className="price-amount">{Math.floor(minimumPrice)} Đ</span>
+              {minimumPrice == 0 || !minimumPrice ? (
+                <Text c="green" size="xl">
+                  Free
+                </Text>
+              ) : (
+                <span className="price-amount">
+                  From {new Intl.NumberFormat('vi-VN').format(minimumPrice)} Đ
+                </span>
+              )}
             </Text>
           )}
 
@@ -93,9 +123,27 @@ const EventCard: React.FC<EventCardProps> = ({
               wrap="nowrap"
             >
               <IconMapPin size={16} stroke={1.5} style={{ flexShrink: 0 }} />
-              <Text size="sm" fw={400} lineClamp={1} className="address-text">
-                {address}
-              </Text>
+              <Tooltip 
+                label={address} 
+                position="top" 
+                withArrow 
+                transitionProps={{ transition: 'fade', duration: 200 }}
+                disabled={address.length <= 30} // Only show tooltip if text is long
+              >
+                <Text 
+                  size="sm" 
+                  fw={400} 
+                  lineClamp={1} 
+                  className="address-text"
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    whiteSpace: 'nowrap'
+                  }}
+                >
+                  {address}
+                </Text>
+              </Tooltip>
             </Group>
           )}
 
@@ -107,7 +155,15 @@ const EventCard: React.FC<EventCardProps> = ({
               wrap="nowrap"
             >
               <IconCalendar size={16} stroke={1.5} style={{ flexShrink: 0 }} />
-              <Text size="sm" fw={500}>
+              <Text 
+                size="sm" 
+                fw={500}
+                style={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }}
+              >
                 {new Date(Number(startTime) * 1000).toLocaleDateString()}
               </Text>
             </Group>

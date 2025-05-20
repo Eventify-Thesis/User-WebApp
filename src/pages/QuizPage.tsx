@@ -89,7 +89,7 @@ export default function QuizPage() {
     if (!currentQuestion || !currentQuestion.timeLimit) return;
 
     setTimeLeft(currentQuestion.timeLimit);
-    
+
     let timer: NodeJS.Timeout;
     let timerActive = true;
 
@@ -120,16 +120,19 @@ export default function QuizPage() {
         questionId: currentQuestion.id,
         selectedOption: selectedOption ?? -1, // -1 means no answer
         userId: 'current-user-id',
-        timeTaken: currentQuestion.timeLimit!
+        timeTaken: currentQuestion.timeLimit!,
       });
-      setAnswers(prev => [...prev, {
-        quizId: quiz.id,
-        questionId: currentQuestion.id,
-        userId: 'current-user-id',
-        selectedOption: selectedOption ?? -1,
-        isCorrect: selectedOption === currentQuestion.correctOption,
-        timeTaken: currentQuestion.timeLimit!
-      }]);
+      setAnswers((prev) => [
+        ...prev,
+        {
+          quizId: quiz.id,
+          questionId: currentQuestion.id,
+          userId: 'current-user-id',
+          selectedOption: selectedOption ?? -1,
+          isCorrect: selectedOption === currentQuestion.correctOption,
+          timeTaken: currentQuestion.timeLimit!,
+        },
+      ]);
       handleShowResultAndNext();
     }
   };
@@ -145,14 +148,17 @@ export default function QuizPage() {
       timeTaken: currentQuestion.timeLimit! - timeLeft,
     });
 
-    setAnswers(prev => [...prev, {
-      quizId: quiz.id,
-      questionId: currentQuestion.id,
-      userId: 'current-user-id',
-      selectedOption: selectedOption,
-      isCorrect: selectedOption === currentQuestion.correctOption,
-      timeTaken: currentQuestion.timeLimit! - timeLeft,
-    }]);
+    setAnswers((prev) => [
+      ...prev,
+      {
+        quizId: quiz.id,
+        questionId: currentQuestion.id,
+        userId: 'current-user-id',
+        selectedOption: selectedOption,
+        isCorrect: selectedOption === currentQuestion.correctOption,
+        timeTaken: currentQuestion.timeLimit! - timeLeft,
+      },
+    ]);
     handleShowResultAndNext();
   };
 
@@ -171,7 +177,9 @@ export default function QuizPage() {
       <QuestionCard
         question={currentQuestion}
         selectedOption={selectedOption}
-        onSelectOption={optionId => !showAnswerResult && setSelectedOption(optionId)}
+        onSelectOption={(optionId) =>
+          !showAnswerResult && setSelectedOption(optionId)
+        }
         showAnswerResult={showAnswerResult}
         correctOption={currentQuestion?.correctOption}
       />

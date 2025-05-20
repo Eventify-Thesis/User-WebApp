@@ -1,0 +1,35 @@
+/* Target EventCard when used in the ShowcaseEventSection */
+.event-card-showcase.event-card-main,
+.event-card-showcase .event-card-main {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Adjust image height for better responsiveness */
+.event-card-showcase .image-section {
+  height: 10rem !important;
+}
+
+/* Override any fixed widths in child elements */
+.event-card-showcase .card-content,
+.event-card-showcase .event-details,
+.event-card-showcase .event-title {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+/* Make sure content fits properly */
+.event-card-showcase .address-text {
+  max-width: 100% !important;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .event-card-showcase.event-card-main {
+    min-height: 18rem;
+  }
+
+  .event-card-showcase .image-section {
+    height: 8rem !important;
+  }
+}

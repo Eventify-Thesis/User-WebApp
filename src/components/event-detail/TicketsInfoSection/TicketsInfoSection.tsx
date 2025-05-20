@@ -14,14 +14,14 @@ import {
   Image,
   Paper,
   Stack,
-  Flex
+  Flex,
 } from '@mantine/core';
 import {
   IconCalendar,
   IconTicket,
   IconCurrencyDollar,
   IconClock,
-  IconInfoCircle
+  IconInfoCircle,
 } from '@tabler/icons-react';
 import './TicketsInfoSection.css';
 
@@ -36,12 +36,10 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  
+
   const handleBuyTicket = (showId: string | undefined) => {
     if (eventId && showId) {
-      navigate(
-        `/events/${eventId}/bookings/${showId}/select-ticket`,
-      );
+      navigate(`/events/${eventId}/bookings/${showId}/select-ticket`);
     }
   };
 
@@ -50,10 +48,14 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
       <Accordion.Item key={ticket.id} value={String(ticket.id)}>
         <Accordion.Control>
           <Group justify="space-between" style={{ width: '100%' }}>
-            <Text className="ticket-title" color="white">{ticket.name}</Text>
+            <Text className="ticket-title" color="white">
+              {ticket.name}
+            </Text>
             <Group gap="xs">
               <IconCurrencyDollar size={16} stroke={1.5} color="#FFD700" />
-              <Text className="ticket-price" fw={600} color="white">{Math.round(ticket.price).toLocaleString()} Đ</Text>
+              <Text className="ticket-price" fw={600} color="white">
+                {Math.round(ticket.price).toLocaleString()} Đ
+              </Text>
             </Group>
           </Group>
         </Accordion.Control>
@@ -71,11 +73,21 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                 />
               </Box>
             ) : (
-              <Box className="ticket-image-container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', backgroundColor: '#373a40', borderRadius: '6px', height: '80px' }}>
+              <Box
+                className="ticket-image-container"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  backgroundColor: '#373a40',
+                  borderRadius: '6px',
+                  height: '80px',
+                }}
+              >
                 <IconTicket size={32} stroke={1.5} color="#FFD700" />
               </Box>
             )}
-            
+
             {/* Ticket details beside the image */}
             <Box className="ticket-details">
               <Group justify="flex-end" mb="xs">
@@ -89,11 +101,13 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                     : t('eventDetailPage.soldOut')}
                 </Badge>
               </Group>
-              
+
               <Stack gap="xs">
                 <Group className="ticket-detail" gap="xs">
                   <IconTicket size={16} stroke={1.5} color="#FFD700" />
-                  <Text size="sm" fw={500} color="white">{t('eventDetailPage.ticketInfo')}</Text>
+                  <Text size="sm" fw={500} color="white">
+                    {t('eventDetailPage.ticketInfo')}
+                  </Text>
                 </Group>
                 <Group className="ticket-detail" gap="xs">
                   <IconCalendar size={16} stroke={1.5} color="#FFD700" />
@@ -163,8 +177,9 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
               color: '#c1c2c5',
             },
             chevron: {
-              color: '#FFD700'
-            }
+              color: '#FFD700',
+              marginLeft: '16px',
+            },
           }}
         >
           {shows.map((show) => (
@@ -184,10 +199,11 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                         {dayjs(show.startTime).format('HH:mm')}
                       </Text>
                     </Group>
-                    <Button 
+                    <Button
                       className="buy-ticket-button"
                       style={{
-                        background: 'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)',
+                        background:
+                          'linear-gradient(135deg, #FFD700 0%, #FFC107 100%)',
                         color: '#000000',
                       }}
                       size="sm"
@@ -228,7 +244,7 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                     },
                     panel: {
                       padding: '0',
-                      backgroundColor: '#373a40',
+                      backgroundColor: '#2f3033',
                       color: '#c1c2c5',
                       boxShadow: 'inset 0 2px 4px rgba(0, 0, 0, 0.2)',
                     },
@@ -237,10 +253,12 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
                     },
                     content: {
                       color: '#c1c2c5',
+                      backgroundColor: '#2f3033',
                     },
                     chevron: {
-                      color: '#FFD700'
-                    }
+                      color: '#FFD700',
+                      marginLeft: '16px',
+                    },
                   }}
                 >
                   {renderTickets(show)}

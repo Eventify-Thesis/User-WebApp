@@ -17,6 +17,8 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import './styles/global.scss';
 import { queryClient } from './utils/queryClient';
 import { AuthTokenProvider } from './components/auth/AuthTokenProvider';
+import { Notifications } from '@mantine/notifications';
+import { SocketProvider } from './contexts/SocketContext';
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -33,33 +35,34 @@ function App() {
   useThemeWatcher();
 
   return (
-    <>
-      <ClerkProvider
-        publishableKey={PUBLISHABLE_KEY}
-        afterSignOutUrl="/"
-        localization={language === 'en' ? enUS : viVN}
-      >
-        <QueryClientProvider client={queryClient}>
-          <meta name="theme-color" content={themeObject[theme].primary} />
-          <GlobalStyle />
-          <HelmetProvider>
-            <Helmet>
+    <ClerkProvider
+      publishableKey={PUBLISHABLE_KEY}
+      afterSignOutUrl="/"
+      localization={language === 'en' ? enUS : viVN}
+    >
+        <Notifications />
+        <SocketProvider>
+            <QueryClientProvider client={queryClient}>
               <meta name="theme-color" content={themeObject[theme].primary} />
-              <meta
-                http-equiv="Content-Security-Policy"
-                content="upgrade-insecure-requests"
-              />
-            </Helmet>
+              <GlobalStyle />
+              <HelmetProvider>
+                <Helmet>
+                  <meta name="theme-color" content={themeObject[theme].primary} />
+                  <meta
+                    http-equiv="Content-Security-Policy"
+                    content="upgrade-insecure-requests"
+                  />
+                </Helmet>
 
-            <AuthTokenProvider>
-              <ConfigProvider locale={language === 'en' ? en : vnVN}>
-                <AppRouter />
-              </ConfigProvider>
-            </AuthTokenProvider>
-          </HelmetProvider>
-        </QueryClientProvider>
-      </ClerkProvider>
-    </>
+                <AuthTokenProvider>
+                  <ConfigProvider locale={language === 'en' ? en : vnVN}>
+                    <AppRouter />
+                  </ConfigProvider>
+                </AuthTokenProvider>
+              </HelmetProvider>
+            </QueryClientProvider>
+        </SocketProvider>
+    </ClerkProvider>
   );
 }
 

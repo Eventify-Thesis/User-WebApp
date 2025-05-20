@@ -99,7 +99,7 @@ const OrderHistory = () => {
                   <OrderInfo
                     date={new Date(order.createdAt).toLocaleDateString()}
                     title={order.event.eventName}
-                    status={order.orderStatus}
+                    status={order.status}
                     OrderType="STRIPE"
                     startTime={order.show.startTime}
                     endTime={order.show.endTime}

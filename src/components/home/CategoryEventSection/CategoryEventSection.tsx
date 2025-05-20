@@ -70,13 +70,13 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
         event.street +
         ', ' +
         event.ward +
-      ', ' +
-      'District ' +
-      event.district +
-      ', ' +
-      event.city +
-      ', ' +
-      event.country,
+        ', ' +
+        'District ' +
+        event.district +
+        ', ' +
+        event.city +
+        ', ' +
+        event.country,
     };
   });
 
@@ -86,7 +86,10 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
     <Box
       py={{ base: 40, md: 80 }}
       px={{ base: 16, sm: 20, md: 40 }}
-      bg="#27272A"
+      style={{
+        padding: '2rem 4rem',
+        backgroundColor: '#27272A',
+      }}
       w="100%"
     >
       <Box mb={30} ml={{ base: 0, sm: 30 }}>
@@ -111,7 +114,13 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
         <div className="grid-wrapper">
           {eventsWithAddress.map((event, index) => (
             <div key={index} className="event-card-wrapper">
-              <EventCard {...event} onClick={() => handleEventClick(event)} />
+              <EventCard
+                style={{
+                  width: '20rem !important',
+                }}
+                {...event}
+                onClick={() => handleEventClick(event)}
+              />
             </div>
           ))}
         </div>

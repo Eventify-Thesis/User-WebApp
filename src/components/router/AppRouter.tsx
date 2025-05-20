@@ -32,6 +32,13 @@ const CheckoutSuccessPage = React.lazy(
   () => import('@/pages/CheckoutSuccessPage'),
 );
 
+// New Mantine quiz pages
+const QuizCodeEntryPage = React.lazy(() => import('@/pages/QuizCodeEntryPage'));
+const QuizWaitingRoomPage = React.lazy(
+  () => import('@/pages/QuizWaitingRoomPage'),
+);
+const QuizPlayPage = React.lazy(() => import('@/pages/QuizPlayPage'));
+
 import { withLoading } from '@/hocs/withLoading.hoc';
 import { SignIn, SignUp } from '@clerk/clerk-react';
 import { PaymentStep, QuestionStep } from '../checkout/steps';
@@ -60,8 +67,14 @@ export const AppRouter: React.FC = () => {
           <Route path="tickets" element={<OrderHistory />} />
           <Route path="orders/:orderId" element={<TicketOrder />} />
           <Route path=":slug" element={<EventDetailPage />} />
+          {/* Legacy quiz pages */}
           <Route path="quiz/:showId" element={<QuizPage />} />
           <Route path="quiz-result/:showId" element={<QuizResultPage />} />
+
+          {/* New Mantine quiz pages */}
+          <Route path="quiz-entry" element={<QuizCodeEntryPage />} />
+          <Route path="quiz-waiting/:code" element={<QuizWaitingRoomPage />} />
+          <Route path="quiz-play/:code" element={<QuizPlayPage />} />
 
           {/* protected subtree */}
           <Route

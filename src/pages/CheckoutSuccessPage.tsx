@@ -4,6 +4,7 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { Result, Spin, Button, Typography, Space } from 'antd';
 import { IeOutlined, LoadingOutlined } from '@ant-design/icons';
+import { IconShoppingCartCheck } from '@tabler/icons-react';
 
 const { Text } = Typography;
 
@@ -51,6 +52,9 @@ const CheckoutSuccessContent: React.FC = () => {
   if (status === 'loading') {
     return (
       <Result
+        style={{
+          color: '#fff',
+        }}
         icon={<LoadingOutlined />}
         title="Processing Your Payment"
         subTitle="Please wait while we confirm your payment..."
@@ -67,6 +71,9 @@ const CheckoutSuccessContent: React.FC = () => {
   if (status === 'error') {
     return (
       <Result
+        style={{
+          color: '#fff',
+        }}
         status="error"
         title="Payment Failed"
         subTitle={error || 'An unexpected error occurred'}
@@ -85,15 +92,33 @@ const CheckoutSuccessContent: React.FC = () => {
 
   return (
     <Result
+      style={{
+        color: 'white !important',
+      }}
       status="success"
-      title="Payment Successful!"
+      title={
+        <Text style={{ color: 'white', fontWeight: 'bold', fontSize: '2rem' }}>
+          Payment Successful!
+        </Text>
+      }
       subTitle={
         <Space direction="vertical" align="center" size="large">
-          <Text>
+          <Text
+            style={{
+              color: 'white',
+              fontWeight: 'bold',
+              fontSize: '1.5rem',
+            }}
+          >
             Thank you for your purchase! Your order #{orderId} has been
             confirmed.
           </Text>
-          <Text type="secondary">
+          <Text
+            style={{
+              color: 'white',
+            }}
+            type="secondary"
+          >
             Your e-tickets are now available in the My Tickets section. You can
             download and view them at any time.
           </Text>
@@ -103,7 +128,7 @@ const CheckoutSuccessContent: React.FC = () => {
         <Button
           key="tickets"
           type="primary"
-          icon={<IeOutlined />}
+          icon={<IconShoppingCartCheck />}
           size="large"
           onClick={() => navigate('/tickets')}
         >

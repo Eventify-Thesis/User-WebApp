@@ -6,7 +6,17 @@ import 'dayjs/locale/vi';
 import 'dayjs/locale/en';
 import { ShowModel } from '@/domain/ShowModel';
 import { TicketTypeModel } from '@/domain/TicketTypeModel';
-import { Box, Title, Text, Group, Stack, Paper, Button, Container, rem } from '@mantine/core';
+import {
+  Box,
+  Title,
+  Text,
+  Group,
+  Stack,
+  Paper,
+  Button,
+  Container,
+  rem,
+} from '@mantine/core';
 import { IconCalendar, IconMapPin } from '@tabler/icons-react';
 import { createStyles } from '@mantine/styles';
 
@@ -17,7 +27,7 @@ const useStyles = createStyles((theme: any) => ({
     position: 'relative',
     padding: `0 ${rem(128)}`,
     width: '100%',
-    height: '100%',
+    maxHeight: rem(500),
     overflow: 'hidden',
     fontFamily: '"Montserrat", sans-serif',
     background: 'linear-gradient(rgb(39, 39, 42) 48.04%, rgb(0, 0, 0) 100%)',
@@ -30,7 +40,8 @@ const useStyles = createStyles((theme: any) => ({
     padding: theme.spacing.xl,
     display: 'flex',
     flexDirection: 'column',
-    justifyContent: 'space-between',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
     position: 'relative',
     borderRadius: '30px',
     flex: 1,
@@ -46,7 +57,8 @@ const useStyles = createStyles((theme: any) => ({
       left: 0,
       right: 0,
       bottom: 0,
-      background: 'url("data:image/svg+xml,%3Csvg width=\'100\' height=\'100\' viewBox=\'0 0 100 100\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z\' fill=\'%23ffffff\' fill-opacity=\'0.03\' fill-rule=\'evenodd\'/%3E%3C/svg%3E")',
+      background:
+        "url(\"data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E\")",
       opacity: 0.5,
       borderRadius: theme.radius.lg,
       pointerEvents: 'none',
@@ -109,7 +121,7 @@ const useStyles = createStyles((theme: any) => ({
     fontStyle: 'italic',
   },
   priceSection: {
-    marginTop: 'auto',
+    marginTop: '1rem',
     paddingTop: theme.spacing.lg,
     position: 'relative',
     '&::before': {
@@ -119,7 +131,8 @@ const useStyles = createStyles((theme: any) => ({
       left: 0,
       right: 0,
       height: '1px',
-      background: 'linear-gradient(to right, rgba(255, 215, 0, 0.5), rgba(255, 215, 0, 0.1) 70%, transparent)',
+      background:
+        'linear-gradient(to right, rgba(255, 215, 0, 0.5), rgba(255, 215, 0, 0.1) 70%, transparent)',
     },
   },
   priceInfo: {
@@ -142,7 +155,8 @@ const useStyles = createStyles((theme: any) => ({
   },
   buyButton: {
     width: '100%',
-    background: 'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color) 100%) !important',
+    background:
+      'linear-gradient(135deg, var(--primary-color) 0%, var(--primary-color) 100%) !important',
     color: 'black !important',
     textAlign: 'center',
     fontWeight: 700,
@@ -169,7 +183,8 @@ const useStyles = createStyles((theme: any) => ({
       left: -100,
       width: rem(60),
       height: '100%',
-      background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)',
+      background:
+        'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent)',
       transform: 'skewX(-15deg)',
       animation: 'shimmer 3s infinite',
     },
@@ -188,7 +203,7 @@ const useStyles = createStyles((theme: any) => ({
     background: 'linear-gradient(rgb(39, 39, 42) 48.04%, rgb(0, 0, 0) 100%)',
   },
   eventImage: {
-    height: '100%',
+    minHeight: '100%',
     width: '100%',
     objectFit: 'cover',
     objectPosition: 'center',
@@ -204,7 +219,8 @@ const useStyles = createStyles((theme: any) => ({
     borderRadius: '50%',
     zIndex: 11,
     boxSizing: 'border-box',
-    boxShadow: 'inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 215, 0, 0.2)',
+    boxShadow:
+      'inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 215, 0, 0.2)',
   },
   topCircle: {
     top: 0,
@@ -228,14 +244,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
   const { t, i18n } = useTranslation();
   const { isDesktop } = useResponsive();
   const { classes } = useStyles();
-  
-  const {
-    startTime,
-    eventName,
-    venueName,
-    address,
-    eventBannerUrl,
-  } = event;
+
+  const { startTime, eventName, venueName, address, eventBannerUrl } = event;
 
   let formattedAddress;
   if (i18n.language === 'vi') {
@@ -265,9 +275,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
         {/* Circle cutouts for the ticket effect */}
         <Box className={`${classes.circle} ${classes.topCircle}`} />
         <Box className={`${classes.circle} ${classes.bottomCircle}`} />
-        
+
         <Box className={classes.eventInfo}>
-          <Title order={1} className={classes.eventTitle}>{eventName}</Title>
+          <Title order={1} className={classes.eventTitle}>
+            {eventName}
+          </Title>
           <Group className={classes.eventDate}>
             <IconCalendar size={22} color="#FFD700" />
             <Text>{formattedStartTime}</Text>
@@ -278,29 +290,32 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
           </Group>
           <Text className={classes.address}>{formattedAddress}</Text>
         </Box>
-        
+
         <Box className={classes.priceSection}>
           <Group className={classes.priceInfo}>
-            <Text className={classes.priceLabel} fw={500}>{t('eventDetailPage.priceFrom')}</Text>
-            <Text component="span" className={classes.price} fw={900} style={{ fontWeight: 900 }}>{new Intl.NumberFormat('vi-VN').format(
-                        minPrice,
-                      )}
-                      ₫</Text>
+            <Text className={classes.priceLabel} fw={500}>
+              {t('eventDetailPage.priceFrom')}
+            </Text>
+            <Text
+              component="span"
+              className={classes.price}
+              fw={900}
+              style={{ fontWeight: 900 }}
+            >
+              {new Intl.NumberFormat('vi-VN').format(minPrice)}₫
+            </Text>
           </Group>
-          <Button 
-            className={classes.buyButton}
-            size="md"
-          >
+          <Button className={classes.buyButton} size="md">
             {t('eventDetailPage.buyTicket')}
           </Button>
         </Box>
       </Paper>
-      
+
       <Box className={classes.imageWrapper}>
-        <img 
-          src={eventBannerUrl} 
-          alt="Event banner" 
-          className={classes.eventImage} 
+        <img
+          src={eventBannerUrl}
+          alt="Event banner"
+          className={classes.eventImage}
         />
       </Box>
     </Box>
@@ -313,9 +328,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
           {/* Circle cutouts for the ticket effect */}
           <Box className={`${classes.circle} ${classes.topCircle}`} />
           <Box className={`${classes.circle} ${classes.bottomCircle}`} />
-          
+
           <Box className={classes.eventInfo}>
-            <Title order={1} className={classes.eventTitle}>{eventName}</Title>
+            <Title order={1} className={classes.eventTitle}>
+              {eventName}
+            </Title>
             <Group className={classes.eventDate}>
               <IconCalendar size={24} color="white" />
               <Text>{formattedStartTime}</Text>
@@ -326,26 +343,25 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
             </Group>
             <Text className={classes.address}>{formattedAddress}</Text>
           </Box>
-          
+
           <Box className={classes.priceSection}>
             <Group className={classes.priceInfo}>
-              <Text className={classes.priceLabel}>{t('eventDetailPage.priceFrom')}</Text>
+              <Text className={classes.priceLabel}>
+                {t('eventDetailPage.priceFrom')}
+              </Text>
               <Text className={classes.price}>{minPrice}</Text>
             </Group>
-            <Button 
-              className={classes.buyButton}
-              size="md"
-            >
+            <Button className={classes.buyButton} size="md">
               {t('eventDetailPage.buyTicket')}
             </Button>
           </Box>
         </Paper>
-        
+
         <Box className={classes.imageWrapper}>
-          <img 
-            src={eventBannerUrl} 
-            alt="Event banner" 
-            className={classes.eventImage} 
+          <img
+            src={eventBannerUrl}
+            alt="Event banner"
+            className={classes.eventImage}
           />
         </Box>
       </Stack>
