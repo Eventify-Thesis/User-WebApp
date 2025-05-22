@@ -266,7 +266,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
           ticketType.price < min ? ticketType.price : min,
         min,
       ),
-    Infinity,
+    0,
   );
 
   const ticketLayout = (

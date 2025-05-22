@@ -20,7 +20,7 @@ export const TicketSummary: React.FC<TicketSummaryProps> = ({
         <Text fw={700} size="sm">
           {t('checkout.temporaryCalculate')}
         </Text>
-        <Text fw={700} size="sm" c="yellow">
+        <Text fw={700} size="sm" c="#2CC275">
           {subtotalAmount.toLocaleString('vi-VN')} đ
         </Text>
       </Group>
@@ -38,7 +38,7 @@ export const TicketSummary: React.FC<TicketSummaryProps> = ({
         <Text fw={700} size="sm">
           {t('checkout.total')}
         </Text>
-        <Text fw={700} size="sm" c="yellow">
+        <Text fw={700} size="sm" c="#2CC275">
           {totalAmount.toLocaleString('vi-VN')} đ
         </Text>
       </Group>

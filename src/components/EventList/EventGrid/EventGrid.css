@@ -1,0 +1,32 @@
+/* Target EventCard when used in the gridEventSection */
+.event-card-grid.event-card-main {
+  max-width: 20rem !important;
+}
+
+/* Adjust image height for better responsiveness */
+.event-card-grid .image-section {
+  height: 10rem !important;
+}
+
+/* Override any fixed widths in child elements */
+.event-card-grid .card-content,
+.event-card-grid .event-details,
+.event-card-grid .event-title {
+  max-width: 20rem !important;
+}
+
+/* Make sure content fits properly */
+.event-card-grid .address-text {
+  max-width: 20rem !important;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+  .event-card-grid.event-card-main {
+    min-height: 18rem;
+  }
+
+  .event-card-grid .image-section {
+    height: 8rem !important;
+  }
+}
