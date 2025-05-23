@@ -19,6 +19,7 @@ import ShowcaseEventSection from '@/components/EventList/ShowcaseEventSection/Sh
 import { formatEvents } from '@/utils/eventFormatter';
 import { Typography } from 'antd';
 import CategoryEventSection from '@/components/home/CategoryEventSection/CategoryEventSection';
+import { useAuth } from '@clerk/clerk-react';
 
 const images = [
   'https://salt.tkbcdn.com/ts/ds/6e/0c/af/7d24dc88c6955aa0caeca421046956ad.jpg',
@@ -29,17 +30,14 @@ const images = [
 
 const HomePage: React.FC = () => {
   const navigate = useNavigate();
+  const { userId } = useAuth();
   const { isTablet, isDesktop } = useResponsive();
   const { t, i18n } = useTranslation();
   const { data: events, isLoading } = useGetEvents();
-  const { data: searchMetadata, isLoading: isSearchMetadataLoading } =
-    useSearchMetadata();
-  const { data: eventsThisMonth, isLoading: isEventsThisMonthLoading } =
-    useGetEventsThisMonth();
-  const { data: eventsThisWeek, isLoading: isEventsThisWeekLoading } =
-    useGetEventsThisWeek();
-  const { data: eventsByCategory, isLoading: isEventsByCategoryLoading } =
-    useGetEventsByCategory();
+  const { data: searchMetadata, isLoading: isSearchMetadataLoading } = useSearchMetadata();
+  const { data: eventsThisMonth, isLoading: isEventsThisMonthLoading } = useGetEventsThisMonth(userId ? userId : undefined);
+  const { data: eventsThisWeek, isLoading: isEventsThisWeekLoading } = useGetEventsThisWeek(userId ? userId : undefined);
+  const { data: eventsByCategory, isLoading: isEventsByCategoryLoading } = useGetEventsByCategory(userId ? userId : undefined);
   const lang = i18n.language;
   if (isLoading || isSearchMetadataLoading) return <Loading />;
 
@@ -53,7 +51,6 @@ const HomePage: React.FC = () => {
 
   const formattedEventsThisMonth = formatEvents(eventsThisMonth || []);
   const formattedEventsThisWeek = formatEvents(eventsThisWeek || []);
-
   const desktopLayout = (
     <>
       <Hero />
@@ -71,6 +68,7 @@ const HomePage: React.FC = () => {
         <ShowcaseEventSection
           eventsThisWeek={formattedEventsThisWeek}
           eventsThisMonth={formattedEventsThisMonth}
+          userId={userId}
         />
       )}
 
@@ -95,6 +93,7 @@ const HomePage: React.FC = () => {
                 key={key}
                 title={title} // Title of the section
                 events={formattedEvents} // Event data for carousel
+                userId={userId}
               />
             );
           })}
@@ -112,6 +111,7 @@ const HomePage: React.FC = () => {
         <ShowcaseEventSection
           eventsThisWeek={formattedEventsThisWeek}
           eventsThisMonth={formattedEventsThisMonth}
+          userId={userId}
         />
       )}
       {eventsByCategory &&
@@ -133,6 +133,7 @@ const HomePage: React.FC = () => {
               key={key}
               title={title} // Title of the section
               events={formattedEvents} // Event data for carousel
+              userId={userId}
             />
           );
         })}

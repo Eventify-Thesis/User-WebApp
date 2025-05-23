@@ -8,6 +8,7 @@ import { useSearchSemanticEvents } from "@/queries/useSearchSemanticEvents";
 import * as s from "@/components/search-result/SearchResult.styles";
 import { Loading } from "@/components/common/Loading/Loading";
 import { FilterData } from "@/components/search-result/FilterContainer/FilterDropdown/FilterDropdown.styles";
+import { useAuth } from "@clerk/clerk-react";
 
 function useQueryParam(key: string) {
   const { search } = useLocation();
@@ -22,7 +23,7 @@ export default function SearchResults() {
   const [filterData, setFilterData] = useState<FilterData>({
     categories: categoryParam ? categoryParam.split(',') : [],
   });
-  
+  const { userId } = useAuth();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [events, setEvents] = useState<any[]>([]);
@@ -87,7 +88,7 @@ export default function SearchResults() {
     eventName: event.eventName,
     minimumPrice: event.lowest_price,
     startTime: event.soonest_start_time,
-    eventBannerUrl: event.event_logo_url,
+    eventLogoUrl: event.event_logo_url,
     isInterested: event.bookmarked,
     ...event
   }));
@@ -104,7 +105,7 @@ export default function SearchResults() {
         <Loading />
       ) : formattedEvents.length > 0 ? (
         <>
-          <EventGrid events={formattedEvents} />
+          <EventGrid events={formattedEvents} userId={userId} />
           {isFetching && <Loading />}
           {!hasMore && <p>No more events to load</p>}
         </>

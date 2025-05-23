@@ -65,7 +65,7 @@ export const EventImage = styled.img`
 `;
 
 export const EventTitle = styled.h3`
-  font-size: 16px;
+  font-size: 19px;
   margin: 10px 0;
   white-space: nowrap;
   overflow: hidden;
@@ -79,11 +79,29 @@ export const EventPrice = styled.p`
 
 export const EventDate = styled.div`
   display: flex;
+  gap: 8px;
   align-items: center;
   font-size: 14px;
   color: #ccc;
 `;
 
+export const EventAddress = styled.div`
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 14px;
+  color: #ccc;
+  max-width: 100%;
+`;
+
+export const EventAddressText = styled.span`
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: inline-block;
+  min-width: 0;
+  max-width: 100%;
+`;
 
 export const BookmarkIcon = styled.div`
   position: absolute;

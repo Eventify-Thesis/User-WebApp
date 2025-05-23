@@ -313,6 +313,9 @@
     "unchecked": "Unchecked"
   },
   "common": {
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page",
     "close": "Close",
     "address": "Address",
     "advancedForms": "Advanced Forms",

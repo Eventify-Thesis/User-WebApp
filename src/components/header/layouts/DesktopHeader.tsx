@@ -69,7 +69,7 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
               position="bottom"
               disabled={isLargeScreen}
             >
-              <Box className="nav-item">
+              <Box className="nav-item" onClick={() => navigate('/interested')}>
                 <S.NavIcon icon="teenyicons:star-outline" />
                 <span className="nav-text">Interested</span>
               </Box>

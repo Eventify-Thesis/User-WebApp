@@ -7,10 +7,20 @@ import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import { DescriptionSection } from '@/components/event-detail/DescriptionSection/DescriptionSection';
 import { OrganizerInfoSection } from '@/components/event-detail/OrganizerInfoSection/OrganizerInfoSection';
 import { useParams } from 'react-router-dom';
+import { EventGrid } from '@/components/EventList/EventGrid/EventGrid';
 import { useGetEventDetail } from '@/queries/useGetEventDetail';
 import TicketsInfoSection from '@/components/event-detail/TicketsInfoSection/TicketsInfoSection';
-import { Box, Container } from '@mantine/core';
+import { Box, Container, Title } from '@mantine/core';
+import { useRelatedEvents } from '@/queries/useRelatedEvents';
+import { useAuth } from '@clerk/clerk-react';
+import { DEFAULT_LIMIT } from '@/constants/recommendedEvents';
 import './EventDetailPage.css';
+import styled from 'styled-components';
+
+const RecommendedEventsBox = styled(Box)`
+  width: 100%;
+  margin: 0 auto;
+`;
 
 const EventDetailPage: React.FC = () => {
   const { slug } = useParams();
@@ -20,8 +30,33 @@ const EventDetailPage: React.FC = () => {
   const { data: event } = useGetEventDetail(eventId);
   const { isTablet, isDesktop } = useResponsive();
 
+  const { userId } = useAuth();
   const { t } = useTranslation();
   const { eventDescription, orgName, orgLogoUrl, orgDescription } = event || {};
+
+  const { data: recommendedEvents, isLoading } = useRelatedEvents(
+        Number(eventId),
+        DEFAULT_LIMIT,
+        userId || ''
+      );
+  console.log(recommendedEvents);
+  // Normalize and map for EventGrid
+  const relatedEvents = (() => {
+    const eventsArr = Array.isArray(recommendedEvents)
+      ? recommendedEvents
+      : [];
+    return eventsArr.map((event: any) => ({
+      ...event,
+      eventLogoUrl: event.eventLogoUrl ?? event.event_logo_url,
+      minimumPrice: event.minimumPrice ?? event.lowest_price,
+      startTime: event.startTime
+        ? new Date(event.startTime)
+        : event.soonest_start_time
+        ? new Date(event.soonest_start_time * 1000)
+        : undefined,
+      isInterested: event.isInterested ?? event.bookmarked,
+    }));
+  })();
 
   const desktopLayout = (
     <BaseRow
@@ -50,6 +85,12 @@ const EventDetailPage: React.FC = () => {
             organizerImage={orgLogoUrl}
           />
         </Box>
+        <Title order={2} className="section-title">
+                  {t('orderHistory.recommended')}
+        </Title>
+        <RecommendedEventsBox>
+          <EventGrid events={relatedEvents} />
+        </RecommendedEventsBox>
       </Box>
     </BaseRow>
   );
@@ -81,6 +122,12 @@ const EventDetailPage: React.FC = () => {
             organizerImage={orgLogoUrl}
           />
         </Box>
+        <Title order={2} className="section-title">
+                  {t('orderHistory.recommended')}
+        </Title>
+        <RecommendedEventsBox>
+          <EventGrid events={relatedEvents} />
+        </RecommendedEventsBox>
       </Box>
     </BaseRow>
   );

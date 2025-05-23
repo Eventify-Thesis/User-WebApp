@@ -16,6 +16,8 @@ import {
 } from '@tabler/icons-react';
 import EventModel from '@/domain/EventModel';
 import './EventCard.css';
+import { useCreateInterest } from '@/mutations/useCreateInterest';
+import { useDeleteInterest } from '@/mutations/useDeleteInterest';
 
 interface EventCardProps extends EventModel {
   minimumPrice?: number;
@@ -24,22 +26,58 @@ interface EventCardProps extends EventModel {
   onClick?: () => void;
   address?: string;
   className?: string;
+  userId?: string | null;
+  onBookmarkChange?: () => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
+  id,
   eventName,
   eventBannerUrl,
   minimumPrice,
   startTime,
   address,
-  isInterested: initialFavorited = false,
+  isInterested = false,
   onClick,
   className = '',
+  userId,
+  onBookmarkChange,
 }) => {
-  const [isFavorited, setIsFavorited] = useState(initialFavorited);
+  const [isFavorited, setIsFavorited] = useState(isInterested);
+  const createInterest = useCreateInterest();
+  const deleteInterest = useDeleteInterest();
+
   const theme = useMantineTheme();
-  console.log('Minimum price: ', minimumPrice);
-  const toggleFavorite = () => setIsFavorited((prev) => !prev);
+
+  const toggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!userId || !id) return;
+
+    if (isFavorited) {
+      setIsFavorited(false);
+      deleteInterest.mutate(
+        { userId, eventId: id },
+        {
+          onSuccess: () => {
+            onBookmarkChange?.();
+          },
+          onError: () => setIsFavorited(true)
+        }
+      );
+    } else {
+      setIsFavorited(true);
+      createInterest.mutate(
+        { userId, eventId: id },
+        {
+          onSuccess: () => {
+            onBookmarkChange?.();
+          },
+          onError: () => setIsFavorited(false)
+        }
+      );
+    }
+  };
+  
   return (
     <Box
       className={`event-card-main ${className}`}
@@ -55,14 +93,12 @@ const EventCard: React.FC<EventCardProps> = ({
           className="event-image"
           fit="cover"
         />
+        {userId && (
         <ActionIcon
           className="bookmark-icon"
           variant="light"
           radius="xl"
-          onClick={(e) => {
-            e.stopPropagation();
-            toggleFavorite();
-          }}
+          onClick={toggleFavorite}
         >
           {isFavorited ? (
             <IconStarFilled
@@ -74,6 +110,7 @@ const EventCard: React.FC<EventCardProps> = ({
             <IconStar size={20} color="white" stroke={1.5} />
           )}
         </ActionIcon>
+      )}
       </Box>
 
       <Box className="card-content" p="md">

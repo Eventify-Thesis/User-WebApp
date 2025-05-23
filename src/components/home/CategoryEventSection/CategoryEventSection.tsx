@@ -11,9 +11,10 @@ import './CategoryEventSection.css';
 interface Props {
   title: string;
   events: any[];
+  userId?: string | null;
 }
 
-const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
+const CategoryEventSection: React.FC<Props> = ({ title, events, userId }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
 
@@ -105,7 +106,7 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
           <Slider {...settings}>
             {eventsWithAddress.map((event, index) => (
               <div key={index} className="event-card-wrapper">
-                <EventCard {...event} onClick={() => handleEventClick(event)} />
+                <EventCard {...event} onClick={() => handleEventClick(event)} userId={userId} />
               </div>
             ))}
           </Slider>
@@ -120,6 +121,7 @@ const CategoryEventSection: React.FC<Props> = ({ title, events }) => {
                 }}
                 {...event}
                 onClick={() => handleEventClick(event)}
+                userId={userId}
               />
             </div>
           ))}
