@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
-  Container,
   Title,
   Text,
   Paper,
@@ -14,9 +13,7 @@ import {
   Badge,
   useMantineTheme,
   Button,
-  Modal,
   Loader,
-  Center,
 } from '@mantine/core';
 import { keyframes } from '@emotion/react';
 import { createStyles } from '@mantine/styles';
@@ -28,19 +25,24 @@ import {
   IconArrowRight,
   IconPointFilled,
   IconTrophy,
+  IconPodium,
 } from '@tabler/icons-react';
 import { useTranslation } from 'react-i18next';
-import { QuizAnswer } from '@/domain/QuizModel';
-import { useMutation } from '@tanstack/react-query';
+// import { QuizAnswer } from '@/domain/QuizModel';
+// import { useMutation } from '@tanstack/react-query';
 import styled from 'styled-components';
 import { useUser } from '@clerk/clerk-react';
-import { useSocket } from '@/contexts/SocketContext';
+import { LeaderboardModal } from '@/components/quiz/LeaderboardModal';
+import { io, Socket } from 'socket.io-client';
+import { showSuccess } from '@/utils/notifications';
+import { notification } from 'antd';
 
 const bounce = keyframes({
   '0%, 100%': { transform: 'translateY(0)' },
   '50%': { transform: 'translateY(-15px)' },
 });
 
+// Create styles for components
 const useStyles = createStyles((theme) => ({
   container: {
     display: 'flex',
@@ -201,9 +203,7 @@ export function QuizPlayPage() {
   const theme = useMantineTheme();
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
-  const { user } = useUser();
-  const { socket, isConnected, connect, currentCode } = useSocket();
-
+  const { user } = useUser(); // Used in the SocketContext when connecting
   // State
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);
@@ -211,284 +211,165 @@ export function QuizPlayPage() {
 
   const [selectedOption, setSelectedOption] = useState<number | null>(null);
   const [showAnswerResult, setShowAnswerResult] = useState(false);
+
+  const [isConnected, setIsConnected] = useState(false);
+  const [connectionStatus, setConnectionStatus] = useState<
+    'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 'error'
+  >('disconnected');
+  const [connectionError, setConnectionError] = useState<string | null>(null);
+
+  const [question, setQuestion] = useState<Question | null>(null);
+
   const [isCorrect, setIsCorrect] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [quizEnded, setQuizEnded] = useState<boolean>(false);
   const [score, setScore] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
+  const [leaderboardModalOpen, setLeaderboardModalOpen] = useState(false);
   const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const timerId = useRef<NodeJS.Timeout | null>(null);
 
-  // Connect to WebSocket
+  // State to track if the timer is running
+  const [isTimerRunning, setIsTimerRunning] = useState(false);
+
+  // Socket connection
+  const socketRef = useRef<Socket | null>(null);
+
   useEffect(() => {
-    if (!code) return;
+    if (!code || isConnected) return;
 
-    // Connect to socket only if not already connected to the same code
-    if (!socket || currentCode !== code) {
-      console.log('Connecting to socket for quiz code:', code);
-      connect(code);
-    } else {
-      console.log('Reusing existing socket connection for quiz code:', code);
-    }
-
-    // Socket event handlers
-    if (socket) {
-      // Clean up previous listeners to prevent duplicates
-      socket.off('joinedQuiz');
-      socket.off('quizStarted');
-      socket.off('questionStarted');
-      socket.off('answerResult');
-      socket.off('quizEnded');
-      socket.off('hostDisconnected');
-      socket.off('error');
-
-      // Join the quiz room
-      socket.emit('joinedGame', {
+    const socket = io(`${import.meta.env.VITE_EVENT_API_BASE_URL}/quiz`, {
+      transports: ['websocket'],
+      autoConnect: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 10000,
+      auth: {
         code,
-        userId: user?.id,
-        username: user?.username || 'Anonymous',
+        userId: user?.id || 'anonymous',
+        username: user?.fullName || 'Anonymous',
+        isHost: false,
+      },
+    });
+    socketRef.current = socket;
+
+    const handleConnect = () => {
+      setIsConnected(true);
+      setConnectionStatus('connected');
+
+      socketRef.current?.emit('userJoinedQuiz', {
+        code,
+        userId: user?.id || 'anonymous',
+        username: user?.fullName || 'Anonymous',
       });
+    };
 
-      socket.on('hostDisconnected', () => {
-        notifications.show({
-          title: 'Host Disconnected',
-          message:
-            'The quiz host has disconnected. Please wait or try rejoining.',
-          color: 'red',
-        });
+    const handleDisconnect = () => {
+      setIsConnected(false);
+      setConnectionStatus('disconnected');
+    };
 
-        // Clear current question state
-        setQuiz(null);
-        setTimeLeft(0);
-        if (timerId.current) {
-          clearInterval(timerId.current);
-        }
-      });
+    const handleQuestionStarted = (data: any) => {
+      setCurrentQuestionIndex(data.questionIndex);
+      setQuestion(data.question);
+      setTimeLeft(data.timeLimit || 30);
+      setIsTimerRunning(true);
+    };
 
-      socket.on('error', (error) => {
-        console.error('Socket error:', error);
-        notifications.show({
-          title: 'Error',
-          message: error.message || 'An error occurred',
-          color: 'red',
-        });
-      });
+    const handleQuestionTimeUp = (data: any) => {
+      handleTimeUp(data.question);
+    };
 
-      socket.on('questionStarted', (data) => {
-        if (data.questionIndex === currentQuestionIndex) return;
-        console.log('Question started:', data);
-        setIsLoading(false);
-        setCurrentQuestionIndex(data.questionIndex);
-        setTotalQuestions(data.totalQuestions);
+    socketRef.current?.on('connect', handleConnect);
+    socketRef.current?.on('disconnect', handleDisconnect);
+    socketRef.current?.on('questionStarted', handleQuestionStarted);
+    socketRef.current?.on('questionTimeUp', handleQuestionTimeUp);
 
-        // Update quiz state with new question
-        setQuiz((prevQuiz) => {
-          if (!prevQuiz) {
-            return {
-              id: 0,
-              title: 'Quiz',
-              questions: [data.question],
-              passingScore: 0,
-            };
-          }
-
-          // Update the question at current index
-          const updatedQuestions = [...prevQuiz.questions];
-          updatedQuestions[data.questionIndex] = data.question;
-
-          return {
-            ...prevQuiz,
-            questions: updatedQuestions,
-          };
-        });
-
-        // Reset question state
-        setTimeLeft(data.timeLimit || 30);
-        setSelectedOption(null);
-        setShowAnswerResult(false);
-        setIsCorrect(false);
-
-        // Start timer
-        startTimer(data.timeLimit || 30);
-      });
-
-      socket.on('answerResult', (data) => {
-        console.log('Answer result:', data);
-
-        // Stop the timer when result is received
-        if (timerId.current) {
-          clearInterval(timerId.current);
-        }
-
-        setIsCorrect(data.isCorrect);
-        setScore((prevScore) => prevScore + (data.score || 0));
-        setShowAnswerResult(true);
-
-        // Show feedback notification
-        notifications.show({
-          title: data.isCorrect ? 'Correct!' : 'Incorrect',
-          message: data.isCorrect
-            ? `You earned ${data.score} points!`
-            : 'Better luck on the next question!',
-          color: data.isCorrect ? 'green' : 'red',
-          autoClose: 2000,
-        });
-      });
-
-      socket.on('quizEnded', (data) => {
-        console.log('Quiz ended:', data);
-
-        // Stop any running timers
-        if (timerId.current) {
-          clearInterval(timerId.current);
-        }
-
-        setQuizEnded(true);
-
-        // Show final score notification
-        notifications.show({
-          title: 'Quiz Completed! 🎉',
-          message: `Your final score: ${score} points`,
-          color: 'blue',
-          autoClose: 5000,
-        });
-
-        // Save final state before navigation
-        const finalState = {
-          score,
-          totalQuestions,
-          answeredQuestions: currentQuestionIndex + 1,
-          leaderboard: data.leaderboard,
-        };
-
-        // Navigate to results with state
-        navigate(`/quiz-results/${code}`, {
-          state: {
-            ...finalState,
-            completedAt: data.endTime || Date.now(),
-          },
-        });
-      });
-
-      // Cleanup on unmount
-      return () => {
-        // Clear all timers
-        if (timerId.current) {
-          clearInterval(timerId.current);
-        }
-
-        if (resultTimeoutRef.current) {
-          clearTimeout(resultTimeoutRef.current);
-        }
-
-        // Remove all socket listeners
-        if (socket) {
-          socket.off('joinedQuiz');
-          socket.off('quizStarted');
-          socket.off('questionStarted');
-          socket.off('answerResult');
-          socket.off('quizEnded');
-          socket.off('hostDisconnected');
-          socket.off('error');
-
-          // Notify server about disconnection if quiz hasn't ended
-          if (!quizEnded) {
-            socket.emit('leaveQuiz', { code });
-          }
-        }
-      };
-    }
-  }, [
-    code,
-    navigate,
-    socket,
-    connect,
-    score,
-    currentQuestionIndex,
-    totalQuestions,
-    quizEnded,
-  ]);
+    return () => {
+      socketRef.current?.off('connect', handleConnect);
+      socketRef.current?.off('disconnect', handleDisconnect);
+      socketRef.current?.off('questionStarted', handleQuestionStarted);
+      socketRef.current?.off('questionTimeUp', handleQuestionTimeUp);
+    };
+  }, []);
 
   useEffect(() => {
-    let timerId: number | undefined;
-
-    if (timeLeft && timeLeft > 0) {
-      timerId = window.setInterval(() => {
+    if (isTimerRunning && timeLeft > 0) {
+      timerId.current = setInterval(() => {
         setTimeLeft((prevTime) => {
           if (prevTime <= 1) {
             // Timer reached 0, stop and show results
-            // setIsTimerRunning(false);
-            handleTimeUp();
+            setIsTimerRunning(false);
+            notifications.show({
+              title: "Time's Up!",
+              message: "You didn't answer in time",
+              color: 'orange',
+              autoClose: 2000,
+            });
+            setShowAnswerResult(true);
             return 0;
           }
           return prevTime - 1;
         });
-      }, 1000);
+      }, 1000) as unknown as NodeJS.Timeout;
     }
 
     return () => {
-      if (timerId) {
-        clearInterval(timerId);
+      if (timerId.current) {
+        clearInterval(timerId.current);
       }
     };
-  }, [timeLeft]);
+  }, [timeLeft, isTimerRunning]);
 
-  const handleTimeUp = () => {
-    if (!quiz || !quiz.questions[currentQuestionIndex] || !socket) return;
+  const handleTimeUp = (question: Question) => {
+    if (selectedOption !== null) {
+      return;
+    }
 
-    // Submit timeout answer
-    socket.emit('submitAnswer', {
-      code,
-      questionId: quiz.questions[currentQuestionIndex].id,
-      questionIndex: currentQuestionIndex,
-      selectedOption: -1, // -1 indicates timeout/no answer
-      timeTaken: quiz.questions[currentQuestionIndex].timeLimit || 30,
-    });
+    if (question.correctOption === selectedOption) {
+      setIsCorrect(true);
+    } else {
+      setIsCorrect(false);
+    }
 
-    // Show timeout notification
-    notifications.show({
-      title: "Time's Up!",
-      message: "You didn't answer in time",
-      color: 'orange',
-      autoClose: 2000,
-    });
+    setShowAnswerResult(true);
   };
 
   const handleOptionSelect = (optionIndex: number) => {
-    if (showAnswerResult || selectedOption !== null || !socket || !quiz) return;
+    if (showAnswerResult || !socketRef.current || !question) {
+      console.log('Cannot select option - already answered or missing data');
+      return;
+    }
 
+    // Update UI immediately to show selection
     setSelectedOption(optionIndex);
 
     // Calculate time taken
-    const timeLimit = quiz.questions[currentQuestionIndex].timeLimit || 30;
+    const timeLimit = question.timeLimit || 30;
     const timeTaken = timeLimit - timeLeft;
 
-    // Submit answer
-    socket.emit('submitAnswer', {
+    // Submit answer to server
+    socketRef.current?.emit('submitAnswer', {
       code,
-      questionId: quiz.questions[currentQuestionIndex].id,
       questionIndex: currentQuestionIndex,
       selectedOption: optionIndex,
       timeTaken: Math.min(timeTaken, timeLimit), // Ensure time taken doesn't exceed limit
     });
-  };
+    console.log('Submitting answer for question:', question);
 
-  // Add a reconnection attempt function
-  const handleReconnect = () => {
-    if (!socket || !code) return;
-
-    setIsLoading(true);
-    connect(code);
-
-    // Attempt to rejoin the quiz
-    socket.emit('joinQuizByCode', {
-      code,
-      userId: user?.id,
-      username: user?.username || 'Anonymous',
+    // Show loading state until we get the result
+    notification.success({
+      message: 'Processing your answer...',
     });
   };
 
-  if (!isConnected || isLoading) {
+  const handleReconnect = () => {
+    setIsConnected(false);
+    setConnectionStatus('connecting');
+  };
+
+  if (!isConnected) {
     return (
       <Container2>
         <Paper
@@ -507,37 +388,115 @@ export function QuizPlayPage() {
             alignItems: 'center',
           }}
         >
-          <Loader size="xl" color="white" variant="dots" mb="lg" />
-          <Title order={3} mb="md" ta="center" style={{ color: theme.white }}>
-            {!isConnected
-              ? 'Connecting to game...'
-              : 'Waiting for game to start...'}
-          </Title>
-          <Text
-            size="lg"
-            fw={500}
-            color="white"
-            opacity={0.8}
-            mb="xl"
-            ta="center"
-          >
-            Please wait a moment
-          </Text>
-          <Progress
-            mt="xl"
-            value={100}
-            animated
-            size="lg"
-            radius="xl"
-            color="cyan"
-            style={{ width: '240px' }}
-          />
+          {connectionStatus === 'connecting' ||
+          connectionStatus === 'reconnecting' ? (
+            // Connecting or reconnecting state
+            <>
+              <Loader size="xl" color="white" variant="dots" mb="lg" />
+              <Title
+                order={3}
+                mb="md"
+                ta="center"
+                style={{ color: theme.white }}
+              >
+                {connectionStatus === 'connecting'
+                  ? 'Connecting to game...'
+                  : 'Reconnecting...'}
+              </Title>
+              <Text
+                size="lg"
+                fw={500}
+                color="white"
+                opacity={0.8}
+                mb="xl"
+                ta="center"
+              >
+                Please wait a moment
+              </Text>
+              <Progress
+                mt="xl"
+                value={100}
+                animated
+                size="lg"
+                radius="xl"
+                color="cyan"
+                style={{ width: '240px' }}
+              />
+            </>
+          ) : connectionStatus === 'error' && connectionError ? (
+            // Connection error state
+            <>
+              <Box mb="lg">
+                <IconX size={64} color={theme.colors.red[5]} />
+              </Box>
+              <Title
+                order={3}
+                mb="md"
+                ta="center"
+                style={{ color: theme.white }}
+              >
+                Connection Error
+              </Title>
+              <Text
+                size="lg"
+                fw={500}
+                color="white"
+                opacity={0.8}
+                mb="xl"
+                ta="center"
+              >
+                {connectionError}
+              </Text>
+              <Button
+                color="blue"
+                size="lg"
+                leftSection={<IconArrowRight size={18} />}
+                onClick={handleReconnect}
+              >
+                Reconnect
+              </Button>
+            </>
+          ) : (
+            // General loading or waiting state
+            <>
+              <Loader size="xl" color="white" variant="dots" mb="lg" />
+              <Title
+                order={3}
+                mb="md"
+                ta="center"
+                style={{ color: theme.white }}
+              >
+                {!isConnected
+                  ? 'Connecting to game...'
+                  : 'Waiting for game to start...'}
+              </Title>
+              <Text
+                size="lg"
+                fw={500}
+                color="white"
+                opacity={0.8}
+                mb="xl"
+                ta="center"
+              >
+                Please wait a moment
+              </Text>
+              <Progress
+                mt="xl"
+                value={100}
+                animated
+                size="lg"
+                radius="xl"
+                color="cyan"
+                style={{ width: '240px' }}
+              />
+            </>
+          )}
         </Paper>
       </Container2>
     );
   }
 
-  if (!quiz || !quiz.questions[currentQuestionIndex]) {
+  if (!question) {
     return (
       <Container2>
         <Paper
@@ -599,21 +558,66 @@ export function QuizPlayPage() {
     );
   }
 
-  const currentQuestion = quiz.questions[currentQuestionIndex];
-  const correctOptionIndex = currentQuestion.correctOption;
-  const isAnswerCorrect = selectedOption === correctOptionIndex;
+  const correctOptionIndex = question?.correctOption;
 
-  if (!isConnected) {
+  // Disconnection handling during active quiz
+  if (quiz && !isConnected) {
     return (
       <Container2>
-        <Center style={{ flexDirection: 'column', height: '100vh' }}>
-          <Text color="red" mb="xl">
-            Lost connection to the game server
-          </Text>
-          <Button color="blue" onClick={handleReconnect} mb="xl">
-            Reconnect
-          </Button>
-        </Center>
+        <Paper
+          p="xl"
+          radius="lg"
+          style={{
+            backgroundColor: 'rgba(30, 42, 120, 0.7)',
+            backdropFilter: 'blur(8px)',
+            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2)',
+            maxWidth: '500px',
+            margin: '0 auto',
+            padding: '2rem',
+          }}
+        >
+          <Stack align="center" gap="xl">
+            {connectionStatus === 'reconnecting' ? (
+              // Actively reconnecting
+              <>
+                <Loader color="cyan" size="xl" />
+                <Title order={3} style={{ color: theme.white }}>
+                  Reconnecting...
+                </Title>
+                <Text color="white" ta="center">
+                  Attempting to reestablish connection to the game server
+                </Text>
+                <Progress
+                  value={100}
+                  animated
+                  size="lg"
+                  radius="xl"
+                  color="blue"
+                  style={{ width: '100%' }}
+                />
+              </>
+            ) : (
+              // Connection lost
+              <>
+                <IconX size={48} color={theme.colors.red[5]} />
+                <Title order={3} style={{ color: theme.white }}>
+                  Connection Lost
+                </Title>
+                <Text color="white" ta="center" mb="md">
+                  {connectionError || 'Lost connection to the game server'}
+                </Text>
+                <Button
+                  size="lg"
+                  color="cyan"
+                  leftSection={<IconArrowRight size={18} />}
+                  onClick={handleReconnect}
+                >
+                  Reconnect
+                </Button>
+              </>
+            )}
+          </Stack>
+        </Paper>
       </Container2>
     );
   }
@@ -633,16 +637,27 @@ export function QuizPlayPage() {
           <Badge size="lg" variant="filled" color="blue">
             Question {currentQuestionIndex + 1}/{totalQuestions}
           </Badge>
-          <Badge
-            size="lg"
-            variant="gradient"
-            gradient={{ from: 'yellow', to: 'orange' }}
-          >
-            <Group gap={5}>
-              <IconTrophy size={16} />
-              <Text>Score: {score}</Text>
-            </Group>
-          </Badge>
+          <Group gap="sm">
+            <Button
+              variant="subtle"
+              color="gray"
+              size="compact-sm"
+              onClick={() => setLeaderboardModalOpen(true)}
+              leftSection={<IconPodium size={16} />}
+            >
+              Leaderboard
+            </Button>
+            <Badge
+              size="lg"
+              variant="gradient"
+              gradient={{ from: 'yellow', to: 'orange' }}
+            >
+              <Group gap={5}>
+                <IconTrophy size={16} />
+                <Text>Score: {score}</Text>
+              </Group>
+            </Badge>
+          </Group>
         </Group>
 
         <Title
@@ -667,7 +682,7 @@ export function QuizPlayPage() {
           roundCaps
           sections={[
             {
-              value: (timeLeft / (currentQuestion.timeLimit || 30)) * 100,
+              value: (timeLeft / (question?.timeLimit || 30)) * 100,
               color:
                 timeLeft > 10 ? theme.colors.green[6] : theme.colors.orange[6],
             },
@@ -696,13 +711,13 @@ export function QuizPlayPage() {
         }}
       >
         <Text size="xl" fw={700} lh={1.3} ta="center">
-          {currentQuestion.text}
+          {question?.text}
         </Text>
       </Paper>
 
       {/* Answer Options - 2x2 Grid */}
       <SimpleGrid cols={2} spacing="xl">
-        {currentQuestion.options.map((option: any, index: number) => (
+        {question?.options.map((option: any, index: number) => (
           <Paper
             key={index}
             shadow="lg"
@@ -806,6 +821,14 @@ export function QuizPlayPage() {
           />
         </Box>
       )}
+      {/* Leaderboard Modal */}
+      <LeaderboardModal
+        opened={leaderboardModalOpen}
+        onClose={() => setLeaderboardModalOpen(false)}
+        leaderboard={leaderboard}
+        totalQuestions={totalQuestions}
+        currentQuestion={currentQuestionIndex}
+      />
     </Container2>
   );
 }

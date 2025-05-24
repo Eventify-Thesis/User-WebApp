@@ -41,30 +41,28 @@ function App() {
       afterSignOutUrl="/"
       localization={language === 'en' ? enUS : viVN}
     >
-      <NotificationProvider>
-        <Notifications />
-        <SocketProvider>
-            <QueryClientProvider client={queryClient}>
+      <Notifications />
+      <SocketProvider>
+        <QueryClientProvider client={queryClient}>
+          <meta name="theme-color" content={themeObject[theme].primary} />
+          <GlobalStyle />
+          <HelmetProvider>
+            <Helmet>
               <meta name="theme-color" content={themeObject[theme].primary} />
-              <GlobalStyle />
-              <HelmetProvider>
-                <Helmet>
-                  <meta name="theme-color" content={themeObject[theme].primary} />
-                  <meta
-                    http-equiv="Content-Security-Policy"
-                    content="upgrade-insecure-requests"
-                  />
-                </Helmet>
+              <meta
+                http-equiv="Content-Security-Policy"
+                content="upgrade-insecure-requests"
+              />
+            </Helmet>
 
-                <AuthTokenProvider>
-                  <ConfigProvider locale={language === 'en' ? en : vnVN}>
-                    <AppRouter />
-                  </ConfigProvider>
-                </AuthTokenProvider>
-              </HelmetProvider>
-            </QueryClientProvider>
-        </SocketProvider>
-      </NotificationProvider>
+            <AuthTokenProvider>
+              <ConfigProvider locale={language === 'en' ? en : vnVN}>
+                <AppRouter />
+              </ConfigProvider>
+            </AuthTokenProvider>
+          </HelmetProvider>
+        </QueryClientProvider>
+      </SocketProvider>
     </ClerkProvider>
   );
 }

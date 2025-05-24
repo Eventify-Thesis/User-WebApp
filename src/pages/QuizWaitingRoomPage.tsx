@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
   Container,
@@ -26,7 +26,7 @@ import {
   IconPointFilled,
 } from '@tabler/icons-react';
 import { useUser } from '@clerk/clerk-react';
-import { useSocket } from '@/contexts/SocketContext';
+import { io, Socket } from 'socket.io-client';
 
 // Animation keyframes
 const float = keyframes({
@@ -168,125 +168,144 @@ export function QuizWaitingRoomPage() {
   const { user } = useUser();
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
-  const { socket, isConnected, connect, currentCode } = useSocket();
 
   const [participants, setParticipants] = useState<Participant[]>([]);
+  const [isConnected, setIsConnected] = useState<boolean>(false);
   const [isHostConnected, setIsHostConnected] = useState<boolean>(false);
   const [lastJoinedUser, setLastJoinedUser] = useState<string>('');
   const [showJoinMessage, setShowJoinMessage] = useState<boolean>(false);
 
+  const socketRef = useRef<Socket | null>(null);
   // Connect to WebSocket and join the quiz room
   useEffect(() => {
-    if (!code) return;
+    if (!code || isConnected) return;
 
-    // Connect to socket only if not already connected to the same code
-    if (!socket || currentCode !== code) {
-      console.log('Connecting to socket for quiz code:', code);
-      connect(code);
-    } else {
-      console.log('Reusing existing socket connection for quiz code:', code);
-    }
+    const socket = io(`${import.meta.env.VITE_EVENT_API_BASE_URL}/quiz`, {
+      transports: ['websocket'],
+      autoConnect: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 10000,
+      auth: {
+        userId: user?.id || 'anonymous',
+        username: user?.fullName || 'Anonymous',
+        isHost: false,
+        code,
+      },
+    });
 
-    // Socket event handlers
-    if (socket) {
-      // Clean up previous listeners to prevent duplicates
-      socket.off('joinedQuiz');
-      socket.off('participantJoined');
-      socket.off('quizStarted');
-      socket.off('hostConnected');
-      socket.off('hostDisconnected');
+    socketRef.current = socket;
 
-      socket.on('joinedQuiz', (data) => {
-        setParticipants(data.participants || []);
+    const handleConnect = () => {
+      setIsConnected(true);
+      socket.emit('joinQuizByCode', {
+        code,
+        userId: user?.id || 'anonymous',
+        username: user?.fullName || 'Anonymous',
+      });
+    };
 
-        // Identify if host is present
-        const hostParticipant = data.participants?.find((p: any) => p.isHost);
-        setIsHostConnected(!!hostParticipant);
+    const handleDisconnect = () => {
+      console.log('Disconnected from WebSocket');
+      setIsConnected(false);
+    };
 
-        notifications.show({
-          title: 'Joined Successfully',
-          message: `You've joined the quiz`,
-          color: 'green',
-        });
+    const handleJoinedQuiz = (data: any) => {
+      setParticipants(data.participants || []);
+      const host = data.participants?.find((p: any) => p.isHost);
+      setIsHostConnected(!!host);
+      notifications.show({
+        title: 'Joined Successfully',
+        message: `You've joined the quiz`,
+        color: 'green',
+      });
+    };
+
+    const handleParticipantJoined = (data: Participant) => {
+      setParticipants((prev) => {
+        if (prev.some((p) => p.userId === data.userId)) return prev;
+        return [
+          ...prev,
+          {
+            userId: data.userId,
+            username: data.username,
+            joinTime: new Date(),
+          },
+        ];
       });
 
-      socket.on('participantJoined', (data) => {
-        if (!participants.some((p) => p.userId === data.userId)) {
-          setParticipants((prevParticipants) => [
-            ...prevParticipants,
-            {
-              userId: data.userId,
-              username: data.username,
-              joinTime: new Date(),
-            },
-          ]);
+      setLastJoinedUser(data.username);
+      setShowJoinMessage(true);
+      setTimeout(() => setShowJoinMessage(false), 3000);
 
-          // Show the join message animation
-          setLastJoinedUser(data.username);
-          setShowJoinMessage(true);
-          setTimeout(() => setShowJoinMessage(false), 3000);
-        }
-
-        notifications.show({
-          title: 'New Player',
-          message: `${data.username} has joined the game`,
-          color: 'blue',
-        });
+      notifications.show({
+        title: 'New Player',
+        message: `${data.username} has joined the game`,
+        color: 'blue',
       });
+    };
 
-      socket.on('quizStarted', () => {
-        console.log('Quiz started event received in waiting room');
-        notifications.show({
-          title: 'Game Started!',
-          message: 'The quiz is starting now...',
-          color: 'green',
-        });
-
-        // Navigate to the play page with the new Mantine UI
-        navigate(`/quiz-play/${code}`);
+    const handleQuizStarted = () => {
+      notifications.show({
+        title: 'Game Started!',
+        message: 'The quiz is starting now...',
+        color: 'green',
       });
+      navigate(`/quiz-play/${code}`);
+    };
 
-      // Host connection status
-      socket.on('hostConnected', () => {
-        setIsHostConnected(true);
-        notifications.show({
-          title: 'Host Connected',
-          message: 'The host has joined the game',
-          color: 'green',
-        });
+    const handleHostConnected = () => {
+      setIsHostConnected(true);
+      notifications.show({
+        title: 'Host Connected',
+        message: 'The host has joined the game',
+        color: 'green',
       });
+    };
 
-      socket.on('hostDisconnected', () => {
-        console.log('Host disconnected');
-        setIsHostConnected(false);
-        notifications.show({
-          title: 'Host Disconnected',
-          message: 'Waiting for host to reconnect...',
-          color: 'orange',
-        });
+    const handleHostDisconnected = () => {
+      setIsHostConnected(false);
+      notifications.show({
+        title: 'Host Disconnected',
+        message: 'Waiting for host to reconnect...',
+        color: 'orange',
       });
+    };
 
-      socket.on('participantLeft', (data) => {
-        setParticipants((prev) => prev.filter((p) => p.userId !== data.userId));
-
-        notifications.show({
-          title: 'Player Left',
-          message: `${data.username} has left the game`,
-          color: 'gray',
-        });
+    const handleParticipantLeft = (data: Participant) => {
+      setParticipants((prev) => prev.filter((p) => p.userId !== data.userId));
+      notifications.show({
+        title: 'Player Left',
+        message: `${data.username} has left the game`,
+        color: 'gray',
       });
+    };
 
-      // Cleanup on unmount
-      return () => {
-        socket.off('joinedQuiz');
-        socket.off('participantJoined');
-        socket.off('participantLeft');
-        socket.off('quizStarted');
-        socket.off('hostConnected');
-        socket.off('hostDisconnected');
-      };
-    }
-  }, [code, navigate, participants, socket, connect]);
+    socket.on('connect', handleConnect);
+    socket.on('disconnect', handleDisconnect);
+    socket.on('joinedQuiz', handleJoinedQuiz);
+    socket.on('participantJoined', handleParticipantJoined);
+    socket.on('quizStarted', handleQuizStarted);
+    socket.on('hostConnected', handleHostConnected);
+    socket.on('hostDisconnected', handleHostDisconnected);
+    socket.on('participantLeft', handleParticipantLeft);
+
+    return () => {
+      socket.off('connect', handleConnect);
+      socket.off('disconnect', handleDisconnect);
+      socket.off('joinedQuiz', handleJoinedQuiz);
+      socket.off('participantJoined', handleParticipantJoined);
+      socket.off('quizStarted', handleQuizStarted);
+      socket.off('hostConnected', handleHostConnected);
+      socket.off('hostDisconnected', handleHostDisconnected);
+      socket.off('participantLeft', handleParticipantLeft);
+      socket.disconnect(); // clean disconnection
+      socketRef.current = null; // clean ref
+    };
+  }, [code, user]);
+
+  console.log('isConnected', isConnected);
 
   if (!isConnected) {
     return (
