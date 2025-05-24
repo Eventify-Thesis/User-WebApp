@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import EventCard from "../EventCard/EventCard";
 import * as s from "./EventGrid.styles";
 
-export const EventGrid: React.FC<s.EventGridProps & { userId?: string | null, onBookmarkChange?: () => void }> = ({ events, userId, onBookmarkChange }) => {
+export const EventGrid: React.FC<s.EventGridProps & { userId?: string | null, onBookmarkChange?: (id: number) => void }> = ({ events, userId, onBookmarkChange }) => {
     const navigate = useNavigate();
     const handleEventClick = (event: any) => {
         if (event.url) {

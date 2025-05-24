@@ -1,12 +1,14 @@
 import styled from "styled-components";
-import ExtendedEventModel from "@/domain/ExtendedEventModel";
+import {ExtendedEventModel} from "@/domain/EventModel";
 
 export interface EventGridProps {
   events: ExtendedEventModel[];
+  onBookmarkChange?: (id: number) => void;
 }
 
 export const EventGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
+  justify-content: flex-start;
 `;

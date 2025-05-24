@@ -19,6 +19,7 @@ import { queryClient } from './utils/queryClient';
 import { AuthTokenProvider } from './components/auth/AuthTokenProvider';
 import { Notifications } from '@mantine/notifications';
 import { SocketProvider } from './contexts/SocketContext';
+import { NotificationProvider } from './contexts/NotificationContext';
 
 // Import your Publishable Key
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -40,6 +41,7 @@ function App() {
       afterSignOutUrl="/"
       localization={language === 'en' ? enUS : viVN}
     >
+      <NotificationProvider>
         <Notifications />
         <SocketProvider>
             <QueryClientProvider client={queryClient}>
@@ -62,6 +64,7 @@ function App() {
               </HelmetProvider>
             </QueryClientProvider>
         </SocketProvider>
+      </NotificationProvider>
     </ClerkProvider>
   );
 }

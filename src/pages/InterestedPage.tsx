@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { Box, Divider, Loader, Pagination, Title } from '@mantine/core';
 import { useTranslation } from 'react-i18next';
-import { EventGrid } from '@/components/interested/EventGrid/EventGrid';
 import * as s from '@/components/interested/InterestedPage.styles';
 import { useGetInterests } from '@/queries/useGetInterests';
 import { useDeleteInterest } from '@/mutations/useDeleteInterest';
@@ -9,7 +8,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { useRelatedEvents } from '@/queries/useRelatedEvents';
 import { useSearchSemanticEvents } from '@/queries/useSearchSemanticEvents';
 import { DEFAULT_LIMIT } from '@/constants/recommendedEvents';
-import { EventGrid as EventGridRecommended } from '@/components/EventList/EventGrid/EventGrid';
+import { EventGrid } from '@/components/EventList/EventGrid/EventGrid';
 import './OrderHistory.css';
 
 export default function InterestedPage() {
@@ -38,8 +37,8 @@ export default function InterestedPage() {
     venueName: interest.event?.venueName,
     street: interest.event?.street,
     categories: interest.event?.categories, // or [] if you want a default
-    minimumPrice: interest.lowest_price,
-    startTime: interest.soonest_start_time,
+    minimumPrice: interest.minimumPrice,
+    startTime: interest.startTime,
     city: interest.city,
     district: interest.district,
     ward: interest.ward,
@@ -48,40 +47,48 @@ export default function InterestedPage() {
   }));
 
   // Recommended events logic
-  const { data: recommendedEvents, isLoading: recommendedEventsLoading } = interestEvents?.[0]?.id
-    ? useRelatedEvents(
-        interestEvents[0].id,
-        DEFAULT_LIMIT,
-        userId || ''
-      )
-    : useSearchSemanticEvents({
-        limit: DEFAULT_LIMIT,
-        userId: userId || '',
-        query: '',
-      });
-  console.log("recommendedEvents: ", recommendedEvents);
+  const relatedEventsQuery = useRelatedEvents(
+    interestEvents?.[0]?.id ?? 0,
+    DEFAULT_LIMIT,
+    userId || ''
+  );
+  
+  const semanticEventsQuery = useSearchSemanticEvents({
+    limit: DEFAULT_LIMIT,
+    userId: userId || '',
+    query: '',
+  });
+  
+  // Determine which data to use
+  const recommendedEvents = interestEvents?.[0]?.id
+    ? relatedEventsQuery.data
+    : semanticEventsQuery.data;
+  
+  const recommendedEventsLoading = interestEvents?.[0]?.id
+    ? relatedEventsQuery.isLoading
+    : semanticEventsQuery.isLoading;
+
   // Normalize and map for EventGrid
   const relatedEvents = (!recommendedEventsLoading)?(() => {
+    if (!recommendedEvents) return [];
     const eventsArr = Array.isArray(recommendedEvents)
       ? recommendedEvents
       : [];
     return eventsArr.map((event: any) => ({
     ...event,
-    eventLogoUrl: event.eventLogoUrl ?? event.event_logo_url,
-    minimumPrice: event.minimumPrice ?? event.lowest_price,
+    eventLogoUrl: event.eventLogoUrl,
+    minimumPrice: event.minimumPrice,
     startTime: event.startTime
-      ? new Date(event.startTime)
-      : event.soonest_start_time
-      ? new Date(event.soonest_start_time * 1000)
+      ? new Date(event.startTime * 1000)
       : undefined,
-    isInterested: event.isInterested ?? event.bookmarked,
+    isInterested: event.isInterested ?? false,
   }));
   })():[];
 
   // Function to handle unbookmarking
   const handleUnbookmark = (id: number) => {
     if (!userId) return;
-    deleteInterest({ userId: String(userId), eventId: Number(id) });
+    refetch();
   };
 
   const filteredEvents = interestEvents.filter((event: any) =>
@@ -110,8 +117,8 @@ export default function InterestedPage() {
         <>
           <EventGrid
             events={filteredEvents}
-            onUnbookmark={handleUnbookmark}
-            fadingEvents={fadingEvents}
+            onBookmarkChange={handleUnbookmark}
+            userId={userId}
           />
           <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
             <Pagination
@@ -132,11 +139,11 @@ export default function InterestedPage() {
         <Loader color="yellow" size="lg" variant="dots" />
       ) : (
         <>
-          <Title style={{ color: 'white' }} order={2} className="section-title">
+          <Title style={{ color: 'white !important' }} order={2} className="page-title">
             {t('orderHistory.recommended')}
           </Title>
           <Box className="recommended-events">
-            <EventGridRecommended events={relatedEvents} userId={userId} onBookmarkChange={refetch} />
+            <EventGrid events={relatedEvents} userId={userId} onBookmarkChange={refetch} />
           </Box>
         </>
       )}

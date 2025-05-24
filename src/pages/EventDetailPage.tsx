@@ -47,14 +47,12 @@ const EventDetailPage: React.FC = () => {
       : [];
     return eventsArr.map((event: any) => ({
       ...event,
-      eventLogoUrl: event.eventLogoUrl ?? event.event_logo_url,
-      minimumPrice: event.minimumPrice ?? event.lowest_price,
+      eventLogoUrl: event.eventLogoUrl,
+      minimumPrice: event.minimumPrice,
       startTime: event.startTime
-        ? new Date(event.startTime)
-        : event.soonest_start_time
-        ? new Date(event.soonest_start_time * 1000)
+        ? new Date(event.startTime * 1000)
         : undefined,
-      isInterested: event.isInterested ?? event.bookmarked,
+      isInterested: event.isInterested ?? false,
     }));
   })();
 

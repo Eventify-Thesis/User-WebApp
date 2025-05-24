@@ -1,6 +1,6 @@
 import { httpApi } from '@/api/http.api';
 import EventModel from '@/domain/EventModel';
-import ExtendedEventModel from '@/domain/ExtendedEventModel';
+import {ExtendedEventModel} from '@/domain/EventModel';
 
 export interface SearchEventsParams {
   query: string;
@@ -43,9 +43,9 @@ export const searchClient = {
     const response = await httpApi.get<any>(`/search/events/${eventId}/related`, { params: { limit, userId } });
     return response.data.data.related_events.map((event: any) => ({
       ...event,
-      minimumPrice: event.lowest_price,
-      startTime: event.soonest_start_time,
-      isInterested: event.bookmarked,
+      minimumPrice: event.minimumPrice,
+      startTime: event.startTime,
+      isInterested: event.isInterested,
     }));
   },
 

@@ -86,10 +86,10 @@ export default function SearchResults() {
   const formattedEvents = events.map(event => ({
     id: event.id.toString(),
     eventName: event.eventName,
-    minimumPrice: event.lowest_price,
-    startTime: event.soonest_start_time,
-    eventLogoUrl: event.event_logo_url,
-    isInterested: event.bookmarked,
+    minimumPrice: event.minimumPrice,
+    startTime: event.startTime,
+    eventLogoUrl: event.eventLogoUrl,
+    isInterested: event.isInterested ?? false,
     ...event
   }));
 

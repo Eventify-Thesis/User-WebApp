@@ -172,7 +172,7 @@ const ShowcaseEventSection: React.FC<Props> = ({
                       <EventCard
                         className="event-card-showcase"
                         {...event}
-                        isInterested={event.bookmarked ?? event.isInterested ?? false}
+                        isInterested={event.isInterested ?? false}
                         onClick={() => handleEventClick(event)}
                         userId={userId}
                       />

@@ -73,14 +73,12 @@ const OrderHistory = () => {
       : [];
     return eventsArr.map((event: any) => ({
     ...event,
-    eventLogoUrl: event.eventLogoUrl ?? event.event_logo_url,
-    minimumPrice: event.minimumPrice ?? event.lowest_price,
+    eventLogoUrl: event.eventLogoUrl,
+    minimumPrice: event.minimumPrice,
     startTime: event.startTime
-      ? new Date(event.startTime)
-      : event.soonest_start_time
-      ? new Date(event.soonest_start_time * 1000)
+      ? new Date(event.startTime * 1000)
       : undefined,
-    isInterested: event.isInterested ?? event.bookmarked,
+    isInterested: event.isInterested ?? false,
   }));
   })();
   return (
@@ -148,7 +146,7 @@ const OrderHistory = () => {
           <Loader color="yellow" size="lg" variant="dots" />
         ) : (
           <>
-            <Title style={{ color: 'white' }} order={2} className="section-title">
+            <Title style={{ color: 'white !important' }} order={2} className="page-title">
               {t('orderHistory.recommended')}
             </Title>
             <Box className="recommended-events">

@@ -38,3 +38,9 @@ export interface EventDetailResponse extends EventModel {
     addressEn: string;
   };
 }
+
+export interface ExtendedEventModel extends EventModel {
+  minimumPrice: number;
+  startTime: Date;
+  isInterested: boolean;
+}

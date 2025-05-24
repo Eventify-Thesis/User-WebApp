@@ -8,10 +8,19 @@ export interface Interest {
   eventId: number;
 }
 
-export const create = async (data: CreateInterestDto): Promise<Interest> => {
+export interface InterestResponse {
+  message: string;
+  interest?: Interest;
+}
+
+export const create = async (data: CreateInterestDto): Promise<InterestResponse> => {
   const res = await httpApi.post('/interests', data, 
     {headers: { 'Content-Type': 'application/json' }});
-  return res.data;
+  // Assume backend returns { message, ...interest }
+  return {
+    message: res.data.message || 'Interest added successfully',
+    interest: res.data.interest || res.data,
+  };
 };
 
 export const findAllInterest = async (
@@ -30,7 +39,7 @@ export const checkExist = async (userId: string, eventId: number): Promise<Inter
   return res.data;
 };
 
-export const remove = async (userId: string, eventId: number): Promise<{ success: boolean }> => {
+export const remove = async (userId: string, eventId: number): Promise<{ message: string }> => {
   const res = await httpApi.delete(`/interests/users/${userId}/events/${eventId}`);
-  return res.data;
+  return { message: res.data.message || 'Interest removed successfully' };
 };

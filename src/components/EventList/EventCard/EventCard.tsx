@@ -27,13 +27,13 @@ interface EventCardProps extends EventModel {
   address?: string;
   className?: string;
   userId?: string | null;
-  onBookmarkChange?: () => void;
+  onBookmarkChange?: (id: number) => void;
 }
 
 const EventCard: React.FC<EventCardProps> = ({
   id,
   eventName,
-  eventBannerUrl,
+  eventLogoUrl,
   minimumPrice,
   startTime,
   address,
@@ -59,7 +59,7 @@ const EventCard: React.FC<EventCardProps> = ({
         { userId, eventId: id },
         {
           onSuccess: () => {
-            onBookmarkChange?.();
+            onBookmarkChange?.(id);
           },
           onError: () => setIsFavorited(true)
         }
@@ -70,7 +70,7 @@ const EventCard: React.FC<EventCardProps> = ({
         { userId, eventId: id },
         {
           onSuccess: () => {
-            onBookmarkChange?.();
+            onBookmarkChange?.(id);
           },
           onError: () => setIsFavorited(false)
         }
@@ -88,7 +88,7 @@ const EventCard: React.FC<EventCardProps> = ({
     >
       <Box className="image-section">
         <Image
-          src={eventBannerUrl}
+          src={eventLogoUrl}
           alt={eventName}
           className="event-image"
           fit="cover"
