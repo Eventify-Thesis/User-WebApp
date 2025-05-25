@@ -21,6 +21,7 @@ import './OrderHistory.css';
 import { useRelatedEvents } from '@/queries/useRelatedEvents';
 import { useAuth } from '@clerk/clerk-react';
 import { useSearchSemanticEvents } from '@/queries/useSearchSemanticEvents';
+import { Loading } from '@/components/common/Loading/Loading';
 
 const OrderHistory = () => {
   const { userId } = useAuth();
@@ -44,7 +45,7 @@ const OrderHistory = () => {
 
   const {
     data: orderData,
-    isLoading,
+    isLoading: isOrderLoading,
     isError,
   } = useGetEventOrders(
     statusMap[activeTab] || '',
@@ -52,16 +53,26 @@ const OrderHistory = () => {
   );
 
   const orders = orderData?.docs;
+  const firstOrderEventId = orders?.[0]?.eventId;
 
-  // Recommended events logic
-  const { data: recommendedEvents, isLoading: recommendedEventsLoading } =
-    orders?.[0]?.eventId
-      ? useRelatedEvents(orders[0].eventId, DEFAULT_LIMIT, userId || '')
-      : useSearchSemanticEvents({
-          limit: DEFAULT_LIMIT,
-          userId: userId || '',
-          query: '',
-        });
+  // Always call both hooks, but use the appropriate one based on conditions
+  const { data: relatedEventsData, isLoading: isRelatedLoading } =
+    useRelatedEvents(firstOrderEventId || '', DEFAULT_LIMIT, userId || '');
+
+  const { data: semanticEventsData, isLoading: isSemanticLoading } =
+    useSearchSemanticEvents({
+      limit: DEFAULT_LIMIT,
+      userId: userId || '',
+      query: '',
+    });
+
+  // Determine which data to use
+  const recommendedEvents = firstOrderEventId
+    ? relatedEventsData
+    : semanticEventsData;
+  const recommendedEventsLoading = firstOrderEventId
+    ? isRelatedLoading
+    : isSemanticLoading;
 
   // Normalize and map for EventGrid
   const relatedEvents = (() => {
@@ -74,6 +85,11 @@ const OrderHistory = () => {
       isInterested: event.isInterested ?? false,
     }));
   })();
+
+  const isLoading = isOrderLoading || recommendedEventsLoading;
+
+  if (isLoading) return <Loading />;
+
   return (
     <Container fluid className="order-history-container">
       <Box className="order-content">
@@ -89,15 +105,6 @@ const OrderHistory = () => {
             setSubTab={setSubTab}
           />
         </Paper>
-
-        {isLoading && (
-          <Box className="loading-container">
-            <Loader color="yellow" size="lg" variant="dots" />
-            <Text c="dimmed" mt="lg" size="md" fw={500}>
-              {t('orderHistory.loading')}
-            </Text>
-          </Box>
-        )}
 
         {isError && (
           <Paper className="error-message" shadow="sm">
@@ -136,22 +143,18 @@ const OrderHistory = () => {
 
         <Divider className="section-divider" />
 
-        {recommendedEventsLoading ? (
-          <Loader color="yellow" size="lg" variant="dots" />
-        ) : (
-          <>
-            <Title
-              style={{ color: 'white !important' }}
-              order={2}
-              className="page-title"
-            >
-              {t('orderHistory.recommended')}
-            </Title>
-            <Box className="recommended-events">
-              <EventGrid events={relatedEvents} userId={userId} />
-            </Box>
-          </>
-        )}
+        <>
+          <Title
+            style={{ color: 'white !important' }}
+            order={2}
+            className="page-title"
+          >
+            {t('orderHistory.recommended')}
+          </Title>
+          <Box className="recommended-events">
+            <EventGrid events={relatedEvents} userId={userId} />
+          </Box>
+        </>
       </Box>
     </Container>
   );
