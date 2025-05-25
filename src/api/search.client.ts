@@ -1,5 +1,6 @@
 import { httpApi } from '@/api/http.api';
 import EventModel from '@/domain/EventModel';
+import {ExtendedEventModel} from '@/domain/EventModel';
 
 export interface SearchEventsParams {
   query: string;
@@ -13,7 +14,7 @@ export interface SearchEventsParams {
 }
 
 export const searchClient = {
-  searchSemanticEvents: async (params: SearchEventsParams): Promise<EventModel[]> => {
+  searchSemanticEvents: async (params: SearchEventsParams): Promise<ExtendedEventModel[]> => {
     let { query, limit, page, city, categories, startDate, endDate, userId } = params;
     // If query is undefined or null, set to empty string
     if (query === undefined || query === null) query = '';
@@ -27,7 +28,7 @@ export const searchClient = {
         ...(categories ? { categories: categories.join(",") } : {}),
         ...(startDate ? { startDate } : {}),
         ...(endDate ? { endDate } : {}),
-        ...(userId ? { user_id: userId } : {}),
+        ...(userId ? { userId } : {}),
       },
     });
     return response.data.data.result;
@@ -38,23 +39,28 @@ export const searchClient = {
     return response.data.data;
   },
 
-  getRelatedEvents: async (eventId: string, limit: number = 4): Promise<EventModel[]> => {
-    const response = await httpApi.get<any>(`/search/events/${eventId}/related`, { params: { limit } });
-    return response.data.data.result;
+  getRelatedEvents: async (eventId: number, limit: number = 4, userId?: string): Promise<any> => {
+    const response = await httpApi.get<any>(`/search/events/${eventId}/related`, { params: { limit, userId } });
+    return response.data.data.related_events.map((event: any) => ({
+      ...event,
+      minimumPrice: event.minimumPrice,
+      startTime: event.startTime,
+      isInterested: event.isInterested,
+    }));
   },
 
-  getEventsThisMonth: async (): Promise<any[]> => {
-    const response = await httpApi.get<any>('/search/events/this-month');
+  getEventsThisMonth: async (userId?: string): Promise<any[]> => {
+    const response = await httpApi.get<any>('/search/events/this-month', { params: { userId } });
     return response.data.data.events;
   },
 
-  getEventsThisWeek: async (): Promise<any[]> => {
-    const response = await httpApi.get<any>('/search/events/this-week');
+  getEventsThisWeek: async (userId?: string): Promise<any[]> => {
+    const response = await httpApi.get<any>('/search/events/this-week', { params: { userId } });
     return response.data.data.events;
   },
 
-  getEventsByCategory: async (): Promise<any[]> => {
-    const response = await httpApi.get<any>('/search/events-by-category');
+  getEventsByCategory: async (userId?: string): Promise<any[]> => {
+    const response = await httpApi.get<any>('/search/events-by-category', { params: { userId } });
     return response.data.data;
   },
 };

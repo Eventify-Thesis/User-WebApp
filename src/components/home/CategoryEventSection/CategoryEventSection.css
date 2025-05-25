@@ -40,7 +40,8 @@
 }
 
 .event-card-wrapper {
-  padding: 0;
+  width: 22rem;     /* fixed width matching card */
+  flex-shrink: 0;   /* prevent shrinking */
   box-sizing: border-box;
 }
 
@@ -61,7 +62,7 @@
 .grid-wrapper {
   display: flex;
   gap: 16px;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   overflow-x: auto;
   padding: 10px 0;
 }

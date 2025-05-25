@@ -19,6 +19,7 @@ import './ShowcaseEventSection.css';
 interface Props {
   eventsThisWeek: any[];
   eventsThisMonth: any[];
+  userId?: string | null;
 }
 
 const EmptyState = ({ type }: { type: 'weekend' | 'month' }) => {
@@ -67,6 +68,7 @@ const EmptyState = ({ type }: { type: 'weekend' | 'month' }) => {
 const ShowcaseEventSection: React.FC<Props> = ({
   eventsThisWeek,
   eventsThisMonth,
+  userId,
 }) => {
   const [activeTab, setActiveTab] = useState<'weekend' | 'month'>('weekend');
   const { t } = useTranslation();
@@ -74,7 +76,6 @@ const ShowcaseEventSection: React.FC<Props> = ({
 
   const currentEvents =
     activeTab === 'weekend' ? eventsThisWeek : eventsThisMonth;
-
   const handleEventClick = (event: any) => {
     if (event.url) {
       navigate(`${event.url}-${event.id}`);
@@ -171,7 +172,9 @@ const ShowcaseEventSection: React.FC<Props> = ({
                       <EventCard
                         className="event-card-showcase"
                         {...event}
+                        isInterested={event.isInterested ?? false}
                         onClick={() => handleEventClick(event)}
+                        userId={userId}
                       />
                     </Box>
                   </Grid.Col>

@@ -3,7 +3,7 @@ import { SettingModel } from './SettingModel';
 import { ShowModel } from './ShowModel';
 
 export default interface EventModel {
-  id: string;
+  id: number;
   paymentInfo?: PaymentInfoModel;
   setting?: SettingModel;
   shows?: ShowModel[];
@@ -37,4 +37,10 @@ export interface EventDetailResponse extends EventModel {
     addressVi: string;
     addressEn: string;
   };
+}
+
+export interface ExtendedEventModel extends EventModel {
+  minimumPrice: number;
+  startTime: Date;
+  isInterested: boolean;
 }

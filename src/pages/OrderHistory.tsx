@@ -5,7 +5,7 @@ import OrderInfo from '@/components/order-history/OrderInfo/OrderInfo';
 import NoOrders from '@/components/order-history/NoOrders/NoOrders';
 import { EventGrid } from '@/components/EventList/EventGrid/EventGrid';
 import { useTranslation } from 'react-i18next';
-import { IdParam } from '@/types/types';
+import { DEFAULT_LIMIT } from '@/constants/recommendedEvents';
 import { useGetEventOrders } from '@/queries/useGetOrders';
 import {
   Container,
@@ -18,11 +18,12 @@ import {
   Divider,
 } from '@mantine/core';
 import './OrderHistory.css';
-
-// Simulate userId (should be dynamically fetched from auth context)
-const userId: IdParam = 'U123';
+import { useRelatedEvents } from '@/queries/useRelatedEvents';
+import { useAuth } from '@clerk/clerk-react';
+import { useSearchSemanticEvents } from '@/queries/useSearchSemanticEvents';
 
 const OrderHistory = () => {
+  const { userId } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
@@ -52,6 +53,34 @@ const OrderHistory = () => {
 
   const orders = orderData?.docs;
 
+  // Recommended events logic
+  const { data: recommendedEvents, isLoading: recommendedEventsLoading } = orders?.[0]?.eventId
+    ? useRelatedEvents(
+        orders[0].eventId,
+        DEFAULT_LIMIT,
+        userId || ''
+      )
+    : useSearchSemanticEvents({
+        limit: DEFAULT_LIMIT,
+        userId: userId || '',
+        query: '',
+      });
+
+  // Normalize and map for EventGrid
+  const relatedEvents = (() => {
+    const eventsArr = Array.isArray(recommendedEvents)
+      ? recommendedEvents
+      : [];
+    return eventsArr.map((event: any) => ({
+    ...event,
+    eventLogoUrl: event.eventLogoUrl,
+    minimumPrice: event.minimumPrice,
+    startTime: event.startTime
+      ? new Date(event.startTime * 1000)
+      : undefined,
+    isInterested: event.isInterested ?? false,
+  }));
+  })();
   return (
     <Container fluid className="order-history-container">
       <Box className="order-content">
@@ -113,12 +142,18 @@ const OrderHistory = () => {
 
         <Divider className="section-divider" />
 
-        <Title order={2} className="section-title">
-          {t('orderHistory.recommended')}
-        </Title>
-        <Box className="recommended-events">
-          <EventGrid events={[]} />
-        </Box>
+        {recommendedEventsLoading ? (
+          <Loader color="yellow" size="lg" variant="dots" />
+        ) : (
+          <>
+            <Title style={{ color: 'white !important' }} order={2} className="page-title">
+              {t('orderHistory.recommended')}
+            </Title>
+            <Box className="recommended-events">
+              <EventGrid events={relatedEvents} userId={userId} />
+            </Box>
+          </>
+        )}
       </Box>
     </Container>
   );

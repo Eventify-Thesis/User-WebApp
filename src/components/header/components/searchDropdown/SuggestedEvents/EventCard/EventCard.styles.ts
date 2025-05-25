@@ -53,6 +53,7 @@ export const EventPrice = styled.p`
 export const EventDate = styled.p`
   color: #cccccc;
   font-size: 12px;
+  gap: 4px;
   display: flex;
   align-items: center;
   margin-top: auto; /* Pushes date to bottom */

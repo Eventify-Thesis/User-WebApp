@@ -197,6 +197,9 @@
     "unchecked": "Unchecked"
   },
   "common": {
+    "prev": "Trước",
+    "next": "Sau",
+    "page": "Trang",
     "address": "Address",
     "advancedForms": "Advanced Forms",
     "age": "Age",

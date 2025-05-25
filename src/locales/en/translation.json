@@ -14,6 +14,9 @@
     "Dec"
   ],
   "searchBar": {
+    "from": "From",
+    "noDate": "Not given",
+    "noPrice": "Not given",
     "browseByCategory": "Browse by Category",
     "browseByLocation": "Browse by City",
     "music": "Music",
@@ -313,6 +316,9 @@
     "unchecked": "Unchecked"
   },
   "common": {
+    "prev": "Previous",
+    "next": "Next",
+    "page": "Page",
     "close": "Close",
     "address": "Address",
     "advancedForms": "Advanced Forms",
