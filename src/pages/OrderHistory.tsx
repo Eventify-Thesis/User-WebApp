@@ -54,32 +54,25 @@ const OrderHistory = () => {
   const orders = orderData?.docs;
 
   // Recommended events logic
-  const { data: recommendedEvents, isLoading: recommendedEventsLoading } = orders?.[0]?.eventId
-    ? useRelatedEvents(
-        orders[0].eventId,
-        DEFAULT_LIMIT,
-        userId || ''
-      )
-    : useSearchSemanticEvents({
-        limit: DEFAULT_LIMIT,
-        userId: userId || '',
-        query: '',
-      });
+  const { data: recommendedEvents, isLoading: recommendedEventsLoading } =
+    orders?.[0]?.eventId
+      ? useRelatedEvents(orders[0].eventId, DEFAULT_LIMIT, userId || '')
+      : useSearchSemanticEvents({
+          limit: DEFAULT_LIMIT,
+          userId: userId || '',
+          query: '',
+        });
 
   // Normalize and map for EventGrid
   const relatedEvents = (() => {
-    const eventsArr = Array.isArray(recommendedEvents)
-      ? recommendedEvents
-      : [];
+    const eventsArr = Array.isArray(recommendedEvents) ? recommendedEvents : [];
     return eventsArr.map((event: any) => ({
-    ...event,
-    eventLogoUrl: event.eventLogoUrl,
-    minimumPrice: event.minimumPrice,
-    startTime: event.startTime
-      ? new Date(event.startTime * 1000)
-      : undefined,
-    isInterested: event.isInterested ?? false,
-  }));
+      ...event,
+      eventLogoUrl: event.eventLogoUrl,
+      minimumPrice: event.minimumPrice,
+      startTime: event.startTime ? new Date(event.startTime * 1000) : undefined,
+      isInterested: event.isInterested ?? false,
+    }));
   })();
   return (
     <Container fluid className="order-history-container">
@@ -134,6 +127,7 @@ const OrderHistory = () => {
                     endTime={order.show.endTime}
                     location={order.event.venueName}
                     imageUrl={order.event.eventBannerUrl}
+                    url={`${order.event.setting.url}-${order.eventId}/${order.show.id}`}
                   />
                 </Paper>
               ))
@@ -146,7 +140,11 @@ const OrderHistory = () => {
           <Loader color="yellow" size="lg" variant="dots" />
         ) : (
           <>
-            <Title style={{ color: 'white !important' }} order={2} className="page-title">
+            <Title
+              style={{ color: 'white !important' }}
+              order={2}
+              className="page-title"
+            >
               {t('orderHistory.recommended')}
             </Title>
             <Box className="recommended-events">

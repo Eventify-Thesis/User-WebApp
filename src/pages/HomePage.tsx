@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Banner } from '@/components/home/Banner/Banner';
 import { CategorySection } from '@/components/home/CategorySection/CategorySection';
-import { EventGrid } from '@/components/EventList/EventGrid/EventGrid';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { useResponsive } from '@/hooks/useResponsive';
@@ -9,7 +8,6 @@ import { PageTitle } from '@/components/common/PageTitle/PageTitle';
 import { LocationSection } from '@/components/home/LocationSection/LocationSection';
 import { Footer } from '@/components/home/Footer/Footer';
 import { Hero } from '@/components/home/Hero/Hero';
-import { useGetEvents } from '@/queries/useGetEvents';
 import { useSearchMetadata } from '@/queries/useSearchMetadata';
 import { useGetEventsThisMonth } from '@/queries/useGetEventsThisMonth';
 import { useGetEventsThisWeek } from '@/queries/useGetEventsThisWeek';
@@ -17,7 +15,6 @@ import { useGetEventsByCategory } from '@/queries/useGetEventsByCategory';
 import { Loading } from '@/components/common/Loading/Loading';
 import ShowcaseEventSection from '@/components/EventList/ShowcaseEventSection/ShowcaseEventSection';
 import { formatEvents } from '@/utils/eventFormatter';
-import { Typography } from 'antd';
 import CategoryEventSection from '@/components/home/CategoryEventSection/CategoryEventSection';
 import { useAuth } from '@clerk/clerk-react';
 
@@ -33,13 +30,22 @@ const HomePage: React.FC = () => {
   const { userId } = useAuth();
   const { isTablet, isDesktop } = useResponsive();
   const { t, i18n } = useTranslation();
-  const { data: events, isLoading } = useGetEvents();
-  const { data: searchMetadata, isLoading: isSearchMetadataLoading } = useSearchMetadata();
-  const { data: eventsThisMonth, isLoading: isEventsThisMonthLoading } = useGetEventsThisMonth(userId ? userId : undefined);
-  const { data: eventsThisWeek, isLoading: isEventsThisWeekLoading } = useGetEventsThisWeek(userId ? userId : undefined);
-  const { data: eventsByCategory, isLoading: isEventsByCategoryLoading } = useGetEventsByCategory(userId ? userId : undefined);
+  const { data: searchMetadata, isLoading: isSearchMetadataLoading } =
+    useSearchMetadata();
+  const { data: eventsThisMonth, isLoading: isEventsThisMonthLoading } =
+    useGetEventsThisMonth(userId ? userId : undefined);
+  const { data: eventsThisWeek, isLoading: isEventsThisWeekLoading } =
+    useGetEventsThisWeek(userId ? userId : undefined);
+  const { data: eventsByCategory, isLoading: isEventsByCategoryLoading } =
+    useGetEventsByCategory(userId ? userId : undefined);
   const lang = i18n.language;
-  if (isLoading || isSearchMetadataLoading) return <Loading />;
+
+  const isLoading =
+    isSearchMetadataLoading ||
+    isEventsThisMonthLoading ||
+    isEventsThisWeekLoading ||
+    isEventsByCategoryLoading;
+  if (isLoading) return <Loading />;
 
   const newCategory = searchMetadata?.data.result.categories.map(
     (category: any) => ({
@@ -83,7 +89,7 @@ const HomePage: React.FC = () => {
               (event) => ({
                 ...event,
                 date: new Date(event.startTime * 1000),
-                eventBannerURL: event.eventBannerUrl,
+                eventBannerURL: event.eventLogoUrl,
                 price: event.minimumPrice,
               }),
             );

@@ -56,6 +56,7 @@
     "invalidShowId": "Invalid show ID",
     "loadingQuiz": "Loading quiz...",
     "quizNotFound": "Quiz not found",
+    "playing": "Playing",
     "submitQuiz": "Submit Quiz",
     "nextQuestion": "Next Question",
     "questionInfo": "Question {{current}} of {{total}}"

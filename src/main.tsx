@@ -1,35 +1,32 @@
 import { StrictMode } from 'react';
-import './index.css';
-import App from './App.tsx';
-import { Provider } from 'react-redux';
-import { store } from '@/store/store';
 import { createRoot } from 'react-dom/client';
-import './i18n';
-import { unstableSetRender } from 'antd';
+import { Provider } from 'react-redux';
+import { MantineProvider } from '@mantine/core';
+import { ModalsProvider } from '@mantine/modals';
+import { Notifications } from '@mantine/notifications';
+
+// Import styles
 import '@mantine/core/styles.css';
+import '@mantine/core/styles/global.css';
+import '@mantine/notifications/styles.css';
+import '@mantine/tiptap/styles.css';
+import './index.css';
+import './i18n';
+
+import App from './App.tsx';
+import { store } from '@/store/store';
 
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
 
-unstableSetRender((node, container) => {
-  container._reactRoot ||= createRoot(container);
-  const root = container._reactRoot;
-  root.render(node);
-  return async () => {
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    root.unmount();
-  };
-});
-import '@mantine/core/styles/global.css';
-import '@mantine/core/styles.css';
-import '@mantine/tiptap/styles.css';
-
-import { MantineProvider } from '@mantine/core';
 root.render(
   <StrictMode>
     <Provider store={store}>
       <MantineProvider>
-        <App />
+        <ModalsProvider>
+          <Notifications position="top-right" />
+          <App />
+        </ModalsProvider>
       </MantineProvider>
     </Provider>
   </StrictMode>,

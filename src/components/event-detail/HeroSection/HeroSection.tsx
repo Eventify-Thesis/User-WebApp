@@ -201,6 +201,11 @@ const useStyles = createStyles((theme: any) => ({
     justifyContent: 'center',
     overflow: 'hidden',
     background: 'linear-gradient(rgb(39, 39, 42) 48.04%, rgb(0, 0, 0) 100%)',
+    [theme.fn.smallerThan('md')]: {
+      width: '100%',
+      flex: 'none',
+      height: rem(300),
+    },
   },
   eventImage: {
     minHeight: '100%',
@@ -211,6 +216,14 @@ const useStyles = createStyles((theme: any) => ({
     borderTopRightRadius: theme.radius.lg,
     borderBottomRightRadius: theme.radius.lg,
     boxShadow: '-5px 0 15px rgba(0, 0, 0, 0.2)',
+    [theme.fn.smallerThan('md')]: {
+      borderLeft: 'none',
+      borderTop: 'none',
+      borderTopLeftRadius: theme.radius.lg,
+      borderTopRightRadius: theme.radius.lg,
+      borderBottomLeftRadius: theme.radius.lg,
+      borderBottomRightRadius: theme.radius.lg,
+    },
   },
   circle: {
     position: 'absolute',
@@ -221,6 +234,9 @@ const useStyles = createStyles((theme: any) => ({
     boxSizing: 'border-box',
     boxShadow:
       'inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 215, 0, 0.2)',
+    [theme.fn.smallerThan('md')]: {
+      display: 'none',
+    },
   },
   topCircle: {
     top: 0,
@@ -266,7 +282,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
           ticketType.price < min ? ticketType.price : min,
         min,
       ),
-    Infinity,
+    0,
   );
 
   const ticketLayout = (
@@ -322,8 +338,16 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
   );
 
   const mobileTicketLayout = (
-    <Container>
+    <Container size="sm" px="xs">
       <Stack gap="md">
+        <Box className={classes.imageWrapper}>
+          <img
+            src={eventBannerUrl}
+            alt="Event banner"
+            className={classes.eventImage}
+          />
+        </Box>
+
         <Paper className={classes.eventContent}>
           {/* Circle cutouts for the ticket effect */}
           <Box className={`${classes.circle} ${classes.topCircle}`} />
@@ -334,11 +358,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
               {eventName}
             </Title>
             <Group className={classes.eventDate}>
-              <IconCalendar size={24} color="white" />
+              <IconCalendar size={24} color="#FFD700" />
               <Text>{formattedStartTime}</Text>
             </Group>
             <Group className={classes.venueInfo}>
-              <IconMapPin size={24} color="white" />
+              <IconMapPin size={24} color="#FFD700" />
               <Text className={classes.venueName}>{venueName}</Text>
             </Group>
             <Text className={classes.address}>{formattedAddress}</Text>
@@ -349,21 +373,20 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
               <Text className={classes.priceLabel}>
                 {t('eventDetailPage.priceFrom')}
               </Text>
-              <Text className={classes.price}>{minPrice}</Text>
+              <Text
+                component="span"
+                className={classes.price}
+                fw={900}
+                style={{ fontWeight: 900 }}
+              >
+                {new Intl.NumberFormat('vi-VN').format(minPrice || 0)}₫
+              </Text>
             </Group>
             <Button className={classes.buyButton} size="md">
               {t('eventDetailPage.buyTicket')}
             </Button>
           </Box>
         </Paper>
-
-        <Box className={classes.imageWrapper}>
-          <img
-            src={eventBannerUrl}
-            alt="Event banner"
-            className={classes.eventImage}
-          />
-        </Box>
       </Stack>
     </Container>
   );

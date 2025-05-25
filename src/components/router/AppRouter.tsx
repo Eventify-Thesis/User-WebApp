@@ -16,6 +16,9 @@ import MainLayout from '@/components/layouts/main/MainLayout/MainLayout';
 
 import RequireAuth from '@/components/router/RequireAuth';
 const EventDetailPage = React.lazy(() => import('@/pages/EventDetailPage'));
+const PurchasedEventDetailPage = React.lazy(
+  () => import('@/pages/PurchasedEventDetailPage'),
+);
 const CheckoutPage = React.lazy(() => import('@/pages/CheckoutPage'));
 const HomePage = React.lazy(() => import('@/pages/HomePage'));
 const SearchResult = React.lazy(() => import('@/pages/SearchResult'));
@@ -48,12 +51,6 @@ const AuthLayoutFallback = withLoading(AuthLayout);
 export const HOME_PATH = '/';
 
 export const AppRouter: React.FC = () => {
-  const protectedLayout = (
-    <RequireAuth>
-      <MainLayout />
-    </RequireAuth>
-  );
-
   return (
     <BrowserRouter>
       <ScrollToTop />
@@ -67,6 +64,10 @@ export const AppRouter: React.FC = () => {
           <Route path="tickets" element={<OrderHistory />} />
           <Route path="orders/:orderId" element={<TicketOrder />} />
           <Route path=":slug" element={<EventDetailPage />} />
+          <Route
+            path="purchased/:slug/:showId"
+            element={<PurchasedEventDetailPage />}
+          />
           {/* Legacy quiz pages */}
           <Route path="quiz/:showId" element={<QuizPage />} />
           <Route path="quiz-result/:showId" element={<QuizResultPage />} />

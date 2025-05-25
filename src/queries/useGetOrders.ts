@@ -1,11 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
-import { orderClient } from "@/api/order.client";
-import { IdParam, PaginationResponse } from "@/types/types";
-import OrderModel from "@/domain/OrderModel";
+import { useQuery } from '@tanstack/react-query';
+import { orderClient } from '@/api/order.client';
+import { IdParam, PaginationResponse } from '@/types/types';
+import OrderModel from '@/domain/OrderModel';
 
-export const GET_ORDERS_QUERY_KEY = "orders";
+export const GET_ORDERS_QUERY_KEY = 'orders';
 
-export const useGetEventOrders = (status: string, time: "UPCOMING" | "PAST") => {
+export const useGetEventOrders = (
+  status: string,
+  time: 'UPCOMING' | 'PAST',
+) => {
   return useQuery<PaginationResponse<OrderModel>>({
     queryKey: [GET_ORDERS_QUERY_KEY, status, time],
     queryFn: () => orderClient.getEventOrders(status, time),
@@ -13,7 +16,7 @@ export const useGetEventOrders = (status: string, time: "UPCOMING" | "PAST") => 
   });
 };
 
-export const GET_ORDER_DETAIL_QUERY_KEY = "orderDetail";
+export const GET_ORDER_DETAIL_QUERY_KEY = 'orderDetail';
 
 export const useGetOrderDetail = (orderId: IdParam) => {
   return useQuery<OrderModel>({
@@ -21,7 +24,7 @@ export const useGetOrderDetail = (orderId: IdParam) => {
     queryFn: async () => {
       const order = await orderClient.getOrderDetail(orderId);
       if (!order) {
-        throw new Error("Order not found");
+        throw new Error('Order not found');
       }
       return order;
     },

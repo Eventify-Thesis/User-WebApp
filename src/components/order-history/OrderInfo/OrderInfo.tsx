@@ -18,6 +18,7 @@ import {
   IconTicket,
 } from '@tabler/icons-react';
 import './OrderInfo.css';
+import { useNavigate } from 'react-router-dom';
 
 interface OrderInfoProps {
   date: string;
@@ -28,6 +29,7 @@ interface OrderInfoProps {
   endTime: string;
   location: string;
   imageUrl: string;
+  url: string;
   onClick?: () => void;
 }
 
@@ -143,8 +145,10 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
   endTime,
   location,
   imageUrl,
+  url,
   onClick,
 }) => {
+  const navigate = useNavigate();
   const { classes } = useStyles();
 
   // Format dates for display
@@ -197,7 +201,15 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
           <Box>
             {/* Title */}
             <Box mb="md">
-              <Text className={classes.title}>{title}</Text>
+              <Text
+                className={classes.title}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/purchased/${url}`);
+                }}
+              >
+                {title}
+              </Text>
             </Box>
 
             {/* Status badges */}
