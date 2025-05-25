@@ -270,27 +270,72 @@ export function QuizPlayPage() {
       setConnectionStatus('disconnected');
     };
 
-    const handleQuestionStarted = (data: any) => {
+    const handleUpdateGameStateUser = (data: any) => {
+      console.log('Update game state user:', data);
       setCurrentQuestionIndex(data.questionIndex);
       setQuestion(data.question);
-      setTimeLeft(data.timeLimit || 30);
-      setIsTimerRunning(true);
+      setTotalQuestions(data.totalQuestions);
+      const timeLeft = Math.max(
+        0,
+        data.timeLimit -
+          Math.floor((Date.now() - data.currentQuestionStartTime) / 1000),
+      );
+
+      setTimeLeft(timeLeft);
+      if (timeLeft > 0) {
+        setIsTimerRunning(true);
+      } else {
+        console.log('Time up');
+        setIsTimerRunning(false);
+        setShowAnswerResult(true);
+        setIsCorrect(false);
+      }
     };
 
     const handleQuestionTimeUp = (data: any) => {
       handleTimeUp(data.question);
     };
 
+    const handleNextQuestion = (data: any) => {
+      console.log('Next question:', data);
+      console.log('Current question:', question);
+      setShowAnswerResult(true);
+      setIsCorrect(selectedOption == question?.correctOption);
+
+      setTimeout(() => {
+        setShowAnswerResult(false);
+        console.log('Next question:', data);
+        setCurrentQuestionIndex(data.questionIndex);
+        setQuestion(data.question);
+        setSelectedOption(null);
+        setTimeLeft(data.timeLimit || 30);
+        setSelectedOption(null);
+        setIsTimerRunning(true);
+      }, 1000);
+    };
+
+    const handleQuestionEnded = (data: any) => {
+      console.log('Question ended:', data);
+      setShowAnswerResult(true);
+      setIsCorrect(selectedOption == question?.correctOption);
+      setIsTimerRunning(false);
+      setLeaderboard(data.leaderboard);
+      setLeaderboardModalOpen(true);
+    };
+
     socketRef.current?.on('connect', handleConnect);
     socketRef.current?.on('disconnect', handleDisconnect);
-    socketRef.current?.on('questionStarted', handleQuestionStarted);
+    socketRef.current?.on('updateGameStateUser', handleUpdateGameStateUser);
     socketRef.current?.on('questionTimeUp', handleQuestionTimeUp);
-
+    socketRef.current?.on('nextQuestion', handleNextQuestion);
+    socketRef.current?.on('questionEnded', handleQuestionEnded);
     return () => {
       socketRef.current?.off('connect', handleConnect);
       socketRef.current?.off('disconnect', handleDisconnect);
-      socketRef.current?.off('questionStarted', handleQuestionStarted);
+      socketRef.current?.off('updateGameStateUser', handleUpdateGameStateUser);
       socketRef.current?.off('questionTimeUp', handleQuestionTimeUp);
+      socketRef.current?.off('nextQuestion', handleNextQuestion);
+      socketRef.current?.off('questionEnded', handleQuestionEnded);
     };
   }, []);
 
@@ -348,6 +393,7 @@ export function QuizPlayPage() {
     // Calculate time taken
     const timeLimit = question.timeLimit || 30;
     const timeTaken = timeLimit - timeLeft;
+    setIsTimerRunning(false);
 
     // Submit answer to server
     socketRef.current?.emit('submitAnswer', {

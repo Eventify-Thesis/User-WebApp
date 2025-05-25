@@ -1,10 +1,3 @@
-import {
-  Quiz,
-  QuizQuestion,
-  QuizAnswer,
-  QuizResult,
-  LeaderboardEntry,
-} from '@/domain/QuizModel';
 import { eventHttpApi } from './eventHttp.api';
 
 export const quizClient = {

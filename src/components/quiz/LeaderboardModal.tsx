@@ -38,8 +38,11 @@ export function LeaderboardModal({
   totalQuestions,
   currentQuestion,
 }: LeaderboardModalProps) {
+  console.log('Leaderboard modal opened:', opened, leaderboard);
   const theme = useMantineTheme();
-  const [sortedLeaderboard, setSortedLeaderboard] = useState<LeaderboardEntry[]>([]);
+  const [sortedLeaderboard, setSortedLeaderboard] = useState<
+    LeaderboardEntry[]
+  >([]);
 
   // Sort leaderboard by score (descending)
   useEffect(() => {
@@ -66,7 +69,11 @@ export function LeaderboardModal({
       };
     } else {
       return {
-        icon: <Text size="sm" fw={700}>{rank + 1}</Text>,
+        icon: (
+          <Text size="sm" fw={700}>
+            {rank + 1}
+          </Text>
+        ),
         color: 'blue',
       };
     }
@@ -90,21 +97,23 @@ export function LeaderboardModal({
         },
       }}
     >
-      <Paper 
-        p="md" 
-        mb="md" 
-        radius="md" 
+      <Paper
+        p="md"
+        mb="md"
+        radius="md"
         style={{ backgroundColor: theme.colors.blue[0], textAlign: 'center' }}
       >
         <Text size="lg" fw={500}>
           Question {currentQuestion + 1} of {totalQuestions}
         </Text>
       </Paper>
-      
+
       {sortedLeaderboard.length === 0 ? (
         <Paper p="xl" withBorder>
           <Stack align="center" gap="md">
-            <Text fw={500} color="dimmed">No scores yet</Text>
+            <Text fw={500} color="dimmed">
+              No scores yet
+            </Text>
             <Text size="sm">
               Leaderboard will update as players submit answers
             </Text>
@@ -143,21 +152,33 @@ export function LeaderboardModal({
                     <Group gap="sm">
                       <Avatar
                         radius="xl"
-                        color={theme.colors[
-                          ['blue', 'green', 'cyan', 'teal', 'indigo', 'violet'][
-                            index % 6
-                          ]
-                        ][6]}
+                        color={
+                          theme.colors[
+                            [
+                              'blue',
+                              'green',
+                              'cyan',
+                              'teal',
+                              'indigo',
+                              'violet',
+                            ][index % 6]
+                          ][6]
+                        }
                       >
-                        {(entry.username || 'User').substring(0, 2).toUpperCase()}
+                        {(entry.username || 'User')
+                          .substring(0, 2)
+                          .toUpperCase()}
                       </Avatar>
                       <Text fw={500} lineClamp={1}>
-                        {entry.username || `Player ${entry.userId.substring(0, 4)}`}
+                        {entry.username ||
+                          `Player ${entry.userId.substring(0, 4)}`}
                       </Text>
                     </Group>
                   </Table.Td>
                   <Table.Td align="center">
-                    <Box style={{ display: 'inline-flex', alignItems: 'center' }}>
+                    <Box
+                      style={{ display: 'inline-flex', alignItems: 'center' }}
+                    >
                       <RingProgress
                         size={40}
                         thickness={4}

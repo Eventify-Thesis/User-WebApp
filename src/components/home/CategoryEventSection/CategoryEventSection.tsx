@@ -81,6 +81,8 @@ const CategoryEventSection: React.FC<Props> = ({ title, events, userId }) => {
     };
   });
 
+  console.log('Events with address: ', eventsWithAddress);
+
   // Show carousel only if more than 3 events, otherwise use a grid/flex row
   const showCarousel = events.length > 3;
   return (

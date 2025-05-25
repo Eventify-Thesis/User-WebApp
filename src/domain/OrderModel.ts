@@ -3,10 +3,10 @@ import EventModel from './EventModel';
 import { ShowModel } from './ShowModel';
 
 export enum OrderStatus {
-  PENDING = "PENDING",
-  PAID = "PAID",
-  PAYMENT_FAILED = "PAYMENT_FAILED",
-  CANCELLED = "CANCELLED",
+  PENDING = 'PENDING',
+  PAID = 'PAID',
+  PAYMENT_FAILED = 'PAYMENT_FAILED',
+  CANCELLED = 'CANCELLED',
 }
 
 export interface OrderModel {

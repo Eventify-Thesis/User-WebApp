@@ -138,7 +138,7 @@
 /* Responsive styles */
 @media (min-width: 768px) {
   .main-info-section {
-    padding: 3rem 2rem;
+    padding: 1rem 2rem;
   }
 
   .section-container {
@@ -148,26 +148,14 @@
 
 @media (min-width: 992px) {
   .main-info-section {
-    padding: 4rem 2rem;
-    margin-left: auto; /* Center the section */
-    margin-right: auto;
-    width: 85%;
-    max-width: 1200px;
+    padding: 1rem 2rem;
+    /* margin-right: auto; */
   }
 
   .event-banner {
     padding: 1rem;
-    margin-bottom: 2rem;
+    margin-bottom: 0rem;
     display: flex;
     justify-content: center;
-  }
-}
-
-@media (min-width: 1200px) {
-  .main-info-section {
-    padding: 4rem 2rem;
-    width: 75%;
-    margin-left: auto;
-    margin-right: auto;
   }
 }

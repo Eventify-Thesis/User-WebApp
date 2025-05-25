@@ -83,7 +83,7 @@ const HomePage: React.FC = () => {
               (event) => ({
                 ...event,
                 date: new Date(event.startTime * 1000),
-                eventBannerURL: event.eventBannerUrl,
+                eventBannerURL: event.eventLogoUrl,
                 price: event.minimumPrice,
               }),
             );

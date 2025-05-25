@@ -22,6 +22,7 @@ import {
   IconCurrencyDollar,
   IconClock,
   IconInfoCircle,
+  IconCurrencyDong,
 } from '@tabler/icons-react';
 import './TicketsInfoSection.css';
 
@@ -52,10 +53,10 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
               {ticket.name}
             </Text>
             <Group gap="xs">
-              <IconCurrencyDollar size={16} stroke={1.5} color="#FFD700" />
               <Text className="ticket-price" fw={600} color="white">
-                {Math.round(ticket.price).toLocaleString()} Đ
+                {new Intl.NumberFormat('vi-VN').format(Number(ticket.price))}
               </Text>
+              <IconCurrencyDong size={16} stroke={1.5} color="#FFD700" />
             </Group>
           </Group>
         </Accordion.Control>

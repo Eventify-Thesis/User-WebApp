@@ -61,8 +61,8 @@ const EventCard: React.FC<EventCardProps> = ({
           onSuccess: () => {
             onBookmarkChange?.(id);
           },
-          onError: () => setIsFavorited(true)
-        }
+          onError: () => setIsFavorited(true),
+        },
       );
     } else {
       setIsFavorited(true);
@@ -72,12 +72,12 @@ const EventCard: React.FC<EventCardProps> = ({
           onSuccess: () => {
             onBookmarkChange?.(id);
           },
-          onError: () => setIsFavorited(false)
-        }
+          onError: () => setIsFavorited(false),
+        },
       );
     }
   };
-  
+
   return (
     <Box
       className={`event-card-main ${className}`}
@@ -94,23 +94,23 @@ const EventCard: React.FC<EventCardProps> = ({
           fit="cover"
         />
         {userId && (
-        <ActionIcon
-          className="bookmark-icon"
-          variant="light"
-          radius="xl"
-          onClick={toggleFavorite}
-        >
-          {isFavorited ? (
-            <IconStarFilled
-              size={20}
-              color={theme.colors.yellow[4]}
-              stroke={1.5}
-            />
-          ) : (
-            <IconStar size={20} color="white" stroke={1.5} />
-          )}
-        </ActionIcon>
-      )}
+          <ActionIcon
+            className="bookmark-icon"
+            variant="light"
+            radius="xl"
+            onClick={toggleFavorite}
+          >
+            {isFavorited ? (
+              <IconStarFilled
+                size={20}
+                color={theme.colors.yellow[4]}
+                stroke={1.5}
+              />
+            ) : (
+              <IconStar size={20} color="white" stroke={1.5} />
+            )}
+          </ActionIcon>
+        )}
       </Box>
 
       <Box className="card-content" p="md">
