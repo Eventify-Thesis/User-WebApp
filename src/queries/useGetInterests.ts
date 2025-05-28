@@ -3,14 +3,15 @@ import { findAllInterest } from '@/api/interest.client';
 import { PaginationResponse } from '@/types/types';
 import { InterestModel } from '@/domain/InterestModel';
 
+export const INTERESTS_QUERY_KEY = 'user-interests';
 export const useGetInterests = (
   userId: string,
   page = 1,
   limit = 10,
-  enabled = true
+  enabled = true,
 ) => {
   return useQuery<PaginationResponse<InterestModel>>({
-    queryKey: ['user-interests', userId, page, limit],
+    queryKey: [INTERESTS_QUERY_KEY, userId],
     queryFn: () => findAllInterest(userId, page, limit),
     enabled: !!userId && enabled,
   });

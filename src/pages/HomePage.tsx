@@ -112,7 +112,15 @@ const HomePage: React.FC = () => {
   const mobileAndTabletLayout = (
     <>
       <Hero />
+      <CategorySection
+        categories={newCategory}
+        onCategoryClick={(code) => {
+          // Navigate to SearchResult with categories=code and empty query
+          navigate(`/search-result?query=&categories=${code}`);
+        }}
+      />
       <Banner images={images} />
+
       {eventsThisWeek && eventsThisMonth && (
         <ShowcaseEventSection
           eventsThisWeek={formattedEventsThisWeek}

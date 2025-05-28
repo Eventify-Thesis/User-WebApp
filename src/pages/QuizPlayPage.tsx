@@ -203,7 +203,7 @@ export function QuizPlayPage() {
   const theme = useMantineTheme();
   const { code } = useParams<{ code: string }>();
   const navigate = useNavigate();
-  const { user } = useUser(); // Used in the SocketContext when connecting
+  const { user } = useUser();
   // State
   const [quiz, setQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);

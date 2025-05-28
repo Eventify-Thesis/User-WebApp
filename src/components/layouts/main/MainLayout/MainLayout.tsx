@@ -4,6 +4,7 @@ import { Outlet } from 'react-router-dom';
 import { UnauthHeader } from '@/components/header/UnauthHeader';
 import { useAuth } from '@clerk/clerk-react';
 import { AppShell, Box } from '@mantine/core';
+import { ChatBot } from '@/components/chatbot';
 import './MainLayout.css';
 
 const MainLayout: React.FC = () => {
@@ -31,6 +32,7 @@ const MainLayout: React.FC = () => {
           <Outlet />
         </Box>
       </AppShell.Main>
+      <ChatBot />
     </AppShell>
   );
 };

@@ -1,10 +1,10 @@
 // SuggestedEvents.tsx
-import React from "react";
-import { List } from "antd";
-import styled from "styled-components";
-import { EventCard } from "./EventCard/EventCard";
-import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import React from 'react';
+import { List } from 'antd';
+import styled from 'styled-components';
+import { EventCard } from './EventCard/EventCard';
+import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 const EventListWrapper = styled.div`
   margin-top: 16px;
@@ -35,27 +35,23 @@ const ViewMoreButton = styled.button`
 import { useSearchSemanticEvents } from '@/queries/useSearchSemanticEvents';
 
 export const SuggestedEvents: React.FC = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
-  const { data: events, isLoading: recommendedEventsLoading } = useSearchSemanticEvents({query: '', page: 1, limit: 10});
+  const { data: events, isLoading: recommendedEventsLoading } =
+    useSearchSemanticEvents({ query: '', page: 1, limit: 10 });
 
-  console.log('suggested events', events);
   // Normalize and map for EventGrid
   const relatedEvents = (() => {
-    const eventsArr = Array.isArray(events)
-      ? events
-      : [];
+    const eventsArr = Array.isArray(events) ? events : [];
     return eventsArr.map((event: any) => ({
-    ...event,
-    eventLogoUrl: event.eventLogoUrl,
-    minimumPrice: event.minimumPrice,
-    startTime: event.startTime
-      ? new Date(event.startTime * 1000)
-      : undefined,
-    isInterested: event.isInterested ?? false,
-  }));
+      ...event,
+      eventLogoUrl: event.eventLogoUrl,
+      minimumPrice: event.minimumPrice,
+      startTime: event.startTime ? new Date(event.startTime * 1000) : undefined,
+      isInterested: event.isInterested ?? false,
+    }));
   })();
-  
+
   const handleEventClick = (event: any) => {
     if (event.url) {
       navigate(`${event.url}-${event.id}`);
@@ -76,8 +72,9 @@ export const SuggestedEvents: React.FC = () => {
           </List.Item>
         )}
       />
-      <ViewMoreButton onClick={() => navigate('/search-result?query=')}>{t('searchBar.viewMore')}</ViewMoreButton>
+      <ViewMoreButton onClick={() => navigate('/search-result?query=')}>
+        {t('searchBar.viewMore')}
+      </ViewMoreButton>
     </EventListWrapper>
-  )
+  );
 };
-

@@ -15,6 +15,7 @@ import './i18n';
 
 import App from './App.tsx';
 import { store } from '@/store/store';
+import { ErrorBoundary } from './components/ErrorBoundary';
 
 const container = document.getElementById('root') as HTMLElement;
 const root = createRoot(container);
@@ -25,7 +26,9 @@ root.render(
       <MantineProvider>
         <ModalsProvider>
           <Notifications position="top-right" />
-          <App />
+          <ErrorBoundary>
+            <App />
+          </ErrorBoundary>
         </ModalsProvider>
       </MantineProvider>
     </Provider>

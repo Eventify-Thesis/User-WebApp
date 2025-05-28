@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react';
 import { io, Socket } from 'socket.io-client';
 import { useUser } from '@clerk/clerk-react';
 
@@ -24,7 +30,11 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
   const connect = (code: string) => {
     // If a socket exists with the same code, reuse it
-    if (persistentSocket && persistentCode === code && persistentSocket.connected) {
+    if (
+      persistentSocket &&
+      persistentCode === code &&
+      persistentSocket.connected
+    ) {
       console.log('Reusing existing socket connection for code:', code);
       setSocket(persistentSocket);
       setIsConnected(true);
@@ -52,7 +62,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     newSocket.on('connect', () => {
       setIsConnected(true);
       console.log('Connected to WebSocket');
-      
+
       // Join the quiz using the code
       newSocket.emit('joinQuizByCode', {
         code,
@@ -96,7 +106,9 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <SocketContext.Provider value={{ socket, isConnected, connect, disconnect, currentCode }}>
+    <SocketContext.Provider
+      value={{ socket, isConnected, connect, disconnect, currentCode }}
+    >
       {children}
     </SocketContext.Provider>
   );
@@ -108,4 +120,4 @@ export function useSocket() {
     throw new Error('useSocket must be used within a SocketProvider');
   }
   return context;
-} 
+}

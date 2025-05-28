@@ -24,6 +24,8 @@ export default interface EventModel {
   street?: string;
   categories?: string[];
   categoriesIds?: string[];
+  latitude?: number;
+  longitude?: number;
 }
 
 export interface EventDetailResponse extends EventModel {
