@@ -20,6 +20,7 @@ import {
   IconDiscount,
 } from '@tabler/icons-react';
 import '@mantine/core/styles.css';
+import { formatDate, utcToTz } from '@/utils/dates';
 
 interface OrderSectionProps {
   order: OrderModel;
@@ -53,7 +54,11 @@ const OrderSection: React.FC<OrderSectionProps> = ({ order }) => {
                 {t('orderSection.orderDate')}:
               </Text>
               <Text size="sm">
-                {new Date(order.createdAt).toLocaleString()}
+                {formatDate(
+                  utcToTz(order.createdAt, 'Asia/Bangkok') || '',
+                  'MM/DD/YYYY, hh:mm A',
+                  'Asia/Bangkok',
+                )}
               </Text>
             </Group>
           </Grid.Col>

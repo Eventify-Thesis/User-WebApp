@@ -19,6 +19,7 @@ import {
 } from '@mantine/core';
 import { IconCalendar, IconMapPin } from '@tabler/icons-react';
 import { createStyles } from '@mantine/styles';
+import { useNavigate } from 'react-router-dom';
 
 // Define styles for the ticket component with Mantine
 const useStyles = createStyles((theme: any) => ({
@@ -260,8 +261,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
   const { t, i18n } = useTranslation();
   const { isDesktop } = useResponsive();
   const { classes } = useStyles();
+  const navigate = useNavigate();
 
-  const { startTime, eventName, venueName, address, eventBannerUrl } = event;
+  const { startTime, eventName, venueName, address, eventBannerUrl, shows } =
+    event;
 
   let formattedAddress;
   if (i18n.language === 'vi') {
@@ -284,6 +287,22 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
       ),
     0,
   );
+
+  const handleBuyTicketClick = () => {
+    if (shows && shows.length === 1) {
+      // Single show: navigate directly to ticket selection
+      navigate(`/events/${event.id}/bookings/${shows[0].id}/select-ticket`);
+    } else {
+      // Multiple shows: scroll to tickets section
+      const ticketsSection = document.getElementById('tickets-section');
+      if (ticketsSection) {
+        ticketsSection.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+        });
+      }
+    }
+  };
 
   const ticketLayout = (
     <Box className={classes.wrapper}>
@@ -318,10 +337,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
               fw={900}
               style={{ fontWeight: 900 }}
             >
-              {new Intl.NumberFormat('vi-VN').format(minPrice)}₫
+              {new Intl.NumberFormat('vi-VN').format(minPrice || 0)}₫
             </Text>
           </Group>
-          <Button className={classes.buyButton} size="md">
+          <Button
+            className={classes.buyButton}
+            size="md"
+            onClick={handleBuyTicketClick}
+          >
             {t('eventDetailPage.buyTicket')}
           </Button>
         </Box>
@@ -382,7 +405,11 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
                 {new Intl.NumberFormat('vi-VN').format(minPrice || 0)}₫
               </Text>
             </Group>
-            <Button className={classes.buyButton} size="md">
+            <Button
+              className={classes.buyButton}
+              size="md"
+              onClick={handleBuyTicketClick}
+            >
               {t('eventDetailPage.buyTicket')}
             </Button>
           </Box>

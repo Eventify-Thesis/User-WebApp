@@ -3,10 +3,18 @@ import TicketSection from '../components/ticket-order/TicketSection/TicketSectio
 import OrderSection from '../components/ticket-order/OrderSection/OrderSection';
 import { useParams } from 'react-router-dom';
 import { useGetOrderDetail } from '@/queries/useGetOrders';
-import { Container, Title, Text, LoadingOverlay, Alert, Box, Card, Image, Grid } from '@mantine/core';
+import {
+  Container,
+  Title,
+  Text,
+  LoadingOverlay,
+  Alert,
+  Box,
+  Card,
+  Image,
+  Grid,
+} from '@mantine/core';
 import { IconAlertCircle } from '@tabler/icons-react';
-
-
 
 const TicketOrder: React.FC = () => {
   const { orderId } = useParams<{ orderId: string }>();
@@ -68,8 +76,12 @@ const TicketOrder: React.FC = () => {
                   padding: '20px',
                 }}
               >
-                <Title order={2} c="white">{orderData.event.eventName}</Title>
-                <Text size="sm" c="dimmed">Order ID: {orderData.publicId}</Text>
+                <Title order={2} c="white">
+                  {orderData.event.eventName}
+                </Title>
+                <Text size="sm" c="dimmed">
+                  Order ID: {orderData.publicId}
+                </Text>
               </Box>
             </Box>
           </Card.Section>

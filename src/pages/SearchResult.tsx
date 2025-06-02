@@ -10,11 +10,11 @@ import {
 } from '@react-google-maps/api';
 import { Grid, Box, Loader } from '@mantine/core';
 import { useDebouncedCallback } from '@mantine/hooks';
-import EventFilters from '@/components/search-result/FilterContainer/FilterContainer';
+import { ModernEventFilters } from '@/components/search-result/ModernEventFilters';
 import { useSearchSemanticEvents } from '@/queries/useSearchSemanticEvents';
 import * as s from '@/components/search-result/SearchResult.styles';
 import { Loading } from '@/components/common/Loading/Loading';
-import { FilterData } from '@/components/search-result/FilterContainer/FilterDropdown/FilterDropdown.styles';
+import type { FilterData } from '@/components/search-result/ModernEventFilters';
 import { useAuth } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import { CustomMarker } from '@/components/search-result/CustomMarker';
@@ -114,7 +114,6 @@ function SearchResults() {
         max_lon: ne.lng(),
       };
 
-      console.log('Map bounds changed:', newBounds);
       setMapBounds(newBounds);
       setPage(1); // Reset to first page when bounds change
       setMapLoading(false);
@@ -339,8 +338,18 @@ function SearchResults() {
     <Grid style={{ margin: 0, height: '100vh', padding: '0 0 !important' }}>
       {/* Left side: Filters and Results */}
       <Grid.Col span={6} style={{ padding: '0 0 !important', height: '100vh' }}>
-        <s.Container id="sub-main-content" ref={containerRef}>
-          <EventFilters
+        <Box
+          id="sub-main-content"
+          ref={containerRef}
+          style={{
+            height: '100vh',
+            overflowY: 'auto',
+            backgroundColor: '#f8fafc',
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+        >
+          <ModernEventFilters
             selectedDates={selectedDates}
             setSelectedDates={setSelectedDates}
             filterData={filterData}
@@ -357,6 +366,7 @@ function SearchResults() {
                   gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
                   gap: '16px',
                   alignItems: 'start',
+                  flex: 1,
                 }}
               >
                 {formattedEvents.map((event) => (
@@ -388,14 +398,23 @@ function SearchResults() {
               )}
             </>
           ) : (
-            <s.NoEventsContainer>
+            <Box
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                flex: 1,
+                padding: '40px 20px',
+              }}
+            >
               <s.SadIcon />
               <s.NoEventsText>
                 {t('searchResult.noAvailableEvents')}
               </s.NoEventsText>
-            </s.NoEventsContainer>
+            </Box>
           )}
-        </s.Container>
+        </Box>
       </Grid.Col>
 
       {/* Right side: Google Map */}

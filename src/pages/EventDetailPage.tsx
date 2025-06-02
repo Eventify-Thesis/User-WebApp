@@ -109,7 +109,7 @@ const EventDetailPage: React.FC = () => {
             <Box className="section-container">
               <DescriptionSection description={eventDescription} />
             </Box>
-            <Box className="section-container">
+            <Box className="section-container" id="tickets-section">
               <TicketsInfoSection
                 shows={event?.shows || []}
                 eventId={event?.id}
@@ -148,7 +148,7 @@ const EventDetailPage: React.FC = () => {
         <Box className="section-container">
           <DescriptionSection description={eventDescription} />
         </Box>
-        <Box className="section-container">
+        <Box className="section-container" id="tickets-section">
           <TicketsInfoSection shows={event?.shows || []} eventId={event?.id} />
         </Box>
         <Box className="section-container">

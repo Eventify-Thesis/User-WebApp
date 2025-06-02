@@ -156,6 +156,7 @@ const EventSelectTicketPage: React.FC = () => {
   const [ticketQuantity, setTicketQuantity] = useState<number>(1);
 
   const handleSelectSection = (section: any) => {
+    console.log('section', JSON.stringify(section, null, 2));
     setSelectedSection(section);
     setTicketQuantity(1);
     setSectionModalOpen(true);
@@ -163,6 +164,7 @@ const EventSelectTicketPage: React.FC = () => {
 
   const handleConfirmTickets = useCallback(
     async (section: any) => {
+      console.log('section', JSON.stringify(section, null, 2));
       try {
         const response = await submitTicketInfo({
           eventId: event?.id,
@@ -172,7 +174,7 @@ const EventSelectTicketPage: React.FC = () => {
           items: [
             {
               id: ticketTypesMapping[selectedSection.category].id,
-              sectionId: selectedSection.id,
+              sectionId: selectedSection.uuid,
               quantity: ticketQuantity,
               sectionName: selectedSection.name,
             },
