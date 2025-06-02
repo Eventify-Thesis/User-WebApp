@@ -25,10 +25,11 @@ import {
   IconSparkles,
   IconMapPin,
 } from '@tabler/icons-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 export interface FilterData {
   locationValue: string;
@@ -89,9 +90,30 @@ export const ModernEventFilters = ({
   setFilterData,
 }: ModernEventFiltersProps) => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [isExpanded, setIsExpanded] = useState(false);
   const [customLocation, setCustomLocation] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+
+  // Initialize search query from URL
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const query = params.get('query') || '';
+    setSearchQuery(query);
+  }, [location.search]);
+
+  const handleSearch = (value: string) => {
+    setSearchQuery(value);
+    const params = new URLSearchParams(location.search);
+    if (value.trim()) {
+      params.set('query', value.trim());
+    } else {
+      params.delete('query');
+    }
+    navigate(`?${params.toString()}`);
+  };
 
   const updateLocation = (value: string) => {
     if (value === 'other') {
@@ -244,6 +266,35 @@ export const ModernEventFilters = ({
         margin: '16px',
       }}
     >
+      {/* Search Bar */}
+      <Box mb="md">
+        <TextInput
+          placeholder={t('filters.searchPlaceholder', 'Search events...')}
+          value={searchQuery}
+          onChange={(e) => handleSearch(e.target.value)}
+          leftSection={<IconSearch size="1.1rem" stroke={1.5} />}
+          rightSection={
+            searchQuery ? (
+              <ActionIcon
+                variant="transparent"
+                onClick={() => handleSearch('')}
+                size="sm"
+              >
+                <IconX size="1rem" />
+              </ActionIcon>
+            ) : null
+          }
+          size="md"
+          radius="lg"
+          styles={{
+            input: {
+              background: 'rgba(255,255,255,0.8)',
+              border: '1px solid rgba(59, 130, 246, 0.2)',
+            },
+          }}
+        />
+      </Box>
+
       {/* Compact Header */}
       <Flex justify="space-between" align="center" mb="md">
         <Group gap="sm">
