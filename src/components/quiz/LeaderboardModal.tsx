@@ -38,7 +38,6 @@ export function LeaderboardModal({
   totalQuestions,
   currentQuestion,
 }: LeaderboardModalProps) {
-  console.log('Leaderboard modal opened:', opened, leaderboard);
   const theme = useMantineTheme();
   const [sortedLeaderboard, setSortedLeaderboard] = useState<
     LeaderboardEntry[]
