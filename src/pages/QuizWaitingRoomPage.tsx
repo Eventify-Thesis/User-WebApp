@@ -174,6 +174,7 @@ export function QuizWaitingRoomPage() {
   const [isHostConnected, setIsHostConnected] = useState<boolean>(false);
   const [lastJoinedUser, setLastJoinedUser] = useState<string>('');
   const [showJoinMessage, setShowJoinMessage] = useState<boolean>(false);
+  const [quizStarted, setQuizStarted] = useState<boolean>(false);
 
   const socketRef = useRef<Socket | null>(null);
   // Connect to WebSocket and join the quiz room
@@ -209,6 +210,16 @@ export function QuizWaitingRoomPage() {
     const handleDisconnect = () => {
       console.log('Disconnected from WebSocket');
       setIsConnected(false);
+      
+      // Only emit leaveQuiz if the quiz hasn't started
+      if (socketRef.current && !quizStarted) {
+        console.log('Emitting leaveQuiz event');
+        socketRef.current.emit('leaveQuiz', {
+          userId: user?.id || 'anonymous',
+          username: user?.fullName || 'Anonymous',
+          code,
+        });
+      }
     };
 
     const handleJoinedQuiz = (data: any) => {
@@ -223,6 +234,7 @@ export function QuizWaitingRoomPage() {
     };
 
     const handleParticipantJoined = (data: Participant) => {
+      console.log('Participant joined:', data);
       setParticipants((prev) => {
         if (prev.some((p) => p.userId === data.userId)) return prev;
         return [
@@ -247,6 +259,7 @@ export function QuizWaitingRoomPage() {
     };
 
     const handleQuizStarted = () => {
+      setQuizStarted(true); // Mark quiz as started
       notifications.show({
         title: 'Game Started!',
         message: 'The quiz is starting now...',
@@ -282,6 +295,16 @@ export function QuizWaitingRoomPage() {
       });
     };
 
+    const handleAlreadyJoined = (data: any) => {
+      notifications.show({
+        title: 'Already Joined',
+        message: data.message || 'You have joined this quiz already.',
+        color: 'yellow',
+      });
+      // Optionally update participants list or redirect user as needed
+      setParticipants(data.participants || []);
+    };
+
     socket.on('connect', handleConnect);
     socket.on('disconnect', handleDisconnect);
     socket.on('joinedQuiz', handleJoinedQuiz);
@@ -290,6 +313,7 @@ export function QuizWaitingRoomPage() {
     socket.on('hostConnected', handleHostConnected);
     socket.on('hostDisconnected', handleHostDisconnected);
     socket.on('participantLeft', handleParticipantLeft);
+    socket.on('alreadyJoined', handleAlreadyJoined);
 
     return () => {
       socket.off('connect', handleConnect);
@@ -300,6 +324,7 @@ export function QuizWaitingRoomPage() {
       socket.off('hostConnected', handleHostConnected);
       socket.off('hostDisconnected', handleHostDisconnected);
       socket.off('participantLeft', handleParticipantLeft);
+      socket.off('alreadyJoined', handleAlreadyJoined);
       socket.disconnect(); // clean disconnection
       socketRef.current = null; // clean ref
     };

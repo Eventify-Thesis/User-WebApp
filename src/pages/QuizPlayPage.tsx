@@ -209,9 +209,9 @@ export function QuizPlayPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);
   const [timeLeft, setTimeLeft] = useState<number>(30);
 
-  const [selectedOption, setSelectedOption] = useState<number | null>(null);
+  const [selectedOption, setSelectedOption] = useState<{ [key: number]: number | null }>({});
   const [showAnswerResult, setShowAnswerResult] = useState(false);
-
+  const [isChosenOption, setIsChosenOption] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
   const [connectionStatus, setConnectionStatus] = useState<
     'disconnected' | 'connecting' | 'connected' | 'reconnecting' | 'error'
@@ -222,10 +222,17 @@ export function QuizPlayPage() {
 
   const [isCorrect, setIsCorrect] = useState(false);
   const [quizEnded, setQuizEnded] = useState<boolean>(false);
-  const [score, setScore] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [leaderboardModalOpen, setLeaderboardModalOpen] = useState(false);
+  
+  // Get current user's score from leaderboard
+  const getCurrentUserScore = () => {
+    if (!user?.id || !leaderboard) return 0;
+    const userEntry = leaderboard.find((p: any) => p.userId === user.id);
+    return userEntry?.score || 0;
+  };
+  
   const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const timerId = useRef<NodeJS.Timeout | null>(null);
 
@@ -243,7 +250,7 @@ export function QuizPlayPage() {
       autoConnect: true,
       reconnection: true,
       reconnectionAttempts: 5,
-      reconnectionDelay: 1000,
+      reconnectionDelay: 3000,
       timeout: 10000,
       auth: {
         code,
@@ -270,8 +277,35 @@ export function QuizPlayPage() {
       setConnectionStatus('disconnected');
     };
 
+    const handleQuestionTimeUp = (data: any) => {
+      handleTimeUp(data.question);
+      setTimeLeft(0);
+      setIsTimerRunning(false);
+      setShowAnswerResult(true);
+      setLeaderboard(data.leaderboard);
+    };
+
+    const handleNextQuestion = (data: any) => {
+      console.log('handle next question', data);
+      setShowAnswerResult(true);
+      setIsCorrect(
+        selectedOption[data.questionIndex] == question?.correctOption &&
+          data.questionIndex === currentQuestionIndex,
+      );
+      setLeaderboard(data.leaderboard);
+      setIsChosenOption(false);
+      setTimeout(() => {
+        setShowAnswerResult(false);
+        setCurrentQuestionIndex(data.currentQuestionIndex);
+        setQuestion(data.question);
+        setSelectedOption({});
+        setTimeLeft(data.timeLimit || 30);
+        setIsTimerRunning(true);
+      }, 1000);
+    };
+
     const handleUpdateGameStateUser = (data: any) => {
-      console.log('Update game state user:', data);
+      console.log('Update game state user', data);
       setCurrentQuestionIndex(data.questionIndex);
       setQuestion(data.question);
       setTotalQuestions(data.totalQuestions);
@@ -280,47 +314,55 @@ export function QuizPlayPage() {
         data.timeLimit -
           Math.floor((Date.now() - data.currentQuestionStartTime) / 1000),
       );
+      setLeaderboard(data.leaderboard);
+      const latestAnswerLength = data.userState.answers.length;
+      
+      if(data.userState.answers[latestAnswerLength - 1]?.questionId == data.questionIndex){
+        const selectedOptionIndex = data.userState.answers[latestAnswerLength - 1]?.selectedOption;
+        setIsCorrect(selectedOptionIndex == question?.correctOption);
+        setSelectedOption(prev => ({
+          ...prev,
+          [data.questionIndex]: selectedOptionIndex
+        }));
+        setIsChosenOption(true);
+        console.log("Previous choice", data.questionIndex, selectedOptionIndex);
+      }
 
       setTimeLeft(timeLeft);
+      //setIsChosenOption(false);
       if (timeLeft > 0) {
         setIsTimerRunning(true);
       } else {
         console.log('Time up');
         setIsTimerRunning(false);
         setShowAnswerResult(true);
-        setIsCorrect(false);
       }
     };
 
-    const handleQuestionTimeUp = (data: any) => {
-      handleTimeUp(data.question);
-    };
-
-    const handleNextQuestion = (data: any) => {
-      console.log('Next question:', data);
-      console.log('Current question:', question);
-      setShowAnswerResult(true);
-      setIsCorrect(selectedOption == question?.correctOption);
-
-      setTimeout(() => {
-        setShowAnswerResult(false);
-        console.log('Next question:', data);
-        setCurrentQuestionIndex(data.questionIndex);
-        setQuestion(data.question);
-        setSelectedOption(null);
-        setTimeLeft(data.timeLimit || 30);
-        setSelectedOption(null);
-        setIsTimerRunning(true);
-      }, 1000);
-    };
-
     const handleQuestionEnded = (data: any) => {
-      console.log('Question ended:', data);
       setShowAnswerResult(true);
-      setIsCorrect(selectedOption == question?.correctOption);
+      setIsCorrect(
+        selectedOption[data.questionIndex] == question?.correctOption &&
+          data.questionIndex === currentQuestionIndex,
+      );
       setIsTimerRunning(false);
       setLeaderboard(data.leaderboard);
       setLeaderboardModalOpen(true);
+    };
+
+    const handleQuizEnded = (data: any) => {
+      setQuizEnded(true);
+      setLeaderboard(data.leaderboard);
+      setLeaderboardModalOpen(true);
+      setIsTimerRunning(false);
+    };
+
+    const handleTimerPaused = () => {
+      setIsTimerRunning(false);
+    };
+
+    const handleTimerResumed = () => {
+      setIsTimerRunning(true);
     };
 
     socketRef.current?.on('connect', handleConnect);
@@ -328,14 +370,26 @@ export function QuizPlayPage() {
     socketRef.current?.on('updateGameStateUser', handleUpdateGameStateUser);
     socketRef.current?.on('questionTimeUp', handleQuestionTimeUp);
     socketRef.current?.on('nextQuestion', handleNextQuestion);
+    socketRef.current?.on('timerPaused', handleTimerPaused);
+    socketRef.current?.on('timerResumed', handleTimerResumed);
     socketRef.current?.on('questionEnded', handleQuestionEnded);
+    socketRef.current?.on('quizEnded', handleQuizEnded);
     return () => {
       socketRef.current?.off('connect', handleConnect);
       socketRef.current?.off('disconnect', handleDisconnect);
       socketRef.current?.off('updateGameStateUser', handleUpdateGameStateUser);
       socketRef.current?.off('questionTimeUp', handleQuestionTimeUp);
       socketRef.current?.off('nextQuestion', handleNextQuestion);
+      socketRef.current?.off('timerPaused', handleTimerPaused);
+      socketRef.current?.off('timerResumed', handleTimerResumed);
       socketRef.current?.off('questionEnded', handleQuestionEnded);
+      socketRef.current?.off('quizEnded', handleQuizEnded);
+      
+      // Close the socket connection
+      if (socketRef.current?.connected) {
+        socketRef.current.disconnect();
+      }
+      socketRef.current = null;
     };
   }, []);
 
@@ -368,11 +422,11 @@ export function QuizPlayPage() {
   }, [timeLeft, isTimerRunning]);
 
   const handleTimeUp = (question: Question) => {
-    if (selectedOption !== null) {
+    if (selectedOption?.[currentQuestionIndex] !== null) {
       return;
     }
 
-    if (question.correctOption === selectedOption) {
+    if (selectedOption?.[currentQuestionIndex] === question.correctOption && question.correctOption !== null) {
       setIsCorrect(true);
     } else {
       setIsCorrect(false);
@@ -382,27 +436,30 @@ export function QuizPlayPage() {
   };
 
   const handleOptionSelect = (optionIndex: number) => {
-    if (showAnswerResult || !socketRef.current || !question) {
-      console.log('Cannot select option - already answered or missing data');
+    if (isChosenOption || showAnswerResult || !socketRef.current || !question) {
       return;
     }
-
+    console.log('Select option:', optionIndex);
+    console.log('Current question index:', currentQuestionIndex);
+    console.log('Selected option:', selectedOption);
     // Update UI immediately to show selection
-    setSelectedOption(optionIndex);
+    setSelectedOption(prev => ({
+      ...prev,                    // Keep existing selections
+      [currentQuestionIndex]: optionIndex  // Add/update current selection
+    }));
+    setIsChosenOption(true);
 
     // Calculate time taken
     const timeLimit = question.timeLimit || 30;
     const timeTaken = timeLimit - timeLeft;
-    setIsTimerRunning(false);
 
     // Submit answer to server
     socketRef.current?.emit('submitAnswer', {
       code,
-      questionIndex: currentQuestionIndex,
+      answerQuestionIndex: currentQuestionIndex,
       selectedOption: optionIndex,
       timeTaken: Math.min(timeTaken, timeLimit), // Ensure time taken doesn't exceed limit
     });
-    console.log('Submitting answer for question:', question);
 
     // Show loading state until we get the result
     notification.success({
@@ -700,7 +757,7 @@ export function QuizPlayPage() {
             >
               <Group gap={5}>
                 <IconTrophy size={16} />
-                <Text>Score: {score}</Text>
+                <Text>Score: {getCurrentUserScore()}</Text>
               </Group>
             </Badge>
           </Group>
@@ -772,12 +829,12 @@ export function QuizPlayPage() {
             style={{
               backgroundColor: theme.colors[ANSWER_COLORS[index]][6],
               cursor: selectedOption === null ? 'pointer' : 'default',
-              transform: selectedOption === index ? 'scale(1.05)' : 'scale(1)',
+              transform: selectedOption?.[currentQuestionIndex] === index ? 'scale(1.05)' : 'scale(1)',
               transition: 'all 0.3s ease',
               border: showAnswerResult
                 ? (index === correctOptionIndex &&
                     `4px solid ${theme.colors.green[5]}`) ||
-                  (selectedOption === index &&
+                  (selectedOption?.[currentQuestionIndex] === index &&
                     index !== correctOptionIndex &&
                     `4px solid ${theme.colors.red[5]}`) ||
                   'none'
@@ -785,7 +842,7 @@ export function QuizPlayPage() {
               opacity:
                 showAnswerResult &&
                 index !== correctOptionIndex &&
-                index !== selectedOption
+                index !== selectedOption?.[currentQuestionIndex]
                   ? 0.7
                   : 1,
               animation:
@@ -815,7 +872,7 @@ export function QuizPlayPage() {
             )}
 
             {showAnswerResult &&
-              selectedOption === index &&
+              selectedOption?.[currentQuestionIndex] === index &&
               index !== correctOptionIndex && (
                 <Badge size="lg" color="red" variant="filled" mt="md">
                   <Group gap={5}>
@@ -843,14 +900,14 @@ export function QuizPlayPage() {
             size="xl"
             variant="gradient"
             gradient={{
-              from: isCorrect ? 'teal' : 'red',
-              to: isCorrect ? 'green' : 'pink',
+              from: selectedOption?.[currentQuestionIndex] === correctOptionIndex ? 'teal' : 'red',
+              to: selectedOption?.[currentQuestionIndex] === correctOptionIndex ? 'green' : 'pink',
             }}
             p="md"
           >
             <Group gap={8}>
-              {isCorrect ? <IconCheck size={20} /> : <IconX size={20} />}
-              <Text fw={700}>{isCorrect ? 'Correct!' : 'Incorrect!'}</Text>
+              {selectedOption?.[currentQuestionIndex] === correctOptionIndex ? <IconCheck size={20} /> : <IconX size={20} />}
+              <Text fw={700}>{selectedOption?.[currentQuestionIndex] === correctOptionIndex ? 'Correct!' : 'Incorrect!'}</Text>
             </Group>
           </Badge>
           <Text mt="lg" color="white" size="lg" fw={500}>
