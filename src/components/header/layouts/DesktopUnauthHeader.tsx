@@ -34,7 +34,7 @@ export const DesktopUnauthHeader: React.FC<DesktopUnauthHeaderProps> = ({}) => {
       style={{
         height: '100%',
         flexWrap: 'nowrap', // Ensure everything stays in one row
-        gap: '6px', // Reduce space between elements
+        gap: '5px', // Reduce space between elements
       }}
     >
       {leftSide}
