@@ -16,7 +16,11 @@ import {
   Loader,
   Stack,
   Divider,
+  Group,
+  Badge,
+  ActionIcon,
 } from '@mantine/core';
+import { IconStar, IconTrendingUp, IconSparkles } from '@tabler/icons-react';
 import './OrderHistory.css';
 import { useRelatedEvents } from '@/queries/useRelatedEvents';
 import { useAuth } from '@clerk/clerk-react';
@@ -93,10 +97,33 @@ const OrderHistory = () => {
   return (
     <Container fluid className="order-history-container">
       <Box className="order-content">
-        <Title order={1} className="page-title">
-          {t('orderHistory.title')}
-        </Title>
+        {/* Enhanced Header Section */}
+        <Box className="page-header" mb="xl">
+          <Group justify="space-between" align="flex-start">
+            <Box>
+              <Title order={1} className="page-title">
+                {t('orderHistory.title')}
+              </Title>
+              <Text c="dimmed" size="lg" mt="sm">
+                Track your event purchases and discover new experiences
+              </Text>
+            </Box>
 
+            <Group gap="xs">
+              <Badge
+                variant="light"
+                color="yellow"
+                size="lg"
+                radius="xl"
+                leftSection={<IconStar size={16} />}
+              >
+                {orders?.length || 0} Orders
+              </Badge>
+            </Group>
+          </Group>
+        </Box>
+
+        {/* Modern Tabs Container */}
         <Paper shadow="md" className="order-tabs-container">
           <OrderTabs
             activeTab={activeTab}
@@ -106,6 +133,7 @@ const OrderHistory = () => {
           />
         </Paper>
 
+        {/* Error State */}
         {isError && (
           <Paper className="error-message" shadow="sm">
             <Text size="md" fw={500}>
@@ -114,16 +142,20 @@ const OrderHistory = () => {
           </Paper>
         )}
 
+        {/* Orders List */}
         <Stack className="orders-list">
           {!isLoading && !isError && orders && orders.length > 0
-            ? orders.map((order) => (
+            ? orders.map((order, index) => (
                 <Paper
                   key={order.id}
                   className="order-card"
                   shadow="sm"
-                  p="md"
-                  withBorder
+                  p={0}
+                  withBorder={false}
                   onClick={() => navigate(`/orders/${order.publicId}`)}
+                  style={{
+                    animationDelay: `${index * 0.1}s`,
+                  }}
                 >
                   <OrderInfo
                     date={new Date(order.createdAt).toLocaleDateString()}
@@ -141,20 +173,48 @@ const OrderHistory = () => {
             : !isLoading && !isError && <NoOrders />}
         </Stack>
 
+        {/* Enhanced Divider */}
         <Divider className="section-divider" />
 
-        <>
-          <Title
-            style={{ color: 'white !important' }}
-            order={2}
-            className="page-title"
-          >
-            {t('orderHistory.recommended')}
-          </Title>
+        {/* Recommended Events Section */}
+        <Box className="recommended-section">
+          <Group justify="space-between" align="center" mb="xl">
+            <Box>
+              <Group gap="md" align="center">
+                <ActionIcon
+                  variant="filled"
+                  color="yellow"
+                  size="xl"
+                  radius="xl"
+                >
+                  <IconSparkles size={20} />
+                </ActionIcon>
+                <Box>
+                  <Title order={2} className="section-title">
+                    {t('orderHistory.recommended')}
+                  </Title>
+                  <Text c="dimmed" size="sm" mt={4}>
+                    Handpicked events based on your preferences
+                  </Text>
+                </Box>
+              </Group>
+            </Box>
+
+            <Badge
+              variant="light"
+              color="blue"
+              size="md"
+              radius="xl"
+              leftSection={<IconTrendingUp size={14} />}
+            >
+              Trending
+            </Badge>
+          </Group>
+
           <Box className="recommended-events">
             <EventGrid events={relatedEvents} userId={userId} />
           </Box>
-        </>
+        </Box>
       </Box>
     </Container>
   );
