@@ -189,8 +189,11 @@ export class ChatBotService {
     }
   }
 
-  async processVoiceMessage(formData: FormData): Promise<string> {
-    const result = await speechClient.speechToText(formData);
+  async processVoiceMessage(
+    formData: FormData,
+    language: string = 'en',
+  ): Promise<string> {
+    const result = await speechClient.speechToText(formData, language);
     return result.text || '';
   }
 

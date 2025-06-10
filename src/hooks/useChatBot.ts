@@ -35,7 +35,7 @@ export const useChatBot = (userId?: string) => {
   );
 
   const sendVoiceMessage = useCallback(
-    async (audioBlob: Blob): Promise<string> => {
+    async (audioBlob: Blob, language: string = 'en'): Promise<string> => {
       setIsLoading(true);
       try {
         // Ensure the blob is a WAV file
@@ -52,7 +52,10 @@ export const useChatBot = (userId?: string) => {
         const formData = new FormData();
         formData.append('file', audioFile);
 
-        const result = await chatBotService.processVoiceMessage(formData);
+        const result = await chatBotService.processVoiceMessage(
+          formData,
+          language,
+        );
         return result;
       } catch (error) {
         notifications.show({

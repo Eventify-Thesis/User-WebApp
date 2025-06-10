@@ -5,7 +5,13 @@ export interface SpeechToTextResponse {
 }
 
 export const speechClient = {
-  speechToText: async (formData: FormData): Promise<SpeechToTextResponse> => {
+  speechToText: async (
+    formData: FormData,
+    language: string = 'en',
+  ): Promise<SpeechToTextResponse> => {
+    // Add language parameter to FormData
+    formData.append('language', language);
+
     const response = await httpApi.post<any>('/user/stt', formData, {
       headers: {
         // Don't set Content-Type - let the browser set it automatically for FormData

@@ -414,7 +414,10 @@ export const ChatBot: React.FC<ChatBotProps> = ({ onSearch }) => {
             throw new Error('Generated WAV file is too small');
           }
 
-          const transcribedText = await sendVoiceMessage(wavBlob);
+          const transcribedText = await sendVoiceMessage(
+            wavBlob,
+            selectedLanguage,
+          );
           if (transcribedText && transcribedText.trim()) {
             // Auto-fill the input field with transcribed text
             setInputValue(transcribedText.trim());
