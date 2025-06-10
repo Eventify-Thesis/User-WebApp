@@ -7,10 +7,12 @@ import { BaseButton } from '@/components/common/BaseButton/BaseButton';
 import { Logo } from '../components/Logo/Logo';
 import { HeaderSearch } from '../components/HeaderSearch/HeaderSearch';
 import { BASE_COLORS } from '@/styles/themes/constants';
+import { useNavigate } from 'react-router-dom';
 
 interface DesktopUnauthHeaderProps {}
 
 export const DesktopUnauthHeader: React.FC<DesktopUnauthHeaderProps> = ({}) => {
+  const navigate = useNavigate();
   const leftSide = (
     <S.SearchColumn xl={12} xxl={14}>
       <BaseRow justify="space-between">
@@ -35,8 +37,6 @@ export const DesktopUnauthHeader: React.FC<DesktopUnauthHeaderProps> = ({}) => {
         gap: '5px', // Reduce space between elements
       }}
     >
-
-
       {leftSide}
 
       <S.ProfileColumn xl={8} xxl={7}>
@@ -44,14 +44,21 @@ export const DesktopUnauthHeader: React.FC<DesktopUnauthHeaderProps> = ({}) => {
           <BaseCol>
             <BaseRow gutter={[10, 10]}>
               <BaseCol>
-                <S.LinkButton type="link" href="auth/login">
+                <S.LinkButton
+                  type="link"
+                  onClick={() => {
+                    navigate('/auth/login');
+                  }}
+                >
                   Login
                 </S.LinkButton>
               </BaseCol>
               <BaseCol>
                 <BaseButton
                   variant="solid"
-                  href="auth/sign-up"
+                  onClick={() => {
+                    navigate('/auth/sign-up');
+                  }}
                   style={{
                     borderColor: 'transparent',
                     fontFamily: 'Montserrat',
