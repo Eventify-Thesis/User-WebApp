@@ -174,6 +174,7 @@ export const ModernEventFilters = ({
 
   const hasActiveFilters = () => {
     return (
+      searchQuery ||
       (selectedDates[0] && selectedDates[1]) ||
       filterData.locationValue ||
       filterData.categories.length > 0
@@ -182,6 +183,7 @@ export const ModernEventFilters = ({
 
   const getActiveFiltersCount = () => {
     let count = 0;
+    if (searchQuery) count++;
     if (selectedDates[0] && selectedDates[1]) count++;
     if (filterData.locationValue) count++;
     if (filterData.categories.length > 0) count++;
@@ -354,65 +356,99 @@ export const ModernEventFilters = ({
         </Group>
       </Flex>
 
+      {/* Show active filters summary when collapsed */}
+      {!isExpanded && hasActiveFilters() && (
+        <Box mb="md">
+          <Group gap="xs">
+            {searchQuery && (
+              <Badge size="xs" variant="light" color="blue">
+                🔍 "{searchQuery}"
+              </Badge>
+            )}
+            {filterData.categories.length > 0 && (
+              <Badge size="xs" variant="light" color="violet">
+                🏷️ {filterData.categories.length} categories
+              </Badge>
+            )}
+            {filterData.locationValue && (
+              <Badge size="xs" variant="light" color="green">
+                📍 {filterData.locationDisplay || filterData.locationValue}
+              </Badge>
+            )}
+            {selectedDates[0] && selectedDates[1] && (
+              <Badge size="xs" variant="light" color="orange">
+                📅 {formatDateLabel()}
+              </Badge>
+            )}
+          </Group>
+        </Box>
+      )}
+
       <Stack gap="md">
         {/* Quick Category Chips - Always Visible */}
-        <Box>
-          <Text size="sm" fw={600} c="dimmed" mb="sm">
-            Popular Categories
-          </Text>
-          <Group gap="xs">
-            {categoryOptions.slice(0, 5).map((category) => (
-              <Chip
-                key={category.value}
-                checked={filterData.categories.includes(category.value)}
-                onChange={(checked) => {
-                  const newCategories = checked
-                    ? [...filterData.categories, category.value]
-                    : filterData.categories.filter((c) => c !== category.value);
-                  updateCategories(newCategories);
-                }}
-                color={category.color}
-                variant="light"
-                size="sm"
-                radius="xl"
-                styles={{
-                  label: {
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '4px',
-                    fontWeight: 500,
-                    fontSize: '12px',
-                  },
-                }}
-              >
-                <span>{category.icon}</span>
-                {category.label}
-              </Chip>
-            ))}
-          </Group>
-        </Box>
+        {!isExpanded && (
+          <Box>
+            <Text size="sm" fw={600} c="dimmed" mb="sm">
+              Popular Categories
+            </Text>
+            <Group gap="xs">
+              {categoryOptions.slice(0, 5).map((category) => (
+                <Chip
+                  key={category.value}
+                  checked={filterData.categories.includes(category.value)}
+                  onChange={(checked) => {
+                    const newCategories = checked
+                      ? [...filterData.categories, category.value]
+                      : filterData.categories.filter(
+                          (c) => c !== category.value,
+                        );
+                    updateCategories(newCategories);
+                  }}
+                  color={category.color}
+                  variant="light"
+                  size="sm"
+                  radius="xl"
+                  styles={{
+                    label: {
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      fontWeight: 500,
+                      fontSize: '12px',
+                    },
+                  }}
+                >
+                  <span>{category.icon}</span>
+                  {category.label}
+                </Chip>
+              ))}
+            </Group>
+          </Box>
+        )}
 
         {/* Date Quick Presets - Always Visible */}
-        <Box>
-          <Text size="sm" fw={600} c="dimmed" mb="sm">
-            <IconCalendar size={14} style={{ marginRight: '4px' }} />
-            {formatDateLabel()}
-          </Text>
-          <Group gap="xs">
-            {datePresets.slice(0, 4).map((preset) => (
-              <Button
-                key={preset.value}
-                variant="light"
-                size="xs"
-                radius="xl"
-                onClick={() => handleDatePreset(preset.value)}
-                style={{ fontSize: '11px' }}
-              >
-                {preset.label}
-              </Button>
-            ))}
-          </Group>
-        </Box>
+        {!isExpanded && (
+          <Box>
+            <Text size="sm" fw={600} c="dimmed" mb="sm">
+              <IconCalendar size={14} style={{ marginRight: '4px' }} />
+              {formatDateLabel()}
+            </Text>
+            <Group gap="xs">
+              {datePresets.slice(0, 4).map((preset) => (
+                <Button
+                  key={preset.value}
+                  variant="light"
+                  size="xs"
+                  radius="xl"
+                  onClick={() => handleDatePreset(preset.value)}
+                  style={{ fontSize: '11px' }}
+                >
+                  {preset.label}
+                </Button>
+              ))}
+            </Group>
+          </Box>
+        )}
 
         {/* Collapsible Advanced Filters */}
         <Transition
@@ -587,8 +623,8 @@ export const ModernEventFilters = ({
           )}
         </Transition>
 
-        {/* Active Filters Display - Only show when filters are active */}
-        {hasActiveFilters() && (
+        {/* Active Filters Display - Only show when filters are active and expanded */}
+        {isExpanded && hasActiveFilters() && (
           <Box>
             <Text size="xs" fw={600} c="dimmed" mb="xs">
               Active Filters:

@@ -619,7 +619,7 @@ function SearchResults() {
             position: 'absolute',
             top: '16px',
             left: '10px',
-            zIndex: 1000,
+            zIndex: 10,
             display: 'flex',
             gap: '8px',
           }}

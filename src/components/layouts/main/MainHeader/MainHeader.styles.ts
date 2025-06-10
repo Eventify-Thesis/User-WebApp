@@ -7,7 +7,7 @@ interface Header {
   // $isTwoColumnsLayoutHeader: boolean;
 }
 
-export const Header = styled(BaseLayout.Header) <Header>`
+export const Header = styled(BaseLayout.Header)<Header>`
   line-height: 1.5;
   height: ${LAYOUT.desktop.headerHeight};
 
@@ -17,10 +17,12 @@ export const Header = styled(BaseLayout.Header) <Header>`
     height: ${LAYOUT.desktop.headerHeight};
   }
 
+  z-index: 1000000 !important;
+
   @media only screen and ${media.md} {
     ${(props) =>
-    // props?.$isTwoColumnsLayoutHeader &&
-    css`
+      // props?.$isTwoColumnsLayoutHeader &&
+      css`
         padding: 0;
       `}
   }

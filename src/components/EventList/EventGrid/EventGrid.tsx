@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import EventCard from '../EventCard/EventCard';
 import { Box, SimpleGrid } from '@mantine/core';
-import ExtendedEventModel from '@/domain/ExtendedEventModel';
+import { ExtendedEventModel } from '@/domain/EventModel';
 
 interface EventGridProps {
   events: ExtendedEventModel[];
@@ -23,21 +23,22 @@ export const EventGrid: React.FC<
   };
   return (
     <SimpleGrid
-      cols={{ base: 1, xs: 2, sm: 3, md: 4, lg: 5 }}
-      spacing="md"
-      verticalSpacing="md"
-      style={{ padding: '1rem', gap: '1rem' }}
+      cols={{ base: 1, xs: 2, sm: 2, md: 3, lg: 4, xl: 5 }}
+      spacing={{ base: 'sm', sm: 'md' }}
+      verticalSpacing={{ base: 'sm', sm: 'md' }}
+      style={{
+        padding: '1rem',
+        width: '100%',
+        maxWidth: '100%',
+      }}
     >
       {events.map((event) => (
         <Box
           key={event.id}
           style={{
-            width: '100%',
-            height: '100%',
-            padding: '0.5rem',
             display: 'flex',
             justifyContent: 'center',
-            alignItems: 'center',
+            width: '100%',
           }}
         >
           <EventCard
