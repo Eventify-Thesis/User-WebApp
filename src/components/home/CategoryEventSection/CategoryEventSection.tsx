@@ -107,6 +107,7 @@ const CategoryEventSection: React.FC<Props> = ({ title, events, userId }) => {
             {eventsWithAddress.map((event, index) => (
               <div key={index} className="event-card-wrapper">
                 <EventCard
+                  className="category-card"
                   {...event}
                   onClick={() => handleEventClick(event)}
                   userId={userId}
@@ -120,6 +121,7 @@ const CategoryEventSection: React.FC<Props> = ({ title, events, userId }) => {
           {eventsWithAddress.map((event, index) => (
             <div key={index} className="event-card-wrapper">
               <EventCard
+                className="category-card"
                 style={{
                   width: '20rem !important',
                 }}

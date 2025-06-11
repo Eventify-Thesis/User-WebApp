@@ -4,47 +4,53 @@ import { BaseInput } from '../BaseInput/BaseInput';
 import { BaseSpace } from '../../BaseSpace/BaseSpace';
 
 export const SearchInput = styled(BaseInput.Search)`
-  & .ant-input-prefix {
-    margin: 0.5rem;
+  /* Apply the height to the wrapper, not the input */
+  .ant-input-affix-wrapper {
+    height: 40px !important; /* Or any desired height */
+    display: flex;
+    align-items: center;
+    padding: 0 12px; /* Horizontal padding only */
   }
 
-  & .ant-input-search-button {
-    height: 3.54875rem;
-    box-shadow: none;
-  }
-
-  &.ant-input-search-large .ant-input-search-button {
-    height: 4.36125rem;
-  }
-
+  /* Input styles */
   & input {
     font-weight: 600;
     background-color: var(--background-color);
+    padding: 0; /* Remove padding here, let the wrapper handle it */
+    line-height: 1.5;
+    box-sizing: border-box;
+    height: auto !important; /* Allow it to expand naturally */
+  }
 
-    @media only screen and ${media.md} {
+  /* Make sure the prefix icon is aligned */
+  & .ant-input-prefix {
+    margin-right: 8px;
+    display: flex;
+    align-items: center;
+  }
+
+  /* Ensure the suffix (filter button) is aligned */
+  & .ant-input-suffix {
+    display: flex;
+    align-items: center;
+  }
+
+  /* For the search button (if used) */
+  .ant-input-search-button {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  @media only screen and ${media.md} {
+    .ant-input-affix-wrapper {
+      height: 44px !important; /* Slightly taller on larger screens if needed */
+      padding: 0 16px;
+    }
+    & input {
       font-size: 1rem;
     }
-
-    &::placeholder {
-      font-weight: 500;
-    }
-  }
-
-  .ant-input-group-addon {
-    min-width: 5.5rem;
-    color: var(--primary-color);
-    font-weight: ${FONT_WEIGHT.semibold};
-    font-size: ${FONT_SIZE.lg};
-  }
-
-  .ant-input-search-button {
-    &.ant-btn .anticon {
-      color: var(--primary-color);
-    }
-    width: 100%;
-    background-color: rgba(1, 80, 154, 0.05);
-    border: 1px solid var(--border-color);
-    color: var(--primary-color);
   }
 `;
 

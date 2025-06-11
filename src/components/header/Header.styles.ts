@@ -55,12 +55,12 @@ export const MobileBurger = styled(BurgerIcon)`
   width: 1.75rem;
   height: 1.75rem;
   margin-right: -0.5rem;
-  color: var(--text-secondary-color);
+  color: white;
 
   ${(props) =>
     props.isCross &&
     css`
-      color: var(--text-secondary-color);
+      color: white;
     `};
 `;
 

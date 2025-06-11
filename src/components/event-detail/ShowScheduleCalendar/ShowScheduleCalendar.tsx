@@ -1,4 +1,5 @@
 import React from 'react';
+import './ShowScheduleCalendar.css';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
@@ -43,7 +44,7 @@ const ShowScheduleCalendar: React.FC<ShowScheduleCalendarProps> = ({
   }));
 
   return (
-    <Box style={{ height: '600px' }}>
+    <Box className="calendar-responsive" style={{ height: '600px' }}>
       <FullCalendar
         plugins={[dayGridPlugin, timeGridPlugin]}
         initialView="timeGridDay"

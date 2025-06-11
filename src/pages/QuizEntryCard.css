@@ -1,0 +1,56 @@
+.quiz-gamify-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: linear-gradient(90deg, #66e2c6 80%, #6ee7b7 100%);
+  border-radius: 16px;
+  padding: 1.5rem 2rem;
+  box-shadow: 0 4px 16px 0 rgba(60, 200, 180, 0.08);
+  margin: 24px 0;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.1s;
+}
+.quiz-gamify-card:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 24px 0 rgba(60, 200, 180, 0.18);
+}
+.quiz-gamify-card__content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.quiz-gamify-card__title {
+  color: #fff;
+  font-size: 2rem;
+  font-weight: 900;
+  letter-spacing: 1px;
+  margin-bottom: 0.25rem;
+}
+.quiz-gamify-card__desc {
+  color: #e0f7f1;
+  font-size: 1rem;
+  font-weight: 500;
+}
+.quiz-gamify-card__icon {
+  width: 56px;
+  height: 56px;
+  margin-left: 1.5rem;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+@media (max-width: 600px) {
+  .quiz-gamify-card {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 1rem;
+  }
+  .quiz-gamify-card__icon {
+    margin-left: 0;
+    margin-top: 1rem;
+  }
+  .quiz-gamify-card__title {
+    font-size: 1.3rem;
+  }
+}

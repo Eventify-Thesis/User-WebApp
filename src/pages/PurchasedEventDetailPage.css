@@ -1,0 +1,30 @@
+.responsive-box {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  padding: 0 128px;
+}
+
+@media (max-width: 1280px) {
+  .responsive-box {
+    padding: 0 24px;
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 800px) {
+  .advertise-section {
+    margin-left: 32px;
+    margin-right: 32px;
+    width: auto !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .quiz-section {
+    margin-left: 32px;
+    margin-right: 32px;
+    width: auto !important;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
