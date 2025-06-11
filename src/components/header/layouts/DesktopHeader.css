@@ -36,6 +36,18 @@
 .header-right-side {
   display: flex;
   align-items: center;
+  margin-left: 20px; /* Add base margin */
+}
+
+/* Add spacing between search and create button on medium screens */
+@media (min-width: 768px) and (max-width: 1000px) {
+  .header-right-side {
+    margin-left: 30px; /* Increase margin for medium screens */
+  }
+  
+  .create-event-button {
+    margin-right: 15px; /* Add right margin to create button */
+  }
 }
 
 .create-event-button {
@@ -91,7 +103,7 @@
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .desktop-header-content {
     height: 60px;
     padding: 0 10px;

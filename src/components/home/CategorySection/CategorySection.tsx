@@ -175,7 +175,7 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories, on
         </Title>
 
         <Box className={classes.categoryScroll}>
-          {categories.map((category) => (
+          {categories?.map((category) => (
             <CategoryItem 
               key={category.id}
               category={category} 
