@@ -209,7 +209,9 @@ export function QuizPlayPage() {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState<number>(-1);
   const [timeLeft, setTimeLeft] = useState<number>(30);
 
-  const [selectedOption, setSelectedOption] = useState<{ [key: number]: number | null }>({});
+  const [selectedOption, setSelectedOption] = useState<{
+    [key: number]: number | null;
+  }>({});
   const [showAnswerResult, setShowAnswerResult] = useState(false);
   const [isChosenOption, setIsChosenOption] = useState(false);
   const [isConnected, setIsConnected] = useState(false);
@@ -225,14 +227,14 @@ export function QuizPlayPage() {
   const [totalQuestions, setTotalQuestions] = useState(0);
   const [leaderboard, setLeaderboard] = useState<any[]>([]);
   const [leaderboardModalOpen, setLeaderboardModalOpen] = useState(false);
-  
+
   // Get current user's score from leaderboard
   const getCurrentUserScore = () => {
     if (!user?.id || !leaderboard) return 0;
     const userEntry = leaderboard.find((p: any) => p.userId === user.id);
     return userEntry?.score || 0;
   };
-  
+
   const resultTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const timerId = useRef<NodeJS.Timeout | null>(null);
 
@@ -316,16 +318,20 @@ export function QuizPlayPage() {
       );
       setLeaderboard(data.leaderboard);
       const latestAnswerLength = data.userState.answers.length;
-      
-      if(data.userState.answers[latestAnswerLength - 1]?.questionId == data.questionIndex){
-        const selectedOptionIndex = data.userState.answers[latestAnswerLength - 1]?.selectedOption;
+
+      if (
+        data.userState.answers[latestAnswerLength - 1]?.questionId ==
+        data.questionIndex
+      ) {
+        const selectedOptionIndex =
+          data.userState.answers[latestAnswerLength - 1]?.selectedOption;
         setIsCorrect(selectedOptionIndex == question?.correctOption);
-        setSelectedOption(prev => ({
+        setSelectedOption((prev) => ({
           ...prev,
-          [data.questionIndex]: selectedOptionIndex
+          [data.questionIndex]: selectedOptionIndex,
         }));
         setIsChosenOption(true);
-        console.log("Previous choice", data.questionIndex, selectedOptionIndex);
+        console.log('Previous choice', data.questionIndex, selectedOptionIndex);
       }
 
       setTimeLeft(timeLeft);
@@ -384,7 +390,7 @@ export function QuizPlayPage() {
       socketRef.current?.off('timerResumed', handleTimerResumed);
       socketRef.current?.off('questionEnded', handleQuestionEnded);
       socketRef.current?.off('quizEnded', handleQuizEnded);
-      
+
       // Close the socket connection
       if (socketRef.current?.connected) {
         socketRef.current.disconnect();
@@ -426,7 +432,10 @@ export function QuizPlayPage() {
       return;
     }
 
-    if (selectedOption?.[currentQuestionIndex] === question.correctOption && question.correctOption !== null) {
+    if (
+      selectedOption?.[currentQuestionIndex] === question.correctOption &&
+      question.correctOption !== null
+    ) {
       setIsCorrect(true);
     } else {
       setIsCorrect(false);
@@ -443,9 +452,9 @@ export function QuizPlayPage() {
     console.log('Current question index:', currentQuestionIndex);
     console.log('Selected option:', selectedOption);
     // Update UI immediately to show selection
-    setSelectedOption(prev => ({
-      ...prev,                    // Keep existing selections
-      [currentQuestionIndex]: optionIndex  // Add/update current selection
+    setSelectedOption((prev) => ({
+      ...prev, // Keep existing selections
+      [currentQuestionIndex]: optionIndex, // Add/update current selection
     }));
     setIsChosenOption(true);
 
@@ -829,7 +838,10 @@ export function QuizPlayPage() {
             style={{
               backgroundColor: theme.colors[ANSWER_COLORS[index]][6],
               cursor: selectedOption === null ? 'pointer' : 'default',
-              transform: selectedOption?.[currentQuestionIndex] === index ? 'scale(1.05)' : 'scale(1)',
+              transform:
+                selectedOption?.[currentQuestionIndex] === index
+                  ? 'scale(1.05)'
+                  : 'scale(1)',
               transition: 'all 0.3s ease',
               border: showAnswerResult
                 ? (index === correctOptionIndex &&
@@ -900,14 +912,28 @@ export function QuizPlayPage() {
             size="xl"
             variant="gradient"
             gradient={{
-              from: selectedOption?.[currentQuestionIndex] === correctOptionIndex ? 'teal' : 'red',
-              to: selectedOption?.[currentQuestionIndex] === correctOptionIndex ? 'green' : 'pink',
+              from:
+                selectedOption?.[currentQuestionIndex] === correctOptionIndex
+                  ? 'teal'
+                  : 'red',
+              to:
+                selectedOption?.[currentQuestionIndex] === correctOptionIndex
+                  ? 'green'
+                  : 'pink',
             }}
             p="md"
           >
             <Group gap={8}>
-              {selectedOption?.[currentQuestionIndex] === correctOptionIndex ? <IconCheck size={20} /> : <IconX size={20} />}
-              <Text fw={700}>{selectedOption?.[currentQuestionIndex] === correctOptionIndex ? 'Correct!' : 'Incorrect!'}</Text>
+              {selectedOption?.[currentQuestionIndex] === correctOptionIndex ? (
+                <IconCheck size={20} />
+              ) : (
+                <IconX size={20} />
+              )}
+              <Text fw={700}>
+                {selectedOption?.[currentQuestionIndex] === correctOptionIndex
+                  ? 'Correct!'
+                  : 'Incorrect!'}
+              </Text>
             </Group>
           </Badge>
           <Text mt="lg" color="white" size="lg" fw={500}>

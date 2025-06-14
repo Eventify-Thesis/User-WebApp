@@ -1,7 +1,7 @@
-import React, { useState } from "react";
-import { HeaderSearch } from "../components/HeaderSearch/HeaderSearch";
-import { SettingsDropdown } from "../components/settingsDropdown/SettingsDropdown";
-import * as S from "../Header.styles";
+import React, { useState } from 'react';
+import { HeaderSearch } from '../components/HeaderSearch/HeaderSearch';
+import { SettingsDropdown } from '../components/settingsDropdown/SettingsDropdown';
+import * as S from '../Header.styles';
 import { UserButton } from '@clerk/clerk-react';
 import { Logo } from '../components/Logo/Logo';
 import { Box, Flex, Drawer } from '@mantine/core';
@@ -17,8 +17,34 @@ export const MobileHeader: React.FC = () => {
   };
 
   const handleCreateEventClick = () => {
-    window.location.href = `${import.meta.env.VITE_PLANNER_BASE_URL}/create-event`;
-    setDrawerOpen(false);
+    const plannerBaseUrl = import.meta.env.VITE_PLANNER_BASE_URL;
+
+    if (!plannerBaseUrl) {
+      console.error('VITE_PLANNER_BASE_URL is not configured');
+      // Fallback: show an alert or handle the error gracefully
+      alert('Event creation is currently unavailable. Please contact support.');
+      setDrawerOpen(false);
+      return;
+    }
+
+    const targetUrl = `${plannerBaseUrl}/create-event`;
+
+    // Open in new tab instead of redirecting current page
+    try {
+      const newWindow = window.open(targetUrl, '_blank', 'noopener,noreferrer');
+      if (!newWindow) {
+        // Fallback if popup was blocked
+        console.warn('Popup blocked, falling back to same-tab navigation');
+        window.location.href = targetUrl;
+      }
+      setDrawerOpen(false);
+    } catch (error) {
+      console.error('Failed to navigate to create event page:', error);
+      alert(
+        'Failed to navigate to event creation. Please try again or contact support.',
+      );
+      setDrawerOpen(false);
+    }
   };
 
   const handleNavItemClick = (path: string) => {
@@ -29,7 +55,11 @@ export const MobileHeader: React.FC = () => {
   return (
     <>
       <Box className="mobile-header-container">
-        <Flex className="mobile-header-content" align="center" justify="space-between">
+        <Flex
+          className="mobile-header-content"
+          align="center"
+          justify="space-between"
+        >
           {/* Left side - Logo and Search */}
           <Flex className="header-left-side" align="center" gap="md">
             <Box className="logo-container" onClick={handleLogoClick}>
@@ -49,7 +79,10 @@ export const MobileHeader: React.FC = () => {
               <SettingsDropdown />
             </Box>
             <Box className="menu-burger">
-              <S.MobileBurger onClick={() => setDrawerOpen(true)} isCross={isDrawerOpen} />
+              <S.MobileBurger
+                onClick={() => setDrawerOpen(true)}
+                isCross={isDrawerOpen}
+              />
             </Box>
           </Flex>
         </Flex>
@@ -66,15 +99,21 @@ export const MobileHeader: React.FC = () => {
           header: 'mobile-drawer-header',
           title: 'mobile-drawer-title',
           body: 'mobile-drawer-body',
-          close: 'mobile-drawer-close'
+          close: 'mobile-drawer-close',
         }}
       >
         <Box className="drawer-content">
-          <Box className="drawer-nav-item" onClick={() => handleNavItemClick('/tickets')}>
+          <Box
+            className="drawer-nav-item"
+            onClick={() => handleNavItemClick('/tickets')}
+          >
             <S.NavIcon icon="ion:ticket-outline" />
             <span>Tickets</span>
           </Box>
-          <Box className="drawer-nav-item" onClick={() => handleNavItemClick('/interested')}>
+          <Box
+            className="drawer-nav-item"
+            onClick={() => handleNavItemClick('/interested')}
+          >
             <S.NavIcon icon="teenyicons:star-outline" />
             <span>Interested</span>
           </Box>
