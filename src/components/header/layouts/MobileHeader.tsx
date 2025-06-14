@@ -17,34 +17,10 @@ export const MobileHeader: React.FC = () => {
   };
 
   const handleCreateEventClick = () => {
-    const plannerBaseUrl = import.meta.env.VITE_PLANNER_BASE_URL;
-
-    if (!plannerBaseUrl) {
-      console.error('VITE_PLANNER_BASE_URL is not configured');
-      // Fallback: show an alert or handle the error gracefully
-      alert('Event creation is currently unavailable. Please contact support.');
-      setDrawerOpen(false);
-      return;
-    }
-
-    const targetUrl = `${plannerBaseUrl}/create-event`;
-
-    // Open in new tab instead of redirecting current page
-    try {
-      const newWindow = window.open(targetUrl, '_blank', 'noopener,noreferrer');
-      if (!newWindow) {
-        // Fallback if popup was blocked
-        console.warn('Popup blocked, falling back to same-tab navigation');
-        window.location.href = targetUrl;
-      }
-      setDrawerOpen(false);
-    } catch (error) {
-      console.error('Failed to navigate to create event page:', error);
-      alert(
-        'Failed to navigate to event creation. Please try again or contact support.',
-      );
-      setDrawerOpen(false);
-    }
+    window.location.href = `${
+      import.meta.env.VITE_PLANNER_BASE_URL
+    }/create-event`;
+    setDrawerOpen(false);
   };
 
   const handleNavItemClick = (path: string) => {
