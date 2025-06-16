@@ -256,7 +256,7 @@ export const ModernEventFilters = ({
   return (
     <Card
       shadow="sm"
-      padding="lg"
+      padding={isExpanded ? 'lg' : 'md'}
       radius="lg"
       style={{
         background:
@@ -265,128 +265,197 @@ export const ModernEventFilters = ({
         border: '1px solid rgba(59, 130, 246, 0.1)',
         position: 'relative',
         overflow: 'visible',
-        margin: '16px',
+        margin: isExpanded ? '16px' : '8px',
       }}
     >
-      {/* Search Bar */}
-      <Box mb="md">
-        <TextInput
-          placeholder={t('filters.searchPlaceholder', 'Search events...')}
-          value={searchQuery}
-          onChange={(e) => handleSearch(e.target.value)}
-          leftSection={<IconSearch size="1.1rem" stroke={1.5} />}
-          rightSection={
-            searchQuery ? (
-              <ActionIcon
-                variant="transparent"
-                onClick={() => handleSearch('')}
-                size="sm"
-              >
-                <IconX size="1rem" />
-              </ActionIcon>
-            ) : null
-          }
-          size="md"
-          radius="lg"
-          styles={{
-            input: {
-              background: 'rgba(255,255,255,0.8)',
-              border: '1px solid rgba(59, 130, 246, 0.2)',
-            },
-          }}
-        />
-      </Box>
-
-      {/* Compact Header */}
-      <Flex justify="space-between" align="center" mb="md">
-        <Group gap="sm">
-          <Box
-            style={{
-              background: 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
-              borderRadius: '8px',
-              padding: '6px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <IconSparkles size={16} color="white" />
-          </Box>
-          <Text fw={600} size="md" c="dark">
-            {t('filters.searchResult', 'Event Filters')}
-          </Text>
-          {hasActiveFilters() && (
-            <Badge size="sm" color="blue" circle>
-              {getActiveFiltersCount()}
-            </Badge>
-          )}
-        </Group>
-
-        <Group gap="xs">
-          {hasActiveFilters() && (
-            <ActionIcon
-              variant="light"
-              color="red"
+      {/* Collapsed Header - Show search + filters in one row */}
+      {!isExpanded && (
+        <Flex gap="sm" align="center" justify="space-between" wrap="wrap">
+          {/* Search Bar - More compact */}
+          <Box style={{ flex: '1 1 200px', minWidth: '200px' }}>
+            <TextInput
+              placeholder={t('filters.searchPlaceholder', 'Search events...')}
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              leftSection={<IconSearch size="1rem" stroke={1.5} />}
+              rightSection={
+                searchQuery ? (
+                  <ActionIcon
+                    variant="transparent"
+                    onClick={() => handleSearch('')}
+                    size="sm"
+                  >
+                    <IconX size="0.8rem" />
+                  </ActionIcon>
+                ) : null
+              }
               size="sm"
-              radius="xl"
-              onClick={clearAllFilters}
-              title="Clear all filters"
-            >
-              <IconRefresh size={14} />
-            </ActionIcon>
+              radius="lg"
+              styles={{
+                input: {
+                  background: 'rgba(255,255,255,0.8)',
+                  border: '1px solid rgba(59, 130, 246, 0.2)',
+                },
+              }}
+            />
+          </Box>
+
+          {/* Active Filters Summary - Compact */}
+          {hasActiveFilters() && (
+            <Group gap="xs" style={{ flex: '0 0 auto' }}>
+              {filterData.categories.length > 0 && (
+                <Badge size="xs" variant="light" color="violet">
+                  {filterData.categories.length} categories
+                </Badge>
+              )}
+              {filterData.locationValue && (
+                <Badge size="xs" variant="light" color="green">
+                  📍 {filterData.locationDisplay || filterData.locationValue}
+                </Badge>
+              )}
+              {selectedDates[0] && selectedDates[1] && (
+                <Badge size="xs" variant="light" color="orange">
+                  📅 {formatDateLabel()}
+                </Badge>
+              )}
+            </Group>
           )}
 
-          <Button
-            variant="subtle"
-            size="xs"
-            rightSection={
-              <IconChevronDown
-                size={14}
-                style={{
-                  transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
-                  transition: 'transform 0.2s ease',
-                }}
-              />
-            }
-            onClick={() => setIsExpanded(!isExpanded)}
-            style={{ color: '#6b7280' }}
-          >
-            {isExpanded ? 'Less' : 'More'}
-          </Button>
-        </Group>
-      </Flex>
+          {/* Expand/Clear Controls */}
+          <Group gap="xs" style={{ flex: '0 0 auto' }}>
+            {hasActiveFilters() && (
+              <ActionIcon
+                variant="light"
+                color="red"
+                size="sm"
+                radius="xl"
+                onClick={clearAllFilters}
+                title="Clear all filters"
+              >
+                <IconRefresh size={12} />
+              </ActionIcon>
+            )}
 
-      {/* Show active filters summary when collapsed */}
-      {!isExpanded && hasActiveFilters() && (
-        <Box mb="md">
-          <Group gap="xs">
-            {searchQuery && (
-              <Badge size="xs" variant="light" color="blue">
-                🔍 "{searchQuery}"
-              </Badge>
-            )}
-            {filterData.categories.length > 0 && (
-              <Badge size="xs" variant="light" color="violet">
-                🏷️ {filterData.categories.length} categories
-              </Badge>
-            )}
-            {filterData.locationValue && (
-              <Badge size="xs" variant="light" color="green">
-                📍 {filterData.locationDisplay || filterData.locationValue}
-              </Badge>
-            )}
-            {selectedDates[0] && selectedDates[1] && (
-              <Badge size="xs" variant="light" color="orange">
-                📅 {formatDateLabel()}
-              </Badge>
-            )}
+            <Button
+              variant="subtle"
+              size="xs"
+              rightSection={
+                <IconChevronDown
+                  size={12}
+                  style={{
+                    transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.2s ease',
+                  }}
+                />
+              }
+              onClick={() => setIsExpanded(!isExpanded)}
+              style={{ color: '#6b7280' }}
+            >
+              {hasActiveFilters()
+                ? `${getActiveFiltersCount()} filters`
+                : 'Filters'}
+            </Button>
           </Group>
-        </Box>
+        </Flex>
+      )}
+
+      {/* Expanded Header - Original layout */}
+      {isExpanded && (
+        <>
+          {/* Search Bar */}
+          <Box mb="md">
+            <TextInput
+              placeholder={t('filters.searchPlaceholder', 'Search events...')}
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              leftSection={<IconSearch size="1.1rem" stroke={1.5} />}
+              rightSection={
+                searchQuery ? (
+                  <ActionIcon
+                    variant="transparent"
+                    onClick={() => handleSearch('')}
+                    size="sm"
+                  >
+                    <IconX size="1rem" />
+                  </ActionIcon>
+                ) : null
+              }
+              size="md"
+              radius="lg"
+              styles={{
+                input: {
+                  background: 'rgba(255,255,255,0.8)',
+                  border: '1px solid rgba(59, 130, 246, 0.2)',
+                },
+              }}
+            />
+          </Box>
+
+          {/* Compact Header */}
+          <Flex justify="space-between" align="center" mb="md">
+            <Group gap="sm">
+              <Box
+                style={{
+                  background:
+                    'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
+                  borderRadius: '8px',
+                  padding: '6px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <IconSparkles size={16} color="white" />
+              </Box>
+              <Text fw={600} size="md" c="dark">
+                {t('filters.searchResult', 'Event Filters')}
+              </Text>
+              {hasActiveFilters() && (
+                <Badge size="sm" color="blue" circle>
+                  {getActiveFiltersCount()}
+                </Badge>
+              )}
+            </Group>
+
+            <Group gap="xs">
+              {hasActiveFilters() && (
+                <ActionIcon
+                  variant="light"
+                  color="red"
+                  size="sm"
+                  radius="xl"
+                  onClick={clearAllFilters}
+                  title="Clear all filters"
+                >
+                  <IconRefresh size={14} />
+                </ActionIcon>
+              )}
+
+              <Button
+                variant="subtle"
+                size="xs"
+                rightSection={
+                  <IconChevronDown
+                    size={14}
+                    style={{
+                      transform: isExpanded ? 'rotate(180deg)' : 'rotate(0deg)',
+                      transition: 'transform 0.2s ease',
+                    }}
+                  />
+                }
+                onClick={() => setIsExpanded(!isExpanded)}
+                style={{ color: '#6b7280' }}
+              >
+                {isExpanded ? 'Less' : 'More'}
+              </Button>
+            </Group>
+          </Flex>
+        </>
       )}
 
       <Stack gap="md">
-        {/* Quick Category Chips - Always Visible */}
-        {!isExpanded && (
+        {/* Quick Category Chips - Only show when expanded */}
+        {isExpanded && (
           <Box>
             <Text size="sm" fw={600} c="dimmed" mb="sm">
               Popular Categories
@@ -426,8 +495,8 @@ export const ModernEventFilters = ({
           </Box>
         )}
 
-        {/* Date Quick Presets - Always Visible */}
-        {!isExpanded && (
+        {/* Date Quick Presets - Only show when expanded */}
+        {isExpanded && (
           <Box>
             <Text size="sm" fw={600} c="dimmed" mb="sm">
               <IconCalendar size={14} style={{ marginRight: '4px' }} />
