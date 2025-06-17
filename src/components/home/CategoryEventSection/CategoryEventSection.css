@@ -50,7 +50,6 @@
   cursor: pointer;
   height: 100%;
   width: 100%;
-  padding: 0 8px;
 }
 
 .event-card:hover {
@@ -65,15 +64,12 @@
   flex-wrap: wrap;
   overflow-x: auto;
   padding: 10px 0;
+  justify-content: flex-start; /* Left-align on larger screens */
 }
 
-.grid-wrapper .event-card {
+.grid-wrapper .event-card-wrapper {
   width: 20rem;
-  margin-right: 16px;
-}
-
-.grid-wrapper .event-card:last-child {
-  margin-right: 0;
+  margin: 0; /* Remove margins to let flexbox handle spacing */
 }
 
 /* Custom dot styling */
@@ -92,14 +88,79 @@
 }
 
 /* Responsive adjustments */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .event-card-wrapper {
+    width: calc(50% - 8px);
+    min-width: 280px;
+  }
+
+  .grid-wrapper {
+    justify-content: center; /* Center on medium screens */
+  }
+}
+
+@media (max-width: 768px) and (min-width: 501px) {
+  .event-card-wrapper {
+    max-width: 350px;
+  }
+
+  .grid-wrapper {
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .grid-wrapper .event-card-wrapper {
+    width: 100%;
+    max-width: 350px;
+    margin: 0;
+  }
+
+  /* Center carousel slides on medium screens */
+  .slider-container {
+    text-align: center;
+  }
+
+  .slider-container .slick-slide {
+    text-align: center;
+  }
+
+  .slider-container .slick-slide .event-card-wrapper {
+    display: inline-block;
+    text-align: left;
+  }
+}
+
 @media (max-width: 768px) {
   .grid-wrapper {
     flex-wrap: wrap;
     justify-content: center;
+    gap: 16px;
   }
 
-  .grid-wrapper .event-card {
-    margin-right: 0;
-    margin-bottom: 16px;
+  .grid-wrapper .event-card-wrapper {
+    margin: 0;
+    width: 100%;
+    max-width: 350px;
+  }
+
+  /* Center carousel slides on small screens */
+  .slider-container {
+    text-align: center;
+  }
+
+  .slider-container .slick-slide {
+    text-align: center;
+  }
+
+  .slider-container .slick-slide .event-card-wrapper {
+    display: inline-block;
+    text-align: left;
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 500px) {
+  .event-card-wrapper {
+    max-width: 300px;
   }
 }
