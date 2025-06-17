@@ -9,7 +9,7 @@ import {
   OverlayView,
 } from '@react-google-maps/api';
 import { Grid, Box, Loader } from '@mantine/core';
-import { useDebouncedCallback, useMediaQuery } from '@mantine/hooks';
+import { useDebouncedCallback } from '@mantine/hooks';
 import { ModernEventFilters } from '@/components/search-result/ModernEventFilters';
 import { useSearchSemanticEvents } from '@/queries/useSearchSemanticEvents';
 import * as s from '@/components/search-result/SearchResult.styles';
@@ -52,7 +52,6 @@ function SearchResults() {
   const navigate = useNavigate();
   const query = useQueryParam('query') || '';
   const categoryParam = useQueryParam('categories');
-  const isMobile = useMediaQuery('(max-width: 768px)');
   const [selectedDates, setSelectedDates] = useState<
     [Dayjs | null, Dayjs | null]
   >([null, null]);
@@ -78,6 +77,19 @@ function SearchResults() {
   const [shouldAutoFit, setShouldAutoFit] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
   const mapRef = useRef<google.maps.Map | null>(null);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check for mobile screen size
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   const searchParams = {
     query,
@@ -335,14 +347,30 @@ function SearchResults() {
     }).format(price);
   };
 
+  // Responsive styles
+  const getResponsiveContainerStyle = () => ({
+    height: isMobile ? '50vh' : '100vh',
+  });
+
+  const getResponsiveMapStyle = () => ({
+    width: '100%',
+    height: isMobile ? '50vh' : '100%',
+  });
+
   return (
-    <Grid style={{ margin: 0, height: '100vh', padding: '0 0 !important' }}>
-      {/* Left side on desktop / Top section on mobile: Filters and Results */}
+    <Grid
+      style={{
+        margin: 0,
+        height: '100vh',
+        padding: '0 0 !important',
+      }}
+    >
+      {/* Left side: Filters and Results */}
       <Grid.Col
         span={{ base: 12, md: 6 }}
         style={{
           padding: '0 0 !important',
-          height: isMobile ? '50vh' : '100vh',
+          ...getResponsiveContainerStyle(),
         }}
       >
         <Box
@@ -368,12 +396,10 @@ function SearchResults() {
             <>
               <div
                 style={{
-                  padding: isMobile ? '8px' : '16px',
+                  padding: '16px',
                   display: 'grid',
-                  gridTemplateColumns: isMobile
-                    ? 'repeat(auto-fit, minmax(160px, 1fr))'
-                    : 'repeat(auto-fit, minmax(200px, 1fr))',
-                  gap: isMobile ? '12px' : '16px',
+                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                  gap: '16px',
                   alignItems: 'start',
                   flex: 1,
                 }}
@@ -399,7 +425,7 @@ function SearchResults() {
                   style={{
                     textAlign: 'center',
                     color: '#666',
-                    padding: isMobile ? '12px' : '16px',
+                    padding: '16px',
                   }}
                 >
                   No more events to load
@@ -414,7 +440,7 @@ function SearchResults() {
                 alignItems: 'center',
                 justifyContent: 'center',
                 flex: 1,
-                padding: isMobile ? '20px 10px' : '40px 20px',
+                padding: '40px 20px',
               }}
             >
               <s.SadIcon />
@@ -426,22 +452,19 @@ function SearchResults() {
         </Box>
       </Grid.Col>
 
-      {/* Right side on desktop / Bottom section on mobile: Google Map */}
+      {/* Right side: Google Map */}
       <Grid.Col
         span={{ base: 12, md: 6 }}
         style={{
           padding: 0,
           position: 'relative',
-          height: isMobile ? '50vh' : '100vh',
+          ...getResponsiveContainerStyle(),
         }}
       >
         <GoogleMap
-          mapContainerStyle={{
-            width: '100%',
-            height: '100%',
-          }}
+          mapContainerStyle={getResponsiveMapStyle()}
           center={defaultCenter}
-          zoom={isMobile ? 11 : 12}
+          zoom={12}
           options={mapOptions}
           onLoad={handleMapLoad}
           onIdle={handleMapIdle}
@@ -474,11 +497,7 @@ function SearchResults() {
               onCloseClick={() => setSelectedEvent(null)}
             >
               <div
-                style={{
-                  color: 'black',
-                  maxWidth: isMobile ? '200px' : '280px',
-                  padding: '4px',
-                }}
+                style={{ color: 'black', maxWidth: '280px', padding: '4px' }}
               >
                 {/* Event Image */}
                 {(selectedEvent.eventLogoUrl ||
@@ -486,7 +505,7 @@ function SearchResults() {
                   <div
                     style={{
                       width: '100%',
-                      height: isMobile ? '80px' : '120px',
+                      height: '120px',
                       marginBottom: '12px',
                       borderRadius: '8px',
                       overflow: 'hidden',
@@ -520,7 +539,7 @@ function SearchResults() {
                 <h3
                   style={{
                     margin: '0 0 8px 0',
-                    fontSize: isMobile ? '14px' : '16px',
+                    fontSize: '16px',
                     fontWeight: '600',
                     lineHeight: '1.3',
                     cursor: 'pointer',
@@ -537,7 +556,7 @@ function SearchResults() {
                   <p
                     style={{
                       margin: '0 0 6px 0',
-                      fontSize: isMobile ? '11px' : '13px',
+                      fontSize: '13px',
                       color: '#555',
                       display: 'flex',
                       alignItems: 'center',
@@ -552,7 +571,7 @@ function SearchResults() {
                   <p
                     style={{
                       margin: '0 0 8px 0',
-                      fontSize: isMobile ? '10px' : '11px',
+                      fontSize: '11px',
                       color: '#777',
                       lineHeight: '1.3',
                     }}
@@ -572,7 +591,7 @@ function SearchResults() {
                   {selectedEvent.minimumPrice !== undefined && (
                     <span
                       style={{
-                        fontSize: isMobile ? '12px' : '14px',
+                        fontSize: '14px',
                         fontWeight: 'bold',
                         color:
                           selectedEvent.minimumPrice === 0
@@ -594,8 +613,8 @@ function SearchResults() {
                       color: 'white',
                       border: 'none',
                       borderRadius: '6px',
-                      padding: isMobile ? '4px 8px' : '6px 12px',
-                      fontSize: isMobile ? '10px' : '12px',
+                      padding: '6px 12px',
+                      fontSize: '12px',
                       cursor: 'pointer',
                       fontWeight: '500',
                     }}
@@ -636,50 +655,51 @@ function SearchResults() {
           </Box>
         )}
 
-        {/* Manual fit bounds buttons - hide on mobile for space */}
-        {!isMobile && (
-          <Box
+        {/* Manual fit bounds buttons */}
+        <Box
+          style={{
+            position: 'absolute',
+            top: '16px',
+            left: '10px',
+            zIndex: 10,
+            display: 'flex',
+            gap: '8px',
+            flexWrap: 'wrap',
+          }}
+        >
+          <button
+            onClick={manualFitBounds}
             style={{
-              position: 'absolute',
-              top: '16px',
-              left: '10px',
-              zIndex: 10,
-              display: 'flex',
-              gap: '8px',
+              background: '#2563eb',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              padding: '6px 10px',
+              fontSize: '11px',
+              cursor: 'pointer',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
             }}
           >
-            <button
-              onClick={manualFitBounds}
-              style={{
-                background: '#2563eb',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '8px 12px',
-                fontSize: '12px',
-                cursor: 'pointer',
-                fontWeight: '500',
-              }}
-            >
-              Fit to Events ({eventsWithCoordinates.length})
-            </button>
-            <button
-              onClick={resetBoundsFitting}
-              style={{
-                background: '#dc2626',
-                color: 'white',
-                border: 'none',
-                borderRadius: '6px',
-                padding: '8px 12px',
-                fontSize: '12px',
-                cursor: 'pointer',
-                fontWeight: '500',
-              }}
-            >
-              Reset Auto-Fit
-            </button>
-          </Box>
-        )}
+            Fit to Events ({eventsWithCoordinates.length})
+          </button>
+          <button
+            onClick={resetBoundsFitting}
+            style={{
+              background: '#dc2626',
+              color: 'white',
+              border: 'none',
+              borderRadius: '6px',
+              padding: '6px 10px',
+              fontSize: '11px',
+              cursor: 'pointer',
+              fontWeight: '500',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            Reset Auto-Fit
+          </button>
+        </Box>
 
         {/* Map loading indicator */}
         {mapLoading && (
