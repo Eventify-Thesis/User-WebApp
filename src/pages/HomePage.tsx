@@ -40,12 +40,14 @@ const HomePage: React.FC = () => {
     useGetEventsByCategory(userId ? userId : undefined);
   const lang = i18n.language;
 
-  const isLoading =
-    isSearchMetadataLoading ||
-    isEventsThisMonthLoading ||
-    isEventsThisWeekLoading ||
-    isEventsByCategoryLoading;
-  if (isLoading) return <Loading />;
+  // Show content progressively instead of waiting for everything
+  const showCategories = !isSearchMetadataLoading && searchMetadata;
+  const showEvents =
+    !isEventsThisMonthLoading &&
+    !isEventsThisWeekLoading &&
+    eventsThisMonth &&
+    eventsThisWeek;
+  const showCategoryEvents = !isEventsByCategoryLoading && eventsByCategory;
 
   const newCategory = searchMetadata?.data.result.categories.map(
     (category: any) => ({
@@ -57,10 +59,11 @@ const HomePage: React.FC = () => {
 
   const formattedEventsThisMonth = formatEvents(eventsThisMonth || []);
   const formattedEventsThisWeek = formatEvents(eventsThisWeek || []);
+
   const desktopLayout = (
     <>
       <Hero />
-      {newCategory && (
+      {showCategories ? (
         <CategorySection
           categories={newCategory}
           onCategoryClick={(code) => {
@@ -68,19 +71,27 @@ const HomePage: React.FC = () => {
             navigate(`/search-result?query=&categories=${code}`);
           }}
         />
+      ) : (
+        <div style={{ height: '200px' }}>
+          <Loading />
+        </div>
       )}
       <Banner images={images} />
-      {eventsThisWeek && eventsThisMonth && (
+      {showEvents ? (
         <ShowcaseEventSection
           eventsThisWeek={formattedEventsThisWeek}
           eventsThisMonth={formattedEventsThisMonth}
           userId={userId}
         />
+      ) : (
+        <div style={{ height: '400px' }}>
+          <Loading />
+        </div>
       )}
 
       {/* Render EventCardGrids for each category with at least one event */}
       <div style={{ margin: '0' }}>
-        {eventsByCategory &&
+        {showCategoryEvents ? (
           Object.entries(eventsByCategory).map(([key, category]) => {
             if (!category.events || category.events.length === 0) return null;
             const title =
@@ -102,7 +113,12 @@ const HomePage: React.FC = () => {
                 userId={userId}
               />
             );
-          })}
+          })
+        ) : (
+          <div style={{ height: '300px' }}>
+            <Loading />
+          </div>
+        )}
       </div>
       <LocationSection />
       <Footer />
@@ -112,23 +128,33 @@ const HomePage: React.FC = () => {
   const mobileAndTabletLayout = (
     <>
       <Hero />
-      <CategorySection
-        categories={newCategory}
-        onCategoryClick={(code) => {
-          // Navigate to SearchResult with categories=code and empty query
-          navigate(`/search-result?query=&categories=${code}`);
-        }}
-      />
+      {showCategories ? (
+        <CategorySection
+          categories={newCategory}
+          onCategoryClick={(code) => {
+            // Navigate to SearchResult with categories=code and empty query
+            navigate(`/search-result?query=&categories=${code}`);
+          }}
+        />
+      ) : (
+        <div style={{ height: '200px' }}>
+          <Loading />
+        </div>
+      )}
       <Banner images={images} />
 
-      {eventsThisWeek && eventsThisMonth && (
+      {showEvents ? (
         <ShowcaseEventSection
           eventsThisWeek={formattedEventsThisWeek}
           eventsThisMonth={formattedEventsThisMonth}
           userId={userId}
         />
+      ) : (
+        <div style={{ height: '400px' }}>
+          <Loading />
+        </div>
       )}
-      {eventsByCategory &&
+      {showCategoryEvents ? (
         Object.entries(eventsByCategory).map(([key, category]) => {
           if (!category.events || category.events.length === 0) return null;
           const title =
@@ -150,7 +176,12 @@ const HomePage: React.FC = () => {
               userId={userId}
             />
           );
-        })}
+        })
+      ) : (
+        <div style={{ height: '300px' }}>
+          <Loading />
+        </div>
+      )}
       <LocationSection />
       <Footer />
     </>
