@@ -17,7 +17,7 @@ import { EventDetails } from '@/components/checkout/EventDetails/EventDetails';
 import { TicketInfo } from '@/components/checkout/TicketInfo/TicketInfo';
 import { ExpiredBookingModal } from '@/components/checkout/ExpiredBookingModal/ExpiredBookingModal';
 import { LeaveCheckoutModal } from '@/components/checkout/LeaveCheckoutModal/LeaveCheckoutModal';
-import { Loader, Container, Box, Group, Center } from '@mantine/core';
+import { Loader, Container, Box, Group, Center, Stack } from '@mantine/core';
 import { useGetEventDetail } from '@/queries/useGetEventDetail';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
 import { useGetBookingStatus } from '@/queries/useGetBookingStatus';
@@ -49,7 +49,7 @@ const CheckoutPage: React.FC = () => {
   const currentStep = isPayment ? 3 : 2;
   const location = useLocation();
   const navigate = useNavigate();
-  const { isDesktop } = useResponsive();
+  const { isDesktop, mobileOnly } = useResponsive();
   const { t } = useTranslation();
   const [isExpiredModalOpen, setIsExpiredModalOpen] = useState(false);
   const [remainingTime, setRemainingTime] = useState<number | null>(null);
@@ -249,23 +249,44 @@ const CheckoutPage: React.FC = () => {
           <EventDetails event={event} expireIn={remainingTime} />
         </EventDetailsRow>
       )}
-      <Container size="xl" p={24} bg="var(--background-color)">
-        <Group gap={24} align="flex-start" wrap="nowrap">
-          <Box style={{ flex: 1, width: '100%' }}>
-            <Outlet context={ctx} />
-          </Box>
-          <Box w={350} style={{ flexShrink: 0 }}>
-            {bookingStatus?.result && (
-              <TicketInfo
-                showId={showId}
-                bookingCode={bookingCode}
-                bookingStatus={bookingStatus.result}
-                currentStep={step}
-                onContinue={handleQuestionnaireSubmit}
-              />
-            )}
-          </Box>
-        </Group>
+      <Container
+        size="xl"
+        p={mobileOnly ? 16 : 24}
+        bg="var(--background-color)"
+      >
+        {mobileOnly ? (
+          <Stack gap={8}>
+            <Box style={{ width: '100%' }}>
+              <Outlet context={ctx} />
+            </Box>
+            <Box style={{ width: '100%' }}>
+              {bookingStatus?.result && (
+                <TicketInfo
+                  bookingCode={bookingCode}
+                  bookingStatus={bookingStatus.result}
+                  currentStep={step}
+                  onContinue={handleQuestionnaireSubmit}
+                />
+              )}
+            </Box>
+          </Stack>
+        ) : (
+          <Group gap={24} align="flex-start" wrap="nowrap">
+            <Box style={{ flex: 1, width: '100%' }}>
+              <Outlet context={ctx} />
+            </Box>
+            <Box w={350} style={{ flexShrink: 0 }}>
+              {bookingStatus?.result && (
+                <TicketInfo
+                  bookingCode={bookingCode}
+                  bookingStatus={bookingStatus.result}
+                  currentStep={step}
+                  onContinue={handleQuestionnaireSubmit}
+                />
+              )}
+            </Box>
+          </Group>
+        )}
       </Container>
       <ExpiredBookingModal
         isOpen={isExpiredModalOpen}

@@ -39,12 +39,7 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
 
     // Open in new tab instead of redirecting current page
     try {
-      const newWindow = window.open(targetUrl, '_blank', 'noopener,noreferrer');
-      if (!newWindow) {
-        // Fallback if popup was blocked
-        console.warn('Popup blocked, falling back to same-tab navigation');
-        window.location.href = targetUrl;
-      }
+      window.open(targetUrl, '_blank', 'noopener,noreferrer');
     } catch (error) {
       console.error('Failed to navigate to create event page:', error);
       alert(

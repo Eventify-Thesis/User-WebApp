@@ -1,4 +1,4 @@
-@import "../../../../styles/mixins.scss";
+@import '../../../../styles/mixins.scss';
 
 .main {
   position: relative;
@@ -11,6 +11,8 @@
 
   @include respond-below(md) {
     padding: 20px;
+    height: auto;
+    overflow-y: visible;
   }
 
   .innerContainer {
