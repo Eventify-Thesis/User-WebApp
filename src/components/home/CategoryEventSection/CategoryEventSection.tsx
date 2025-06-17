@@ -122,9 +122,6 @@ const CategoryEventSection: React.FC<Props> = ({ title, events, userId }) => {
             <div key={index} className="event-card-wrapper">
               <EventCard
                 className="category-card"
-                style={{
-                  width: '20rem !important',
-                }}
                 {...event}
                 onClick={() => handleEventClick(event)}
                 userId={userId}

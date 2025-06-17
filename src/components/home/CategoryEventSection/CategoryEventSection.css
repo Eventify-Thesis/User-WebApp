@@ -40,8 +40,8 @@
 }
 
 .event-card-wrapper {
-  width: 22rem;     /* fixed width matching card */
-  flex-shrink: 0;   /* prevent shrinking */
+  width: 20rem; /* fixed width matching card */
+  flex-shrink: 0; /* prevent shrinking */
   box-sizing: border-box;
 }
 
@@ -68,7 +68,7 @@
 }
 
 .grid-wrapper .event-card {
-  max-width: 350px;
+  width: 20rem;
   margin-right: 16px;
 }
 
@@ -97,7 +97,7 @@
     flex-wrap: wrap;
     justify-content: center;
   }
-  
+
   .grid-wrapper .event-card {
     margin-right: 0;
     margin-bottom: 16px;
