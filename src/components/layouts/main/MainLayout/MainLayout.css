@@ -29,12 +29,12 @@
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .content-container {
-    padding: 16px;
+    padding: 0px;
   }
 }
 
 @media (max-width: 480px) {
   .content-container {
-    padding: 12px 8px;
+    padding: 0px;
   }
 }

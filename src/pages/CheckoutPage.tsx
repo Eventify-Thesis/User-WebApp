@@ -259,7 +259,7 @@ const CheckoutPage: React.FC = () => {
             <Box style={{ width: '100%' }}>
               <Outlet context={ctx} />
             </Box>
-            <Box style={{ width: '100%' }}>
+            <Box style={{ width: '95%' }}>
               {bookingStatus?.result && (
                 <TicketInfo
                   bookingCode={bookingCode}

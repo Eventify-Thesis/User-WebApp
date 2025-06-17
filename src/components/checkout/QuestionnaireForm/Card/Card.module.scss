@@ -3,6 +3,13 @@
   border-radius: var(--tk-radius-sm);
   padding: var(--tk-spacing-lg);
   margin-bottom: var(--tk-spacing-lg);
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    padding: var(--tk-spacing-md);
+  }
 
   &.noStyle {
     //
@@ -16,6 +23,6 @@
   &.default {
     box-shadow: 0 3px 0 #dddddd;
     border: 1px solid #e3e3e3;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
   }
 }

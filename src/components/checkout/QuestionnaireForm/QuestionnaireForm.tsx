@@ -293,32 +293,55 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
   };
 
   return (
-    <form style={{ width: '100%' }}>
+    <form
+      style={{
+        width: '100%',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        boxSizing: 'border-box',
+      }}
+    >
       <CheckoutContent>
         <Card>
-          <InputGroup>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: isDesktop ? 'row' : 'column',
+              gap: '16px',
+              width: '100%',
+            }}
+          >
             <TextInput
               withAsterisk
               label={t`First Name`}
               placeholder={t`First name`}
-              styles={{ label: textStyles }}
+              styles={{
+                label: textStyles,
+                root: { flex: 1, minWidth: 0 },
+              }}
               {...form.getInputProps('order.first_name')}
             />
             <TextInput
               withAsterisk
               label={t`Last Name`}
               placeholder={t`Last Name`}
-              styles={{ label: textStyles }}
+              styles={{
+                label: textStyles,
+                root: { flex: 1, minWidth: 0 },
+              }}
               {...form.getInputProps('order.last_name')}
             />
-          </InputGroup>
+          </div>
 
           <TextInput
             withAsterisk
             type={'email'}
             label={t`Email Address`}
             placeholder={t`Email Address`}
-            styles={{ label: textStyles }}
+            styles={{
+              label: textStyles,
+              root: { width: '100%' },
+            }}
             {...form.getInputProps('order.email')}
           />
 
@@ -356,12 +379,22 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
                     <h4 style={subheadingStyles}>
                       {t`Attendee`} {index + 1} {t`Details`}
                     </h4>
-                    <InputGroup>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: isDesktop ? 'row' : 'column',
+                        gap: '16px',
+                        width: '100%',
+                      }}
+                    >
                       <TextInput
                         withAsterisk
                         label={t`First Name`}
                         placeholder={t`First name`}
-                        styles={{ label: textStyles }}
+                        styles={{
+                          label: textStyles,
+                          root: { flex: 1, minWidth: 0 },
+                        }}
                         {...form.getInputProps(
                           `attendees.${attendeeIndex}.first_name`,
                         )}
@@ -370,18 +403,24 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
                         withAsterisk
                         label={t`Last Name`}
                         placeholder={t`Last Name`}
-                        styles={{ label: textStyles }}
+                        styles={{
+                          label: textStyles,
+                          root: { flex: 1, minWidth: 0 },
+                        }}
                         {...form.getInputProps(
                           `attendees.${attendeeIndex}.last_name`,
                         )}
                       />
-                    </InputGroup>
+                    </div>
 
                     <TextInput
                       withAsterisk
                       label={t`Email Address`}
                       placeholder={t`Email Address`}
-                      styles={{ label: textStyles }}
+                      styles={{
+                        label: textStyles,
+                        root: { width: '100%' },
+                      }}
                       {...form.getInputProps(
                         `attendees.${attendeeIndex}.email`,
                       )}
