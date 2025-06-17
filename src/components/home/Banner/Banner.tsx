@@ -1,13 +1,32 @@
 import React, { useState, useEffect } from "react";
 import { Typewriter } from "react-simple-typewriter";
-import * as s from "./Banner.styles"; // Import styles
+import { useNavigate } from "react-router-dom";
+import * as s from "./Banner.styles";
+
+interface EventData {
+  id: number;
+  eventLogoUrl: string;
+  eventName: string;
+  url?: string;
+}
 
 interface BannerProps {
-  images: string[];
+  events?: EventData[];
+  images?: string[];
   promoText?: string;
 }
 
-export const Banner: React.FC<BannerProps> = ({ images, promoText = "Special Promotion Events" }) => {
+export const Banner: React.FC<BannerProps> = ({ events, images: propImages, promoText = "Special Promotion Events" }) => {
+  const navigate = useNavigate();
+  const images = events?.map(event => event.eventLogoUrl) || propImages || [];
+  
+  const handleImageClick = (event: EventData) => {
+    if (event.url) {
+      navigate(`${event.url}-${event.id}`);
+    } else {
+      navigate(`${event.eventName}-${event.id}`);
+    }
+  };
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 750);
 
   useEffect(() => {
@@ -49,9 +68,19 @@ export const Banner: React.FC<BannerProps> = ({ images, promoText = "Special Pro
         {groupedImages.map((pair, index) => (
           <s.SlideContainer key={index}>
             <s.ImageWrapper>
-              {pair.map((image, idx) => (
-                <s.SlideImage key={idx} src={image} alt={`Slide ${index * 2 + idx + 1}`} />
-              ))}
+              {pair.map((image, idx) => {
+                const eventIndex = index * 2 + idx;
+                const event = events?.[eventIndex];
+                return (
+                  <s.SlideImage 
+                    key={idx} 
+                    src={image} 
+                    alt={event?.eventName || `Slide ${eventIndex + 1}`}
+                    onClick={() => event && handleImageClick(event)}
+                    style={{ cursor: event ? 'pointer' : 'default' }}
+                  />
+                );
+              })}
             </s.ImageWrapper>
           </s.SlideContainer>
         ))}

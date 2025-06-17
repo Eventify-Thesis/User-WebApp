@@ -22,7 +22,7 @@ interface CategorySectionProps {
 // Create styles for components
 const useStyles = createStyles((theme) => ({
   categorySection: {
-    backgroundColor: '#f4f7fc !important',
+    // Background color removed to show parent pattern
   },
   categoryItem: {
     display: 'flex',
@@ -72,12 +72,12 @@ const useStyles = createStyles((theme) => ({
   categoryName: {
     fontWeight: 'bold !important',
     fontSize: '0.9rem',
-    color: 'black !important',
+    color: 'white !important',
     textAlign: 'center',
     marginTop: 4,
   },
   sectionTitle: {
-    color: 'black !important',
+    color: 'white !important',
     fontWeight: 700,
     fontSize: 24,
     textTransform: 'uppercase',
@@ -89,7 +89,7 @@ const useStyles = createStyles((theme) => ({
       display: 'block',
       width: 40,
       height: 3,
-      backgroundColor: 'black !important',
+      backgroundColor: 'white !important',
       margin: '8px auto',
       borderRadius: theme.radius.sm,
     }
@@ -164,13 +164,11 @@ export const CategorySection: React.FC<CategorySectionProps> = ({ categories, on
   const { classes } = useStyles();
 
   return (
-    <Box py="lg" px="md" style={{
-      margin: '20px 0',
-    }}
+    <Box py="lg" px="md"
     className={classes.categorySection}
     >
       <Container size="xl">
-        <Title order={2} className={classes.sectionTitle}>
+        <Title order={1} className={classes.sectionTitle}>
           {t('categories')}
         </Title>
 
