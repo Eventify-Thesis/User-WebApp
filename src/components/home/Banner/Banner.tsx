@@ -2,16 +2,10 @@ import React, { useState, useEffect } from "react";
 import { Typewriter } from "react-simple-typewriter";
 import { useNavigate } from "react-router-dom";
 import * as s from "./Banner.styles";
-
-interface EventData {
-  id: number;
-  eventLogoUrl: string;
-  eventName: string;
-  url?: string;
-}
-
+import EventModel from "@/domain/EventModel";
+import placeholderImage from "@/assets/images/placeholder_image.png";
 interface BannerProps {
-  events?: EventData[];
+  events?: EventModel[];
   images?: string[];
   promoText?: string;
 }
@@ -20,7 +14,7 @@ export const Banner: React.FC<BannerProps> = ({ events, images: propImages, prom
   const navigate = useNavigate();
   const images = events?.map(event => event.eventLogoUrl) || propImages || [];
   
-  const handleImageClick = (event: EventData) => {
+  const handleImageClick = (event: any) => {
     if (event.url) {
       navigate(`${event.url}-${event.id}`);
     } else {
@@ -39,10 +33,10 @@ export const Banner: React.FC<BannerProps> = ({ events, images: propImages, prom
   }, []);
 
   const groupedImages = isMobile
-    ? images.map((image) => [image])
+    ? images.map((image) => [image || placeholderImage])
     : images.reduce((acc, image, index) => {
-        if (index % 2 === 0) acc.push([image]);
-        else acc[acc.length - 1].push(image);
+        if (index % 2 === 0) acc.push([image || placeholderImage]);
+        else acc[acc.length - 1].push(image || placeholderImage);
         return acc;
       }, [] as string[][]);
 
