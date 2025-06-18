@@ -26,7 +26,6 @@ const TicketCard: React.FC<TicketCardProps> = ({
   quantity,
   onQuantityChange,
 }) => {
-
   const handleQuantityChange = (value: number | null) => {
     const newValue = value ?? 0;
     if (newValue >= 0 && newValue <= ticket.maxTicketPurchase) {
@@ -69,7 +68,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
               color: '#495057',
             }}
           >
-            ${ticket.price}
+            {`${new Intl.NumberFormat('vi-VN').format(Number(ticket.price))} ₫`}
           </Text>
         </Space>
         <Space
@@ -108,9 +107,7 @@ const TicketCard: React.FC<TicketCardProps> = ({
             disabled={quantity >= ticket.maxTicketPurchase}
             style={{
               color:
-                quantity >= ticket.maxTicketPurchase
-                  ? '#adb5bd'
-                  : '#212529',
+                quantity >= ticket.maxTicketPurchase ? '#adb5bd' : '#212529',
             }}
           />
         </Space>
