@@ -28,11 +28,12 @@ const EmptyState = ({ type }: { type: 'weekend' | 'month' }) => {
       <Paper
         radius="md"
         style={{
-          backgroundColor: '#27272A',
+          background: 'transparent',
           backdropFilter: 'blur(10px)',
           maxWidth: 500,
           padding: '0rem',
           width: '100%',
+          boxShadow: 'none'
         }}
       >
         <Stack align="center" gap="md">
@@ -86,7 +87,6 @@ const ShowcaseEventSection: React.FC<Props> = ({
 
   return (
     <Box
-      bg="#27272A"
       py={{ base: 'md', sm: 'xl' }}
       px={{ base: 'xs', sm: 'md' }}
     >

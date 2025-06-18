@@ -89,7 +89,6 @@ const CategoryEventSection: React.FC<Props> = ({ title, events, userId }) => {
       px={{ base: 16, sm: 20, md: 40 }}
       style={{
         padding: '2rem 4rem',
-        backgroundColor: '#27272A',
       }}
       w="100%"
     >
