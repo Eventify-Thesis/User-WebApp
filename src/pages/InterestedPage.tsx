@@ -1,6 +1,27 @@
 import { useState } from 'react';
-import { Box, Divider, Loader, Pagination, Title } from '@mantine/core';
+import {
+  Box,
+  Container,
+  Divider,
+  Loader,
+  Pagination,
+  Title,
+  TextInput,
+  Group,
+  Stack,
+  Badge,
+  ActionIcon,
+  Paper,
+  Text,
+} from '@mantine/core';
 import { useTranslation } from 'react-i18next';
+import {
+  IconSearch,
+  IconStar,
+  IconSparkles,
+  IconTrendingUp,
+  IconBookmark,
+} from '@tabler/icons-react';
 import * as s from '@/components/interested/InterestedPage.styles';
 import { useGetInterests } from '@/queries/useGetInterests';
 import { useDeleteInterest } from '@/mutations/useDeleteInterest';
@@ -9,6 +30,7 @@ import { useRelatedEvents } from '@/queries/useRelatedEvents';
 import { useSearchSemanticEvents } from '@/queries/useSearchSemanticEvents';
 import { DEFAULT_LIMIT } from '@/constants/recommendedEvents';
 import { EventGrid } from '@/components/EventList/EventGrid/EventGrid';
+import { Loading } from '@/components/common/Loading/Loading';
 import './OrderHistory.css';
 
 export default function InterestedPage() {
@@ -18,13 +40,14 @@ export default function InterestedPage() {
   const [page, setPage] = useState(1);
   const limit = 10;
 
-  const {
-    data,
-    isLoading,
-    error,
-    refetch,
-} = useGetInterests(userId!, page, limit, !!userId);
-  const { mutate: deleteInterest, fadingEvents } = useDeleteInterest();
+  const { data, isLoading, error, refetch } = useGetInterests(
+    userId!,
+    page,
+    limit,
+    !!userId,
+  );
+  const { mutate: deleteInterest } = useDeleteInterest();
+
   // Map InterestModel[] to EventModel[] for EventGrid
   const interestEvents = (data?.docs || []).map((interest: any) => ({
     id: interest.eventId,
@@ -50,103 +73,219 @@ export default function InterestedPage() {
   const relatedEventsQuery = useRelatedEvents(
     interestEvents?.[0]?.id ?? 0,
     DEFAULT_LIMIT,
-    userId || ''
+    userId || '',
   );
-  
+
   const semanticEventsQuery = useSearchSemanticEvents({
     limit: DEFAULT_LIMIT,
     userId: userId || '',
     query: '',
   });
-  
+
   // Determine which data to use
   const recommendedEvents = interestEvents?.[0]?.id
     ? relatedEventsQuery.data
     : semanticEventsQuery.data;
-  
+
   const recommendedEventsLoading = interestEvents?.[0]?.id
     ? relatedEventsQuery.isLoading
     : semanticEventsQuery.isLoading;
 
   // Normalize and map for EventGrid
-  const relatedEvents = (!recommendedEventsLoading)?(() => {
-    if (!recommendedEvents) return [];
-    const eventsArr = Array.isArray(recommendedEvents)
-      ? recommendedEvents
-      : [];
-    return eventsArr.map((event: any) => ({
-    ...event,
-    eventLogoUrl: event.eventLogoUrl,
-    minimumPrice: event.minimumPrice,
-    startTime: event.startTime
-      ? new Date(event.startTime * 1000)
-      : undefined,
-    isInterested: event.isInterested ?? false,
-  }));
-  })():[];
+  const relatedEvents = !recommendedEventsLoading
+    ? (() => {
+        if (!recommendedEvents) return [];
+        const eventsArr = Array.isArray(recommendedEvents)
+          ? recommendedEvents
+          : [];
+        return eventsArr.map((event: any) => ({
+          ...event,
+          eventLogoUrl: event.eventLogoUrl,
+          minimumPrice: event.minimumPrice,
+          startTime: event.startTime
+            ? new Date(event.startTime * 1000)
+            : undefined,
+          isInterested: event.isInterested ?? false,
+        }));
+      })()
+    : [];
 
-  // Function to handle unbookmarking
-  const handleUnbookmark = (id: number) => {
-    if (!userId) return;
+  // Callback to handle interest changes and update the list
+  const handleInterestChange = (eventId: number) => {
+    // Refetch the interests to update the main list
     refetch();
+
+    // Also refetch the recommended events to update their interest status
+    if (interestEvents?.[0]?.id) {
+      relatedEventsQuery.refetch();
+    } else {
+      semanticEventsQuery.refetch();
+    }
   };
 
   const filteredEvents = interestEvents.filter((event: any) =>
-    event.eventName?.toLowerCase().includes(searchQuery.toLowerCase())
+    event.eventName?.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
+  if (isLoading) return <Loading />;
+
   return (
-    <s.Container>
-      <s.Title>{t('interested.title')}</s.Title>
-      <s.SearchInput
-        type="text"
-        placeholder={t('interested.searchPlaceholder')}
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-      />
+    <Container fluid className="order-history-container">
+      <Box className="order-content">
+        {/* Enhanced Header Section */}
+        <Box className="page-header" mb="xl">
+          <Group justify="space-between" align="flex-start">
+            <Box>
+              <Title order={1} className="page-title">
+                {t('interested.title')}
+              </Title>
+              <Text c="dimmed" size="lg" mt="sm">
+                Discover and manage your favorite events
+              </Text>
+            </Box>
 
-      {isLoading ? (
-        <s.NoEventsContainer>
-          <s.NoEventsText>{t('loading')}</s.NoEventsText>
-        </s.NoEventsContainer>
-      ) : error ? (
-        <s.NoEventsContainer>
-          <s.NoEventsText>{t('error.loadingEvents')}</s.NoEventsText>
-        </s.NoEventsContainer>
-      ) : filteredEvents.length > 0 ? (
-        <>
-          <EventGrid
-            events={filteredEvents}
-            onBookmarkChange={handleUnbookmark}
-            userId={userId}
-          />
-          <div style={{ display: 'flex', justifyContent: 'center', marginTop: 16 }}>
-            <Pagination
-              value={page}
-              onChange={setPage}
-              total={data?.totalPages || 1}
+            <Group gap="xs">
+              <Badge
+                variant="light"
+                color="pink"
+                size="lg"
+                radius="xl"
+                leftSection={<IconBookmark size={16} />}
+              >
+                {filteredEvents.length} Saved
+              </Badge>
+            </Group>
+          </Group>
+        </Box>
+
+        {/* Modern Search Section */}
+        <Paper shadow="md" className="order-tabs-container" mb="xl">
+          <Box p="md">
+            <TextInput
+              placeholder={t('interested.searchPlaceholder')}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              leftSection={<IconSearch size={16} />}
+              size="md"
+              radius="md"
+              styles={{
+                input: {
+                  borderColor: '#e0e7ff',
+                  '&:focus': {
+                    borderColor: '#6366f1',
+                    boxShadow: '0 0 0 2px rgba(99, 102, 241, 0.1)',
+                  },
+                },
+              }}
             />
-          </div>
-        </>
-      ) : (
-        <s.NoEventsContainer>
-          <s.SadIcon />
-          <s.NoEventsText>{t('interested.noInterested')}</s.NoEventsText>
-        </s.NoEventsContainer>
-      )}
-
-      {recommendedEventsLoading ? (
-        <Loader color="yellow" size="lg" variant="dots" />
-      ) : (
-        <>
-          <Title style={{ color: 'white !important' }} order={2} className="page-title">
-            {t('orderHistory.recommended')}
-          </Title>
-          <Box className="recommended-events">
-            <EventGrid events={relatedEvents} userId={userId} onBookmarkChange={refetch} />
           </Box>
-        </>
-      )}
-    </s.Container>
+        </Paper>
+
+        {/* Error State */}
+        {error && (
+          <Paper className="error-message" shadow="sm" mb="xl">
+            <Text size="md" fw={500}>
+              {t('error.loadingEvents')}
+            </Text>
+          </Paper>
+        )}
+
+        {/* Events Grid */}
+        {filteredEvents.length > 0 ? (
+          <Stack gap="xl">
+            <EventGrid
+              events={filteredEvents}
+              userId={userId}
+              onBookmarkChange={handleInterestChange}
+            />
+
+            {/* Pagination */}
+            <Group justify="center">
+              <Pagination
+                value={page}
+                onChange={setPage}
+                total={data?.totalPages || 1}
+                color="yellow"
+                radius="xl"
+                size="md"
+              />
+            </Group>
+          </Stack>
+        ) : (
+          <Paper
+            className="no-events-container"
+            shadow="sm"
+            p="xl"
+            ta="center"
+            style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              color: 'white',
+              borderRadius: '16px',
+            }}
+          >
+            <s.SadIcon />
+            <Title order={3} mt="md" mb="sm" c="white">
+              {t('interested.noInterested')}
+            </Title>
+            <Text c="rgba(255, 255, 255, 0.8)" size="sm">
+              Start exploring events and save your favorites to see them here
+            </Text>
+          </Paper>
+        )}
+
+        {/* Enhanced Divider */}
+        <Divider className="section-divider" my="xl" />
+
+        {/* Recommended Events Section */}
+        <Box className="recommended-section">
+          <Group justify="space-between" align="center" mb="xl">
+            <Box>
+              <Group gap="md" align="center">
+                <ActionIcon
+                  variant="filled"
+                  color="yellow"
+                  size="xl"
+                  radius="xl"
+                >
+                  <IconSparkles size={20} />
+                </ActionIcon>
+                <Box>
+                  <Title order={2} className="section-title">
+                    {t('orderHistory.recommended')}
+                  </Title>
+                  <Text c="dimmed" size="sm" mt={4}>
+                    Discover more events you might love
+                  </Text>
+                </Box>
+              </Group>
+            </Box>
+
+            <Badge
+              variant="light"
+              color="blue"
+              size="md"
+              radius="xl"
+              leftSection={<IconTrendingUp size={14} />}
+            >
+              Trending
+            </Badge>
+          </Group>
+
+          {recommendedEventsLoading ? (
+            <Group justify="center" p="xl">
+              <Loader color="yellow" size="lg" variant="dots" />
+            </Group>
+          ) : (
+            <Box className="recommended-events">
+              <EventGrid
+                events={relatedEvents}
+                userId={userId}
+                onBookmarkChange={handleInterestChange}
+              />
+            </Box>
+          )}
+        </Box>
+      </Box>
+    </Container>
   );
 }
