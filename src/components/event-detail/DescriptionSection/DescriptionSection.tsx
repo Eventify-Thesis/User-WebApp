@@ -26,8 +26,11 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
           position: 'relative',
         }}
       >
-        <div style={{ color: '#f5f5f7' }} dangerouslySetInnerHTML={{ __html: description || '' }} />
-        
+        <div
+          style={{ color: '#f5f5f7' }}
+          dangerouslySetInnerHTML={{ __html: description || '' }}
+        />
+
         {/* Fade-out Effect */}
         {!isExpanded && (
           <Box
@@ -36,13 +39,14 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
               width: '100%',
               bottom: 0,
               height: '120px',
-              background: 'linear-gradient(rgba(25, 25, 40, 0) 0%, rgba(25, 25, 40, 0.95) 100%)',
+              background:
+                'linear-gradient(rgba(25, 25, 40, 0) 0%, rgba(25, 25, 40, 0.95) 100%)',
               zIndex: 3,
             }}
           />
         )}
       </Box>
-      
+
       <Box
         style={{
           display: 'flex',
@@ -54,10 +58,18 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
           variant="subtle"
           color="yellow"
           onClick={toggleExpand}
-          rightSection={isExpanded ? <IconChevronUp size={18} /> : <IconChevronDown size={18} />}
+          rightSection={
+            isExpanded ? (
+              <IconChevronUp size={18} />
+            ) : (
+              <IconChevronDown size={18} />
+            )
+          }
           style={{ color: '#facc15', fontSize: '16px', fontWeight: 600 }}
         >
-          {isExpanded ? t('eventDetailPage.showLess') : t('eventDetailPage.showMore')}
+          {isExpanded
+            ? t('eventDetailPage.showLess')
+            : t('eventDetailPage.showMore')}
         </Button>
       </Box>
     </Box>
@@ -65,7 +77,12 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
 
   return (
     <>
-      <Title order={2} className="section-title">
+      <Title
+        c="black"
+        order={2}
+        className="section-detail-title"
+        style={{ color: 'black !important' }}
+      >
         {t('eventDetailPage.description')}
       </Title>
       {renderDescription()}

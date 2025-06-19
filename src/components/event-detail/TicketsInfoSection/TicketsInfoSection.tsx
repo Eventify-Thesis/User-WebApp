@@ -137,7 +137,11 @@ const TicketsInfoSection: React.FC<TicketInfoSectionProps> = ({
 
   return (
     <>
-      <Title order={2} className="section-title" style={{ color: '#333333' }}>
+      <Title
+        order={2}
+        className="section-detail-title"
+        style={{ color: '#333333' }}
+      >
         {t('eventDetailPage.tickets')}
       </Title>
 

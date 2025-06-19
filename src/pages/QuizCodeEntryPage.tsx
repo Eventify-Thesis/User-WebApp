@@ -45,7 +45,7 @@ const useStyles = createStyles((theme) => ({
   },
   subtitle: {
     fontSize: '1.5rem',
-    marginBottom: theme.spacing.xl * 2,
+    marginBottom: `calc(${theme.spacing.xl} * 2)`,
     textAlign: 'center',
     color: theme.colors.gray[2],
   },
@@ -133,7 +133,7 @@ export function QuizCodeEntryPage() {
 
       <Paper className={classes.paper}>
         <form onSubmit={handleSubmit}>
-          <Stack spacing="xl">
+          <Stack gap="xl">
             <TextInput
               placeholder="ENTER CODE"
               size="xl"

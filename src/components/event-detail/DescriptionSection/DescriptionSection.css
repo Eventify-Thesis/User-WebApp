@@ -15,7 +15,7 @@
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 18px;
-  color: #ffffff;
+  color: black !important;
   position: relative;
   display: inline-block;
   letter-spacing: 0.02em;

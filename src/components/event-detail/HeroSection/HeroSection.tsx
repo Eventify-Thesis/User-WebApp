@@ -32,7 +32,7 @@ const useStyles = createStyles((theme: any) => ({
     overflow: 'hidden',
     fontFamily: '"Montserrat", sans-serif',
     background: 'linear-gradient(rgb(39, 39, 42) 48.04%, rgb(0, 0, 0) 100%)',
-    [theme.fn.smallerThan('md')]: {
+    '@media (max-width: 1199px)': {
       padding: `0 ${rem(24)}`,
     },
   },
@@ -202,7 +202,7 @@ const useStyles = createStyles((theme: any) => ({
     justifyContent: 'center',
     overflow: 'hidden',
     background: 'linear-gradient(rgb(39, 39, 42) 48.04%, rgb(0, 0, 0) 100%)',
-    [theme.fn.smallerThan('md')]: {
+    '@media (max-width: 1199px)': {
       width: '100%',
       flex: 'none',
       height: rem(300),
@@ -217,7 +217,7 @@ const useStyles = createStyles((theme: any) => ({
     borderTopRightRadius: theme.radius.lg,
     borderBottomRightRadius: theme.radius.lg,
     boxShadow: '-5px 0 15px rgba(0, 0, 0, 0.2)',
-    [theme.fn.smallerThan('md')]: {
+    '@media (max-width: 1199px)': {
       borderLeft: 'none',
       borderTop: 'none',
       borderTopLeftRadius: theme.radius.lg,
@@ -235,7 +235,7 @@ const useStyles = createStyles((theme: any) => ({
     boxSizing: 'border-box',
     boxShadow:
       'inset 0 0 10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 215, 0, 0.2)',
-    [theme.fn.smallerThan('md')]: {
+    '@media (max-width: 1199px)': {
       display: 'none',
     },
   },
@@ -259,9 +259,12 @@ interface HeroSectionProps {
 
 export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
   const { t, i18n } = useTranslation();
-  const { isDesktop } = useResponsive();
+  const { isDesktop, useMediaQuery } = useResponsive();
   const { classes } = useStyles();
   const navigate = useNavigate();
+
+  // Use same 1200px breakpoint as EventDetailPage for consistency
+  const isLargeDesktop = useMediaQuery({ query: '(min-width: 1200px)' });
 
   const { startTime, eventName, venueName, address, eventBannerUrl, shows } =
     event;
@@ -418,5 +421,5 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
     </Container>
   );
 
-  return <>{isDesktop ? ticketLayout : mobileTicketLayout}</>;
+  return <>{isLargeDesktop ? ticketLayout : mobileTicketLayout}</>;
 };

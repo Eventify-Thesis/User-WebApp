@@ -1,5 +1,6 @@
 /* DesktopHeader.css */
 .desktop-header-container {
+  z-index: 1000000000;
   background-color: #1a1a1a;
   padding: 0;
   width: 100%;
@@ -7,6 +8,7 @@
 }
 
 .desktop-header-content {
+  z-index: 1000000000;
   height: 70px;
   padding: 0 20px;
   max-width: 1400px;
@@ -44,7 +46,7 @@
   .header-right-side {
     margin-left: 30px; /* Increase margin for medium screens */
   }
-  
+
   .create-event-button {
     margin-right: 15px; /* Add right margin to create button */
   }
@@ -108,7 +110,7 @@
     height: 60px;
     padding: 0 10px;
   }
-  
+
   .header-left-side {
     gap: 10px;
   }

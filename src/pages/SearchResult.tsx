@@ -350,11 +350,13 @@ function SearchResults() {
   // Responsive styles
   const getResponsiveContainerStyle = () => ({
     height: isMobile ? '50vh' : '100vh',
+    zIndex: 10,
   });
 
   const getResponsiveMapStyle = () => ({
     width: '100%',
     height: isMobile ? '50vh' : '100%',
+    zIndex: 10,
   });
 
   return (
@@ -640,7 +642,7 @@ function SearchResults() {
               padding: '16px 24px',
               borderRadius: '8px',
               textAlign: 'center',
-              zIndex: 1000,
+              zIndex: 10,
             }}
           >
             <p style={{ margin: '0', fontSize: '14px' }}>

@@ -20,6 +20,7 @@ import './EventDetailPage.css';
 import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import ShowScheduleCalendar from '@/components/event-detail/ShowScheduleCalendar/ShowScheduleCalendar';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
+import { GameSection } from '@/components/event-detail/GameSection/GameSection';
 
 const PurchasedEventDetailPage: React.FC = () => {
   const { slug, showId } = useParams();
@@ -137,6 +138,9 @@ const PurchasedEventDetailPage: React.FC = () => {
                 organizerName={event.orgName}
                 organizerImage={event.orgLogoUrl}
               />
+            </Box>
+            <Box className="section-container">
+              <GameSection eventId={eventId} />
             </Box>
           </Box>
         </Box>

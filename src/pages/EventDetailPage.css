@@ -13,7 +13,7 @@
   background-position: 40px 0, 40px 0, 0 0, 0 0;
   background-size: 80px 80px;
   background-repeat: repeat;
-  color: white;
+  color: black !important;
   position: relative;
 }
 
@@ -98,7 +98,7 @@
   background-color: rgba(255, 255, 255, 0.05);
 }
 
-.section-title {
+.section-detail-title {
   font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 18px;
@@ -108,7 +108,7 @@
   letter-spacing: 0.02em;
 }
 
-.section-title::after {
+.section-detail-title::after {
   content: '';
   position: absolute;
   left: 0;

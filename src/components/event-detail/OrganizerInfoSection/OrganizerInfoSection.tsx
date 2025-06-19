@@ -20,7 +20,7 @@ export const OrganizerInfoSection: React.FC<OrganizerInfoProps> = ({
 
   const desktopLayout = (
     <Box>
-      <Title order={2} className="section-title">
+      <Title order={2} className="section-detail-title">
         {t('eventDetailPage.organizer')}
       </Title>
       <OrganizerCard
@@ -33,7 +33,7 @@ export const OrganizerInfoSection: React.FC<OrganizerInfoProps> = ({
 
   const mobileAndTabletLayout = (
     <Box>
-      <Title order={2} className="section-title">
+      <Title order={2} className="section-detail-title">
         {t('eventDetailPage.organizer')}
       </Title>
       <OrganizerCard
@@ -46,5 +46,3 @@ export const OrganizerInfoSection: React.FC<OrganizerInfoProps> = ({
 
   return <>{isDesktop ? desktopLayout : mobileAndTabletLayout}</>;
 };
-
-
