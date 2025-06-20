@@ -16,6 +16,7 @@ import {
   useMantineTheme,
   Loader,
 } from '@mantine/core';
+import { IconCalendar } from '@tabler/icons-react';
 import './EventDetailPage.css';
 import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import ShowScheduleCalendar from '@/components/event-detail/ShowScheduleCalendar/ShowScheduleCalendar';
@@ -70,7 +71,7 @@ const PurchasedEventDetailPage: React.FC = () => {
   const ScheduleSection = () => {
     if (showsLoading || schedulesLoading) {
       return (
-        <Box pos="relative" h={400}>
+        <Box pos="relative" h={600}>
           <LoadingOverlay visible={true} />
         </Box>
       );
@@ -78,24 +79,28 @@ const PurchasedEventDetailPage: React.FC = () => {
 
     if (!showDetail) {
       return (
-        <Stack p="md">
-          <Title order={2}>Show Schedule</Title>
-          <Stack p="md">
-            <Text>Show not found.</Text>
+        <Paper p="xl" radius="md" style={{ textAlign: 'center' }}>
+          <Stack align="center" gap="md">
+            <IconCalendar size={48} color="#64748b" />
+            <Title order={3} c="dimmed">
+              Show Not Found
+            </Title>
+            <Text c="dimmed">The requested show could not be found.</Text>
           </Stack>
-        </Stack>
+        </Paper>
       );
     }
 
     return (
-      <Stack p="md">
+      <Paper radius="md" style={{ overflow: 'hidden', height: '600px' }}>
         <ShowScheduleCalendar
+          event={event}
           showStartTime={showDetail.startTime}
           showEndTime={showDetail.endTime}
           schedules={schedules || []}
           error={schedulesError}
         />
-      </Stack>
+      </Paper>
     );
   };
 

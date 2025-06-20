@@ -25,12 +25,11 @@ export const httpApi = axios.create({
 
 httpApi.interceptors.request.use((config) => {
   const token = getToken();
+
   if (token) {
-    // Set Authorization header properly for Axios v1+
     config.headers.set('Authorization', `Bearer ${token}`);
   }
 
-  // Handle FormData - remove Content-Type to let browser set it with boundary
   if (config.data instanceof FormData) {
     config.headers.delete('Content-Type');
   }
@@ -39,23 +38,10 @@ httpApi.interceptors.request.use((config) => {
 });
 
 httpApi.interceptors.response.use(undefined, (error: AxiosError) => {
-  console.error('HTTP API Error:', {
-    message: error.message,
-    status: error.response?.status,
-    statusText: error.response?.statusText,
-    data: error.response?.data,
-    config: {
-      url: error.config?.url,
-      method: error.config?.method,
-      headers: error.config?.headers,
-    },
-  });
-
   // Type guard for error.response?.data
   const errorData = error.response?.data as { message?: string } | undefined;
   const status = error.response?.status;
 
-  // Handle authentication errors (401) - redirect to login
   if (status === 401) {
     if (globalErrorHandler) {
       globalErrorHandler(401, 'unauthorized');

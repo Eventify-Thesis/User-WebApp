@@ -16,12 +16,20 @@ export const AuthTokenProvider: React.FC<{ children: React.ReactNode }> = ({
   const updateToken = useCallback(async () => {
     if (isSignedIn) {
       try {
-        // Get the default session token
-        const token = await getToken();
+        const token = await getToken({ template: 'test' });
+
         setToken(token);
       } catch (error) {
         console.error('Error getting auth token from Clerk:', error);
-        setToken(null);
+        // Fallback to default token if custom template fails
+        try {
+          const fallbackToken = await getToken();
+          console.log('Using fallback default token');
+          setToken(fallbackToken);
+        } catch (fallbackError) {
+          console.error('Fallback token also failed:', fallbackError);
+          setToken(null);
+        }
       }
     } else {
       setToken(null);
@@ -33,14 +41,12 @@ export const AuthTokenProvider: React.FC<{ children: React.ReactNode }> = ({
     // Update token immediately
     updateToken();
 
-    // Refresh token every 30 minutes to ensure it doesn't expire
-    // This is a fallback in case the focus event listeners don't trigger
-    const intervalId = setInterval(updateToken, 3 * 100);
+    // Refresh token every 30 seconds - much more reasonable frequency
+    const intervalId = setInterval(updateToken, 30 * 1000);
 
     // Add event listener to refresh token when window gets focus
     // This helps ensure the token is fresh when the user returns to the app
     const handleFocus = () => {
-      console.log('Window focused, refreshing token');
       updateToken();
     };
 
