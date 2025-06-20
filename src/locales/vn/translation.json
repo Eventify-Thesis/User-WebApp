@@ -1,5 +1,18 @@
 {
-  "monthNames": ["Th1", "Th2", "Th3", "Th4", "Th5", "Th6", "Th7", "Th8", "Th9", "Th10", "Th11", "Th12"],
+  "monthNames": [
+    "Th1",
+    "Th2",
+    "Th3",
+    "Th4",
+    "Th5",
+    "Th6",
+    "Th7",
+    "Th8",
+    "Th9",
+    "Th10",
+    "Th11",
+    "Th12"
+  ],
   "searchBar": {
     "browseByCategory": "Khám phá theo Thể loại",
     "browseByLocation": "Khám phá theo Thành phố",
@@ -43,20 +56,20 @@
     "physicalTicket": "Vé cứng"
   },
   "orderSection": {
-      "order": "Đơn hàng",
-      "orderDate": "Ngày đặt hàng",
-      "paymentMethod": "Phương thức thanh toán",
-      "orderStatus": "Tình trạng đơn hàng",
-      "buyerInfo": "Thông tin người mua",
-      "name": "Tên",
-      "email": "Email",
-      "phone": "Số điện thoại",
-      "address": "Địa chỉ",
-      "orderSummary": "Thông tin đơn hàng",
-      "ticketType": "Loại vé",
-      "quantity": "Số lượng",
-      "totalPrice": "Thành tiền",
-      "totalAmount": "Tổng tiền"
+    "order": "Đơn hàng",
+    "orderDate": "Ngày đặt hàng",
+    "paymentMethod": "Phương thức thanh toán",
+    "orderStatus": "Tình trạng đơn hàng",
+    "buyerInfo": "Thông tin người mua",
+    "name": "Tên",
+    "email": "Email",
+    "phone": "Số điện thoại",
+    "address": "Địa chỉ",
+    "orderSummary": "Thông tin đơn hàng",
+    "ticketType": "Loại vé",
+    "quantity": "Số lượng",
+    "totalPrice": "Thành tiền",
+    "totalAmount": "Tổng tiền"
   },
   "filters": {
     "location": "Vị trí",
@@ -244,6 +257,8 @@
     "emailError": "Please input users name or delete this field",
     "notValidEmail": "Please input a valid email address!",
     "error": "Error",
+    "unauthorized": "Phiên làm việc của bạn đã hết hạn. Vui lòng đăng nhập lại.",
+    "forbidden": "Bạn không có quyền thực hiện hành động này.",
     "feed": "Feed",
     "firstName": "First Name",
     "forgotPass": "Forgot Password",

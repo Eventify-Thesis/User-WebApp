@@ -15,6 +15,8 @@ const AuthLayout = React.lazy(
 import MainLayout from '@/components/layouts/main/MainLayout/MainLayout';
 
 import RequireAuth from '@/components/router/RequireAuth';
+import { GlobalErrorHandler } from '@/components/common/GlobalErrorHandler/GlobalErrorHandler';
+import { ErrorBoundary } from '@/components/common/ErrorBoundary/ErrorBoundary';
 const EventDetailPage = React.lazy(() => import('@/pages/EventDetailPage'));
 const PurchasedEventDetailPage = React.lazy(
   () => import('@/pages/PurchasedEventDetailPage'),
@@ -53,66 +55,78 @@ export const HOME_PATH = '/';
 export const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
+      <GlobalErrorHandler />
       <ScrollToTop />
-      <Routes>
-        {/* everything lives under the same MainLayout */}
-        <Route path="/" element={<MainLayout />}>
-          {/* public pages */}
-          <Route index element={<HomePage />} />
-          <Route path="search-result" element={<SearchResult />} />
-          <Route path="interested" element={<InterestedPage />} />
-          <Route path="tickets" element={<OrderHistory />} />
-          <Route path="orders/:orderId" element={<TicketOrder />} />
-          <Route path=":slug" element={<EventDetailPage />} />
-          <Route
-            path="purchased/:slug/:showId"
-            element={<PurchasedEventDetailPage />}
-          />
-          {/* Legacy quiz pages */}
-          <Route path="quiz/:showId" element={<QuizPage />} />
-          <Route path="quiz-result/:showId" element={<QuizResultPage />} />
-
-          {/* New Mantine quiz pages */}
-          <Route path="quiz-entry" element={<QuizCodeEntryPage />} />
-          <Route path="quiz-waiting/:code" element={<QuizWaitingRoomPage />} />
-          <Route path="quiz-play/:code" element={<QuizPlayPage />} />
-
-          {/* protected subtree */}
-          <Route
-            element={
-              <RequireAuth>
-                <Outlet />
-              </RequireAuth>
-            }
-          >
+      <ErrorBoundary>
+        <Routes>
+          {/* everything lives under the same MainLayout */}
+          <Route path="/" element={<MainLayout />}>
+            {/* public pages */}
+            <Route index element={<HomePage />} />
+            <Route path="search-result" element={<SearchResult />} />
+            <Route path="interested" element={<InterestedPage />} />
+            <Route path="tickets" element={<OrderHistory />} />
+            <Route path="orders/:orderId" element={<TicketOrder />} />
+            <Route path=":slug" element={<EventDetailPage />} />
             <Route
-              path="events/:eventId/bookings/:showId/select-ticket"
-              element={<EventSelectTicketPage />}
+              path="purchased/:slug/:showId"
+              element={<PurchasedEventDetailPage />}
             />
+            {/* Legacy quiz pages */}
+            <Route path="quiz/:showId" element={<QuizPage />} />
+            <Route path="quiz-result/:showId" element={<QuizResultPage />} />
 
+            {/* New Mantine quiz pages */}
+            <Route path="quiz-entry" element={<QuizCodeEntryPage />} />
             <Route
-              path="events/:eventId/bookings/:showId"
-              element={<CheckoutPage />}
+              path="quiz-waiting/:code"
+              element={<QuizWaitingRoomPage />}
+            />
+            <Route path="quiz-play/:code" element={<QuizPlayPage />} />
+
+            {/* protected subtree */}
+            <Route
+              element={
+                <RequireAuth>
+                  <Outlet />
+                </RequireAuth>
+              }
             >
-              {/* nested steps here */}+{' '}
-              <Route index element={<Navigate to="question-form" replace />} />
-              <Route path="question-form" element={<QuestionStep />} />
-              <Route path="payment-info" element={<PaymentStep />} />
+              <Route
+                path="events/:eventId/bookings/:showId/select-ticket"
+                element={<EventSelectTicketPage />}
+              />
+
+              <Route
+                path="events/:eventId/bookings/:showId"
+                element={<CheckoutPage />}
+              >
+                {/* nested steps here */}+{' '}
+                <Route
+                  index
+                  element={<Navigate to="question-form" replace />}
+                />
+                <Route path="question-form" element={<QuestionStep />} />
+                <Route path="payment-info" element={<PaymentStep />} />
+              </Route>
+
+              <Route
+                path="checkout/:orderId/success"
+                element={<CheckoutSuccessPage />}
+              />
             </Route>
-
-            <Route
-              path="checkout/:orderId/success"
-              element={<CheckoutSuccessPage />}
-            />
           </Route>
-        </Route>
 
-        {/* auth routes (outside MainLayout) */}
-        <Route path="auth" element={<AuthLayoutFallback />}>
-          <Route path="login" element={<SignIn signUpUrl="/auth/sign-up" />} />
-          <Route path="sign-up" element={<SignUp />} />
-        </Route>
-      </Routes>
+          {/* auth routes (outside MainLayout) */}
+          <Route path="auth" element={<AuthLayoutFallback />}>
+            <Route
+              path="login"
+              element={<SignIn signUpUrl="/auth/sign-up" />}
+            />
+            <Route path="sign-up" element={<SignUp />} />
+          </Route>
+        </Routes>
+      </ErrorBoundary>
     </BrowserRouter>
   );
 };
