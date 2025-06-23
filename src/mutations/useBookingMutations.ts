@@ -51,9 +51,28 @@ export const useBookingMutations = () => {
     },
   });
 
+  const completeFreeOrderMutation = useMutation({
+    mutationFn: (data: { orderId: number }) => {
+      return bookingClient.completeFreeOrder(data.orderId);
+    },
+    onSuccess: () => {
+      notification.success({
+        message: 'Success',
+        description: 'Your free tickets have been confirmed!',
+      });
+    },
+    onError: (error: Error) => {
+      notification.error({
+        message: error.message,
+        description: 'Failed to complete your free order. Please try again.',
+      });
+    },
+  });
+
   return {
     submitTicketInfo: submitTicketInfoMutation.mutateAsync,
     updateFormAnswer: updateFormAnswerMutation.mutateAsync,
     createPaymentIntent: createPaymentIntent.mutateAsync,
+    completeFreeOrder: completeFreeOrderMutation.mutateAsync,
   };
 };

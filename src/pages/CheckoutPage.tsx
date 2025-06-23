@@ -26,6 +26,7 @@ import { useNavigationBlocker } from '@/hooks/useNavigationBlocker';
 import { useBookingMutations } from '@/mutations/useBookingMutations';
 import { useForm } from '@mantine/form';
 import { CheckoutContext } from '@/types/checkout';
+import BookingModel from '@/domain/BookingModel';
 enum CheckoutStep {
   QUESTION_FORM = 'question-form',
   PAYMENT_INFO = 'payment-info',
@@ -70,9 +71,9 @@ const CheckoutPage: React.FC = () => {
     showId,
   );
   const { data: bookingStatus, isLoading: isLoadingBooking } =
-    useGetBookingStatus(Number(showId), bookingCode);
+    useGetBookingStatus(Number(showId), bookingCode || '');
 
-  const { updateFormAnswer } = useBookingMutations();
+  const { updateFormAnswer, completeFreeOrder } = useBookingMutations();
 
   const form = useForm<{
     order: {
@@ -106,7 +107,7 @@ const CheckoutPage: React.FC = () => {
           first_name: '',
           last_name: '',
           email: '',
-          id: '',
+          id: 0,
           seatId: undefined,
           rowLabel: undefined,
           seatNumber: undefined,
@@ -182,7 +183,9 @@ const CheckoutPage: React.FC = () => {
     return step === CheckoutStep.QUESTION_FORM ? 2 : 3;
   };
 
-  const handleQuestionnaireSubmit = async () => {
+  const handleQuestionnaireSubmit = async (
+    bookingStatusParam?: BookingModel,
+  ) => {
     if (!form) {
       console.error('Form reference not available');
       return;
@@ -216,11 +219,37 @@ const CheckoutPage: React.FC = () => {
           })),
         },
       });
+
       unblock();
-      navigate(
-        `/events/${eventId}/bookings/${showId}/${CheckoutStep.PAYMENT_INFO}`,
-        { replace: true },
-      );
+
+      // Use the passed booking status or fall back to the current one
+      const currentBookingStatus = bookingStatusParam || bookingStatus?.result;
+
+      // Check if the order is free (total amount is 0)
+      if (currentBookingStatus && currentBookingStatus.totalAmount === 0) {
+        console.log('Free order detected, completing without payment');
+
+        try {
+          await completeFreeOrder({ orderId: currentBookingStatus.orderId });
+          // Navigate to success page with free order indicator
+          navigate(
+            `/checkout/${currentBookingStatus.orderId}/success?free=true`,
+          );
+        } catch (error) {
+          console.error('Failed to complete free order:', error);
+          // If free order completion fails, still proceed to payment for safety
+          navigate(
+            `/events/${eventId}/bookings/${showId}/${CheckoutStep.PAYMENT_INFO}`,
+            { replace: true },
+          );
+        }
+      } else {
+        // Proceed to payment for paid orders
+        navigate(
+          `/events/${eventId}/bookings/${showId}/${CheckoutStep.PAYMENT_INFO}`,
+          { replace: true },
+        );
+      }
     } catch (error) {
       // Error is handled by the mutation
       console.error('Failed to submit form:', error);
@@ -246,7 +275,7 @@ const CheckoutPage: React.FC = () => {
       </ProgressRow>
       {event && show && (
         <EventDetailsRow>
-          <EventDetails event={event} expireIn={remainingTime} />
+          <EventDetails event={event} expireIn={remainingTime || 0} />
         </EventDetailsRow>
       )}
       <Container

@@ -94,4 +94,11 @@ export const bookingClient = {
     });
     return response.data.data;
   },
+
+  completeFreeOrder: async (orderId: number) => {
+    const response = await httpApi.post('/bookings/complete-free-order', {
+      orderId,
+    });
+    return response.data.data;
+  },
 };

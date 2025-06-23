@@ -30,6 +30,11 @@ export const QuestionStep: React.FC = () => {
   //   return null;
   // }
 
+  const handleContinue = () => {
+    // Pass the booking status to determine if payment is needed
+    onContinue(bookingStatus);
+  };
+
   return (
     <BaseRow
       style={{
@@ -45,7 +50,7 @@ export const QuestionStep: React.FC = () => {
         orderItems={bookingStatus.items}
         form={form}
         onFormReady={() => {}}
-        onContinue={onContinue}
+        onContinue={handleContinue}
       />
     </BaseRow>
   );

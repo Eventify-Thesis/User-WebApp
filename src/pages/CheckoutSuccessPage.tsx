@@ -4,52 +4,83 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { Result, Spin, Button, Typography, Space } from 'antd';
 import { IeOutlined, LoadingOutlined } from '@ant-design/icons';
-import { IconShoppingCartCheck } from '@tabler/icons-react';
+import { IconShoppingCartCheck, IconGift } from '@tabler/icons-react';
 
 const { Text } = Typography;
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
+interface OrderType {
+  type: 'free' | 'paid';
+  status: 'loading' | 'success' | 'error';
+  error?: string;
+}
+
 const CheckoutSuccessContent: React.FC = () => {
   const navigate = useNavigate();
   const { orderId } = useParams();
   const [searchParams] = useSearchParams();
-  const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
-    'loading',
-  );
-  const [error, setError] = useState<string | null>(null);
+  const [orderInfo, setOrderInfo] = useState<OrderType>({
+    type: 'paid',
+    status: 'loading',
+  });
 
   useEffect(() => {
     const clientSecret = searchParams.get('payment_intent_client_secret');
+    const paymentIntentStatus = searchParams.get('redirect_status');
+    const isFreeOrder = searchParams.get('free') === 'true';
 
+    // Check if this is a free order
+    if (isFreeOrder || (!clientSecret && !paymentIntentStatus)) {
+      setOrderInfo({
+        type: 'free',
+        status: 'success',
+      });
+      return;
+    }
+
+    // Handle Stripe payment verification
     if (!clientSecret) {
-      setStatus('error');
-      setError('Payment verification failed. Please contact support.');
+      setOrderInfo({
+        type: 'paid',
+        status: 'error',
+        error: 'Payment verification failed. Please contact support.',
+      });
       return;
     }
 
     // Verify payment status from URL parameters
-    const paymentIntentStatus = searchParams.get('redirect_status');
-
     switch (paymentIntentStatus) {
       case 'succeeded':
-        setStatus('success');
+        setOrderInfo({
+          type: 'paid',
+          status: 'success',
+        });
         break;
       case 'processing':
-        setStatus('loading');
+        setOrderInfo({
+          type: 'paid',
+          status: 'loading',
+        });
         break;
       case 'requires_payment_method':
-        setStatus('error');
-        setError('Payment failed. Please try another payment method.');
+        setOrderInfo({
+          type: 'paid',
+          status: 'error',
+          error: 'Payment failed. Please try another payment method.',
+        });
         break;
       default:
-        setStatus('error');
-        setError(`Unexpected payment status: ${paymentIntentStatus}`);
+        setOrderInfo({
+          type: 'paid',
+          status: 'error',
+          error: `Unexpected payment status: ${paymentIntentStatus}`,
+        });
         break;
     }
   }, [searchParams]);
 
-  if (status === 'loading') {
+  if (orderInfo.status === 'loading') {
     return (
       <Result
         style={{
@@ -68,15 +99,15 @@ const CheckoutSuccessContent: React.FC = () => {
     );
   }
 
-  if (status === 'error') {
+  if (orderInfo.status === 'error') {
     return (
       <Result
         style={{
           color: '#fff',
         }}
         status="error"
-        title="Payment Failed"
-        subTitle={error || 'An unexpected error occurred'}
+        title="Order Processing Failed"
+        subTitle={orderInfo.error || 'An unexpected error occurred'}
         extra={[
           <Button
             key="retry"
@@ -90,6 +121,9 @@ const CheckoutSuccessContent: React.FC = () => {
     );
   }
 
+  // Success state - different messages for free vs paid orders
+  const isFreeOrder = orderInfo.type === 'free';
+
   return (
     <Result
       style={{
@@ -98,7 +132,7 @@ const CheckoutSuccessContent: React.FC = () => {
       status="success"
       title={
         <Text style={{ color: 'white', fontWeight: 'bold', fontSize: '2rem' }}>
-          Payment Successful!
+          {isFreeOrder ? 'Registration Confirmed!' : 'Payment Successful!'}
         </Text>
       }
       subTitle={
@@ -110,8 +144,9 @@ const CheckoutSuccessContent: React.FC = () => {
               fontSize: '1.5rem',
             }}
           >
-            Thank you for your purchase! Your order #{orderId} has been
-            confirmed.
+            {isFreeOrder
+              ? `Thank you for registering! Your free tickets for order #${orderId} have been confirmed.`
+              : `Thank you for your purchase! Your order #${orderId} has been confirmed.`}
           </Text>
           <Text
             style={{
@@ -122,13 +157,23 @@ const CheckoutSuccessContent: React.FC = () => {
             Your e-tickets are now available in the My Tickets section. You can
             download and view them at any time.
           </Text>
+          {isFreeOrder && (
+            <Text
+              style={{
+                color: '#52c41a',
+                fontWeight: 'bold',
+              }}
+            >
+              🎉 This event was free - no payment required!
+            </Text>
+          )}
         </Space>
       }
       extra={[
         <Button
           key="tickets"
           type="primary"
-          icon={<IconShoppingCartCheck />}
+          icon={isFreeOrder ? <IconGift /> : <IconShoppingCartCheck />}
           size="large"
           onClick={() => navigate('/tickets')}
         >

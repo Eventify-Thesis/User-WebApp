@@ -68,7 +68,7 @@ const EventSelectTicketPage: React.FC = () => {
     );
   }, [selectedTickets, selectedSeats, show]);
   const handleTicketQuantityChange = (ticketId: number, quantity: number) => {
-    const ticket = show?.ticketTypes.find((t) => t.id === ticketId);
+    const ticket = show?.ticketTypes.find((t: any) => t.id === ticketId);
     if (!ticket) return;
 
     if (
@@ -409,7 +409,7 @@ const EventSelectTicketPage: React.FC = () => {
                   size="middle"
                   style={{ width: '100%' }}
                 >
-                  {show?.ticketTypes.map((ticket) => (
+                  {show?.ticketTypes.map((ticket: any) => (
                     <TicketCard
                       key={ticket.id}
                       ticket={ticket}
