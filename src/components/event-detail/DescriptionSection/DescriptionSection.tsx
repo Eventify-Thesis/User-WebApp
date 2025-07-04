@@ -27,7 +27,7 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
         }}
       >
         <div
-          style={{ color: '#f5f5f7' }}
+          style={{ color: '#333' }}
           dangerouslySetInnerHTML={{ __html: description || '' }}
         />
 
@@ -40,7 +40,7 @@ export const DescriptionSection: React.FC<DescriptionSectionProps> = ({
               bottom: 0,
               height: '120px',
               background:
-                'linear-gradient(rgba(25, 25, 40, 0) 0%, rgba(25, 25, 40, 0.95) 100%)',
+                'linear-gradient(rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.95) 100%)',
               zIndex: 3,
             }}
           />

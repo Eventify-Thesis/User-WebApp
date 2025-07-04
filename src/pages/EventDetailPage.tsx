@@ -25,12 +25,24 @@ import {
   Badge,
   ActionIcon,
   Button,
+  Modal,
+  Flex,
+  Tooltip,
+  CopyButton,
 } from '@mantine/core';
 import {
   IconSparkles,
   IconTrendingUp,
   IconHeart,
   IconHeartFilled,
+  IconShare,
+  IconBrandFacebook,
+  IconBrandTwitter,
+  IconBrandLinkedin,
+  IconBrandWhatsapp,
+  IconMail,
+  IconCopy,
+  IconCheck,
 } from '@tabler/icons-react';
 import { useRelatedEvents } from '@/queries/useRelatedEvents';
 import { useAuth } from '@clerk/clerk-react';
@@ -53,6 +65,7 @@ const EventDetailPage: React.FC = () => {
   const theme = useMantineTheme();
   const { eventDescription, orgName, orgLogoUrl, orgDescription } = event || {};
   const [isLiked, setIsLiked] = useState(event?.isInterested || false);
+  const [shareModalOpen, setShareModalOpen] = useState(false);
 
   // Custom media query for better responsive behavior
   // Use desktop layout only for screens >= 1200px
@@ -100,6 +113,151 @@ const EventDetailPage: React.FC = () => {
       setIsLiked(event.isInterested);
     }
   }, [event?.isInterested]);
+
+  // Social media sharing functionality
+  const currentUrl = window.location.href;
+  const shareTitle = event?.eventName || 'Check out this event';
+  const shareDescription =
+    event?.eventDescription || 'Amazing event you should not miss!';
+
+  const shareUrls = {
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+      currentUrl,
+    )}`,
+    twitter: `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+      currentUrl,
+    )}&text=${encodeURIComponent(shareTitle)}`,
+    linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+      currentUrl,
+    )}`,
+    whatsapp: `https://wa.me/?text=${encodeURIComponent(
+      shareTitle + ' ' + currentUrl,
+    )}`,
+    email: `mailto:?subject=${encodeURIComponent(
+      shareTitle,
+    )}&body=${encodeURIComponent(shareDescription + '\n\n' + currentUrl)}`,
+  };
+
+  const handleSocialShare = (platform: string) => {
+    const url = shareUrls[platform as keyof typeof shareUrls];
+    if (url) {
+      window.open(url, '_blank', 'noopener,noreferrer');
+    }
+  };
+
+  const ShareModal = () => (
+    <Modal
+      opened={shareModalOpen}
+      onClose={() => setShareModalOpen(false)}
+      title={<Title order={3}>Share this event</Title>}
+      centered
+      size="md"
+    >
+      <Stack gap="md">
+        <Text size="sm" c="dimmed">
+          Share this event with your friends and family
+        </Text>
+
+        <Flex gap="md" wrap="wrap" justify="center">
+          <Tooltip label="Share on Facebook">
+            <ActionIcon
+              size="xl"
+              variant="filled"
+              color="blue"
+              onClick={() => handleSocialShare('facebook')}
+              style={{ borderRadius: '50%' }}
+            >
+              <IconBrandFacebook size={20} />
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip label="Share on Twitter">
+            <ActionIcon
+              size="xl"
+              variant="filled"
+              color="cyan"
+              onClick={() => handleSocialShare('twitter')}
+              style={{ borderRadius: '50%' }}
+            >
+              <IconBrandTwitter size={20} />
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip label="Share on LinkedIn">
+            <ActionIcon
+              size="xl"
+              variant="filled"
+              color="blue"
+              onClick={() => handleSocialShare('linkedin')}
+              style={{ borderRadius: '50%' }}
+            >
+              <IconBrandLinkedin size={20} />
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip label="Share on WhatsApp">
+            <ActionIcon
+              size="xl"
+              variant="filled"
+              color="green"
+              onClick={() => handleSocialShare('whatsapp')}
+              style={{ borderRadius: '50%' }}
+            >
+              <IconBrandWhatsapp size={20} />
+            </ActionIcon>
+          </Tooltip>
+
+          <Tooltip label="Share via Email">
+            <ActionIcon
+              size="xl"
+              variant="filled"
+              color="orange"
+              onClick={() => handleSocialShare('email')}
+              style={{ borderRadius: '50%' }}
+            >
+              <IconMail size={20} />
+            </ActionIcon>
+          </Tooltip>
+        </Flex>
+
+        <Divider my="sm" />
+
+        <Box>
+          <Text size="sm" fw={500} mb="xs">
+            Or copy link
+          </Text>
+          <Group gap="xs">
+            <Text
+              size="sm"
+              c="dimmed"
+              style={{
+                flex: 1,
+                padding: '8px 12px',
+                backgroundColor: theme.colors.gray[1],
+                borderRadius: theme.radius.sm,
+                wordBreak: 'break-all',
+              }}
+            >
+              {currentUrl}
+            </Text>
+            <CopyButton value={currentUrl} timeout={2000}>
+              {({ copied, copy }) => (
+                <Tooltip label={copied ? 'Copied!' : 'Copy link'}>
+                  <ActionIcon
+                    variant="filled"
+                    color={copied ? 'teal' : 'gray'}
+                    onClick={copy}
+                  >
+                    {copied ? <IconCheck size={16} /> : <IconCopy size={16} />}
+                  </ActionIcon>
+                </Tooltip>
+              )}
+            </CopyButton>
+          </Group>
+        </Box>
+      </Stack>
+    </Modal>
+  );
 
   const AdvertisingSection = () => (
     <Paper
@@ -223,33 +381,65 @@ const EventDetailPage: React.FC = () => {
     >
       <Box className="event-banner" style={{ position: 'relative' }}>
         <HeroSection event={event} />
-        {/* Like button positioned within hero section */}
-        {event && userId && (
-          <ActionIcon
-            size="xl"
-            radius="xl"
-            variant="filled"
-            color={isLiked ? 'red' : 'gray'}
-            onClick={handleLikeToggle}
-            loading={
-              createInterestMutation.isPending ||
-              deleteInterestMutation.fadingEvents.includes(Number(eventId))
-            }
+        {/* Action buttons positioned within hero section */}
+        {event && (
+          <Group
+            gap="sm"
             style={{
               position: 'absolute',
               top: '20px',
               right: '20px',
               zIndex: 10,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
-              border: '2px solid white',
               '@media (max-width: 1199px)': {
                 top: '10px',
                 right: '10px',
               },
             }}
           >
-            {isLiked ? <IconHeartFilled size={24} /> : <IconHeart size={24} />}
-          </ActionIcon>
+            <Tooltip label="Share event">
+              <ActionIcon
+                size="xl"
+                radius="xl"
+                variant="filled"
+                color="blue"
+                onClick={() => setShareModalOpen(true)}
+                style={{
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+                  border: '2px solid white',
+                }}
+              >
+                <IconShare size={24} />
+              </ActionIcon>
+            </Tooltip>
+
+            {userId && (
+              <Tooltip label={isLiked ? 'Unlike event' : 'Like event'}>
+                <ActionIcon
+                  size="xl"
+                  radius="xl"
+                  variant="filled"
+                  color={isLiked ? 'red' : 'gray'}
+                  onClick={handleLikeToggle}
+                  loading={
+                    createInterestMutation.isPending ||
+                    deleteInterestMutation.fadingEvents.includes(
+                      Number(eventId),
+                    )
+                  }
+                  style={{
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+                    border: '2px solid white',
+                  }}
+                >
+                  {isLiked ? (
+                    <IconHeartFilled size={24} />
+                  ) : (
+                    <IconHeart size={24} />
+                  )}
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </Group>
         )}
       </Box>
       <Box
@@ -308,29 +498,61 @@ const EventDetailPage: React.FC = () => {
     >
       <Box className="event-banner" style={{ position: 'relative' }}>
         <HeroSection event={event} />
-        {/* Like button positioned within hero section */}
-        {event && userId && (
-          <ActionIcon
-            size="xl"
-            radius="xl"
-            variant="filled"
-            color={isLiked ? 'red' : 'gray'}
-            onClick={handleLikeToggle}
-            loading={
-              createInterestMutation.isPending ||
-              deleteInterestMutation.fadingEvents.includes(Number(eventId))
-            }
+        {/* Action buttons positioned within hero section */}
+        {event && (
+          <Group
+            gap="sm"
             style={{
               position: 'absolute',
               top: '10px',
               right: '10px',
               zIndex: 10,
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
-              border: '2px solid white',
             }}
           >
-            {isLiked ? <IconHeartFilled size={24} /> : <IconHeart size={24} />}
-          </ActionIcon>
+            <Tooltip label="Share event">
+              <ActionIcon
+                size="xl"
+                radius="xl"
+                variant="filled"
+                color="blue"
+                onClick={() => setShareModalOpen(true)}
+                style={{
+                  boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+                  border: '2px solid white',
+                }}
+              >
+                <IconShare size={24} />
+              </ActionIcon>
+            </Tooltip>
+
+            {userId && (
+              <Tooltip label={isLiked ? 'Unlike event' : 'Like event'}>
+                <ActionIcon
+                  size="xl"
+                  radius="xl"
+                  variant="filled"
+                  color={isLiked ? 'red' : 'gray'}
+                  onClick={handleLikeToggle}
+                  loading={
+                    createInterestMutation.isPending ||
+                    deleteInterestMutation.fadingEvents.includes(
+                      Number(eventId),
+                    )
+                  }
+                  style={{
+                    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.25)',
+                    border: '2px solid white',
+                  }}
+                >
+                  {isLiked ? (
+                    <IconHeartFilled size={24} />
+                  ) : (
+                    <IconHeart size={24} />
+                  )}
+                </ActionIcon>
+              </Tooltip>
+            )}
+          </Group>
         )}
       </Box>
       <Box className="main-info-section">
@@ -362,6 +584,7 @@ const EventDetailPage: React.FC = () => {
       {event && (
         <>{shouldUseMobileLayout ? mobileAndTabletLayout : desktopLayout}</>
       )}
+      <ShareModal />
     </Container>
   );
 };
