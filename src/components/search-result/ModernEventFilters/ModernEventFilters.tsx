@@ -40,11 +40,13 @@ export interface FilterData {
   categories: string[];
 }
 
+type SetStateAction<S> = S | ((prevState: S) => S);
+
 interface ModernEventFiltersProps {
   selectedDates: [Dayjs | null, Dayjs | null];
   setSelectedDates: (dates: [Dayjs | null, Dayjs | null]) => void;
   filterData: FilterData;
-  setFilterData: (data: FilterData) => void;
+  setFilterData: (data: SetStateAction<FilterData>) => void;
 }
 
 const categoryOptions = [
@@ -111,27 +113,29 @@ export const ModernEventFilters = ({
   };
 
   const updateLocation = (value: string) => {
-    if (value === 'other') {
-      setFilterData({
-        ...filterData,
-        locationValue: customLocation,
-        locationDisplay: 'Other Location',
-      });
-    } else {
-      const option = locationOptions.find((opt) => opt.value === value);
-      setFilterData({
-        ...filterData,
-        locationValue: value,
-        locationDisplay: option?.label || '',
-      });
-    }
-  };
-
-  const updateCategories = (categories: string[]) => {
-    setFilterData({
-      ...filterData,
-      categories,
+    setFilterData((prev: FilterData) => {
+      if (value === 'other') {
+        return {
+          ...prev,
+          locationValue: customLocation,
+          locationDisplay: 'Other Location',
+        };
+      } else {
+        const option = locationOptions.find((opt) => opt.value === value);
+        return {
+          ...prev,
+          locationValue: value,
+          locationDisplay: option?.label || '',
+        };
+      }
     });
+  };
+  
+  const updateCategories = (categories: string[]) => {
+    setFilterData((prev: FilterData) => ({
+      ...prev,
+      categories,
+    }));
   };
 
   const clearAllFilters = () => {

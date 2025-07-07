@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
+import type { SetStateAction } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'react-router-dom';
 import type { Dayjs } from 'dayjs';
@@ -20,6 +21,7 @@ import { useNavigate } from 'react-router-dom';
 import { CustomMarker } from '@/components/search-result/CustomMarker';
 import { GridEventCard } from '@/components/search-result/GridEventCard';
 import { GoogleMapsProvider } from '@/components/providers/GoogleMapsProvider';
+import React from 'react';
 
 function useQueryParam(key: string) {
   const { search } = useLocation();
@@ -47,6 +49,9 @@ const mapOptions = {
   gestureHandling: 'greedy',
 };
 
+// Memoize the ModernEventFilters component to prevent unnecessary re-renders
+const ModernEventFiltersMemo = React.memo(ModernEventFilters);
+
 function SearchResults() {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -60,6 +65,13 @@ function SearchResults() {
     locationDisplay: '',
     categories: categoryParam ? categoryParam.split(',') : [],
   });
+
+  // Memoize the filter change handler to prevent unnecessary re-renders
+  const handleFilterChange = useCallback((newFilterData: SetStateAction<FilterData>) => {
+    setFilterData(newFilterData);
+    // Reset to first page when filters change
+    setPage(1);
+  }, []);
   const { userId } = useAuth();
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -386,11 +398,11 @@ function SearchResults() {
             flexDirection: 'column',
           }}
         >
-          <ModernEventFilters
+          <ModernEventFiltersMemo
             selectedDates={selectedDates}
             setSelectedDates={setSelectedDates}
             filterData={filterData}
-            setFilterData={setFilterData}
+            setFilterData={handleFilterChange}
           />
           {isFetching && page === 1 ? (
             <Loading />
