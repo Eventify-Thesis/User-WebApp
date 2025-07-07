@@ -93,6 +93,7 @@ export const ModernEventFilters = ({
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [customLocation, setCustomLocation] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeDatePreset, setActiveDatePreset] = useState<string | null>(null);
 
   // Initialize search query from URL
   useEffect(() => {
@@ -177,9 +178,17 @@ export const ModernEventFilters = ({
   };
 
   const handleDatePreset = (preset: string) => {
-    const today = dayjs();
+    // Toggle off if clicking the same preset
+    if (activeDatePreset === preset) {
+      setActiveDatePreset(null);
+      setSelectedDates([null, null]);
+      return;
+    }
+
+    setActiveDatePreset(preset);
     let startDate: Dayjs | null = null;
     let endDate: Dayjs | null = null;
+    const today = dayjs();
 
     switch (preset) {
       case 'today':
@@ -187,8 +196,9 @@ export const ModernEventFilters = ({
         endDate = today.endOf('day');
         break;
       case 'tomorrow':
-        startDate = today.add(1, 'day').startOf('day');
-        endDate = today.add(1, 'day').endOf('day');
+        const tomorrow = today.add(1, 'day');
+        startDate = tomorrow.startOf('day');
+        endDate = tomorrow.endOf('day');
         break;
       case 'this-week':
         startDate = today.startOf('week');
@@ -196,7 +206,7 @@ export const ModernEventFilters = ({
         break;
       case 'this-weekend':
         const thisSaturday = today.day(6);
-        const thisSunday = today.day(7);
+        const thisSunday = today.day(0).add(1, 'week');
         startDate = thisSaturday.startOf('day');
         endDate = thisSunday.endOf('day');
         break;
@@ -288,36 +298,38 @@ export const ModernEventFilters = ({
         />
 
         {/* Quick Filters Row */}
-        <Flex gap="xs" wrap="wrap" align="center">
+        <Flex gap="xs" wrap="nowrap" align="center">
           {/* Quick Categories */}
-          <Group gap="4px">
+          <Group gap="4px" wrap="nowrap">
             {categoryOptions.slice(0, 4).map((category) => (
-              <Chip
+              <Button
                 key={category.value}
-                checked={filterData.categories.includes(category.value)}
-                onChange={(checked) => {
-                  const newCategories = checked
-                    ? [...filterData.categories, category.value]
-                    : filterData.categories.filter((c) => c !== category.value);
-                  updateCategories(newCategories);
-                }}
+                variant={filterData.categories.includes(category.value) ? 'filled' : 'light'}
                 color={category.color}
-                variant="light"
                 size="xs"
                 radius="xl"
+                onClick={() => {
+                  const newCategories = filterData.categories.includes(category.value)
+                    ? filterData.categories.filter((c) => c !== category.value)
+                    : [...filterData.categories, category.value];
+                  updateCategories(newCategories);
+                }}
+                leftSection={<span style={{ fontSize: '10px' }}>{category.icon}</span>}
                 styles={{
+                  root: {
+                    height: '24px',
+                    padding: '0 8px',
+                  },
                   label: {
                     fontSize: '10px',
-                    padding: '2px 6px',
                     display: 'flex',
                     alignItems: 'center',
-                    gap: '2px',
+                    gap: '4px',
                   },
                 }}
               >
-                <span style={{ fontSize: '10px' }}>{category.icon}</span>
                 {category.label}
-              </Chip>
+              </Button>
             ))}
           </Group>
 
@@ -328,14 +340,22 @@ export const ModernEventFilters = ({
             {datePresets.map((preset) => (
               <Button
                 key={preset.value}
-                variant="light"
+                variant={activeDatePreset === preset.value ? 'filled' : 'light'}
+                color="blue"
                 size="xs"
                 radius="xl"
                 onClick={() => handleDatePreset(preset.value)}
-                style={{
-                  fontSize: '10px',
-                  height: '24px',
-                  padding: '0 8px',
+                styles={{
+                  root: {
+                    height: '24px',
+                    padding: '0 8px',
+                  },
+                  label: {
+                    fontSize: '10px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                  },
                 }}
               >
                 {preset.label}
