@@ -60,7 +60,7 @@ const categoryOptions = [
   { value: 'networking', label: 'Network', color: 'lime', icon: '🤝' },
   { value: 'entertainment', label: 'Fun', color: 'grape', icon: '🎪' },
   { value: 'education', label: 'Learn', color: 'cyan', icon: '📚' },
-  { value: 'other', label: 'Other', color: 'gray', icon: '🔮' },
+  { value: '', label: 'Other', color: 'gray', icon: '🔮' },
 ];
 
 const locationOptions = [
@@ -71,7 +71,6 @@ const locationOptions = [
   { value: 'hue', label: 'Hue' },
   { value: 'da lat', label: 'Da Lat' },
   { value: 'nha trang', label: 'Nha Trang' },
-  { value: 'other', label: 'Other' },
 ];
 
 const datePresets = [
