@@ -22,6 +22,7 @@ import { BaseRow } from '@/components/common/BaseRow/BaseRow';
 import ShowScheduleCalendar from '@/components/event-detail/ShowScheduleCalendar/ShowScheduleCalendar';
 import { useGetEventShowDetail } from '@/queries/useGetEventShowDetail';
 import { GameSection } from '@/components/event-detail/GameSection/GameSection';
+import { CommentSection } from '@/components/event-detail/CommentSection/CommentSection';
 
 const PurchasedEventDetailPage: React.FC = () => {
   const { slug, showId } = useParams();
@@ -118,15 +119,12 @@ const PurchasedEventDetailPage: React.FC = () => {
         <HeroSection event={event} />
       </Box>
       <Box
+        className="event-content-container"
         style={{
           display: 'flex',
           gap: '10px',
           width: '100%',
           padding: '0 128px',
-          '@media (max-width: 1280px)': {
-            padding: '0 24px',
-            flexDirection: 'column',
-          },
         }}
       >
         <Box style={{ flex: 1, padding: '0' }}>
@@ -147,6 +145,11 @@ const PurchasedEventDetailPage: React.FC = () => {
             <Box className="section-container">
               <GameSection eventId={eventId} />
             </Box>
+            {eventId && (
+              <Box className="section-container">
+                <CommentSection eventId={eventId} />
+              </Box>
+            )}
           </Box>
         </Box>
         <Box style={{ width: '400px', flexShrink: 0 }}>

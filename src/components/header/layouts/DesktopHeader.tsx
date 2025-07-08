@@ -6,11 +6,17 @@ import { Logo } from '../components/Logo/Logo';
 import { UserButton } from '@clerk/clerk-react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Container, Flex, Tooltip } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
+import { IssueReportModal } from '@/components/support/IssueReportModal';
 import './DesktopHeader.css';
 interface DesktopHeaderProps {}
 
 export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1050);
+  const [
+    supportModalOpened,
+    { open: openSupportModal, close: closeSupportModal },
+  ] = useDisclosure(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -92,6 +98,13 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
               </Box>
             </Tooltip>
 
+            <Tooltip label="Support" position="bottom" disabled={isLargeScreen}>
+              <Box className="nav-item" onClick={openSupportModal}>
+                <S.NavIcon icon="heroicons:question-mark-circle-20-solid" />
+                <span className="nav-text">Support</span>
+              </Box>
+            </Tooltip>
+
             <Box className="user-button">
               <UserButton showName={isLargeScreen} appearance={{}} />
             </Box>
@@ -102,6 +115,12 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
           </Flex>
         </Flex>
       </Flex>
+
+      {/* Support Modal */}
+      <IssueReportModal
+        opened={supportModalOpened}
+        onClose={closeSupportModal}
+      />
     </Container>
   );
 };

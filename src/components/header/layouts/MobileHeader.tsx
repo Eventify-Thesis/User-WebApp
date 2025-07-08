@@ -6,10 +6,16 @@ import { UserButton } from '@clerk/clerk-react';
 import { Logo } from '../components/Logo/Logo';
 import { Box, Flex, Drawer } from '@mantine/core';
 import { useNavigate } from 'react-router-dom';
+import { useDisclosure } from '@mantine/hooks';
+import { IssueReportModal } from '@/components/support/IssueReportModal';
 import './MobileHeader.css';
 
 export const MobileHeader: React.FC = () => {
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [
+    supportModalOpened,
+    { open: openSupportModal, close: closeSupportModal },
+  ] = useDisclosure(false);
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
@@ -26,6 +32,11 @@ export const MobileHeader: React.FC = () => {
   const handleNavItemClick = (path: string) => {
     navigate(path);
     setDrawerOpen(false);
+  };
+
+  const handleSupportClick = () => {
+    setDrawerOpen(false);
+    openSupportModal();
   };
 
   return (
@@ -93,11 +104,21 @@ export const MobileHeader: React.FC = () => {
             <S.NavIcon icon="teenyicons:star-outline" />
             <span>Interested</span>
           </Box>
+          <Box className="drawer-nav-item" onClick={handleSupportClick}>
+            <S.NavIcon icon="heroicons:question-mark-circle-20-solid" />
+            <span>Support</span>
+          </Box>
           <Box className="drawer-create-event" onClick={handleCreateEventClick}>
             <S.CEButton />
           </Box>
         </Box>
       </Drawer>
+
+      {/* Support Modal */}
+      <IssueReportModal
+        opened={supportModalOpened}
+        onClose={closeSupportModal}
+      />
     </>
   );
 };
