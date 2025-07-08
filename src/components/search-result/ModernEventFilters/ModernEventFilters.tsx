@@ -65,12 +65,12 @@ const categoryOptions = [
 
 const locationOptions = [
   { value: '', label: 'All Cities' },
-  { value: 'ho-chi-minh', label: 'HCMC' },
-  { value: 'hanoi', label: 'Hanoi' },
-  { value: 'da-nang', label: 'Da Nang' },
+  { value: 'ho chi minh', label: 'HCMC' },
+  { value: 'hanoi', label: 'Ha Noi' },
+  { value: 'da nang', label: 'Da Nang' },
   { value: 'hue', label: 'Hue' },
-  { value: 'can-tho', label: 'Can Tho' },
-  { value: 'nha-trang', label: 'Nha Trang' },
+  { value: 'da lat', label: 'Da Lat' },
+  { value: 'nha trang', label: 'Nha Trang' },
   { value: 'other', label: 'Other' },
 ];
 
