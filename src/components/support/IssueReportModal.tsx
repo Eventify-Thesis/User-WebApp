@@ -31,16 +31,20 @@ export const IssueReportModal: React.FC<IssueReportModalProps> = ({
       styles={{
         content: {
           borderRadius: '12px',
-          overflow: 'hidden',
+          maxHeight: '90vh',
+          overflow: 'auto',
         },
         body: {
           padding: 0,
+          maxHeight: '90vh',
+          overflow: 'auto',
+        },
+        header: {
+          display: 'none',
         },
       }}
     >
-      <ScrollArea style={{ maxHeight: '90vh' }}>
-        <IssueReportForm onSuccess={handleSuccess} onCancel={handleCancel} />
-      </ScrollArea>
+      <IssueReportForm onSuccess={handleSuccess} onCancel={handleCancel} />
     </Modal>
   );
 };

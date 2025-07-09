@@ -119,20 +119,9 @@ const EventCard: React.FC<EventCardProps> = ({
           position="top"
           withArrow
           transitionProps={{ transition: 'fade', duration: 200 }}
-          // disabled={eventName.length <= 20} // Only show tooltip if text is long
+          disabled={eventName.length <= 50} // Only show tooltip for very long titles
         >
-          <Text
-            lineClamp={1}
-            className="event-title"
-            size="xs"
-            style={{
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              display: '-webkit-box',
-              WebkitLineClamp: 1,
-              WebkitBoxOrient: 'vertical',
-            }}
-          >
+          <Text className="event-title" size="xs">
             {eventName}
           </Text>
         </Tooltip>

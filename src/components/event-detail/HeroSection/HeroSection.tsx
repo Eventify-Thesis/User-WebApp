@@ -283,12 +283,14 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
   // Get the minimum price of all ticket types
   const minPrice = event.shows?.reduce(
     (min: number, show: ShowModel) =>
-      show.ticketTypes.reduce(
-        (min: number, ticketType: TicketTypeModel) =>
-          ticketType.price < min ? ticketType.price : min,
-        min,
-      ),
-    0,
+      show.ticketTypes.reduce((min: number, ticketType: TicketTypeModel) => {
+        const price =
+          typeof ticketType.price === 'string'
+            ? parseFloat(ticketType.price)
+            : ticketType.price;
+        return price < min ? price : min;
+      }, min),
+    Infinity,
   );
 
   const handleBuyTicketClick = () => {
@@ -340,7 +342,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
               fw={900}
               style={{ fontWeight: 900 }}
             >
-              {new Intl.NumberFormat('vi-VN').format(minPrice || 0)}₫
+              {new Intl.NumberFormat('vi-VN').format(
+                minPrice === Infinity ? 0 : minPrice || 0,
+              )}
+              ₫
             </Text>
           </Group>
           <Button
@@ -405,7 +410,10 @@ export const HeroSection: React.FC<HeroSectionProps> = ({ event }) => {
                 fw={900}
                 style={{ fontWeight: 900 }}
               >
-                {new Intl.NumberFormat('vi-VN').format(minPrice || 0)}₫
+                {new Intl.NumberFormat('vi-VN').format(
+                  minPrice === Infinity ? 0 : minPrice || 0,
+                )}
+                ₫
               </Text>
             </Group>
             <Button

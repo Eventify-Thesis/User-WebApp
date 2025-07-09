@@ -107,9 +107,14 @@
   font-weight: 600;
   position: relative;
   display: block;
+  line-height: 1.4;
+  height: 4.2rem; /* Fixed height for ~2 lines (1.5rem * 1.4 * 2) */
   margin-bottom: 10px;
   color: #ffffff;
   padding-bottom: 6px;
+  overflow: hidden;
+  word-wrap: break-word;
+  hyphens: auto;
 }
 
 .event-title::after {
@@ -198,7 +203,7 @@
     max-width: 100%;
     margin: 0 auto;
   }
-  
+
   .event-card-main.category-card {
     min-height: 380px;
   }
@@ -213,6 +218,7 @@
 
   .event-title {
     font-size: 0.85rem;
+    height: 2.38rem; /* Fixed height for ~2 lines (0.85rem * 1.4 * 2) */
   }
 }
 
@@ -220,15 +226,15 @@
   .event-card-main {
     min-height: 260px;
   }
-  
+
   .event-card-main.category-card {
     min-height: 360px;
   }
-  
+
   .card-content {
     min-height: 140px; /* Slightly smaller for mobile */
   }
-  
+
   .event-details {
     min-height: 50px; /* Slightly smaller for mobile */
   }
@@ -239,6 +245,7 @@
 
   .event-title {
     font-size: 0.8rem;
+    height: 2.24rem; /* Fixed height for ~2 lines (0.8rem * 1.4 * 2) */
   }
 
   .price-display {
