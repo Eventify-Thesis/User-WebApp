@@ -82,6 +82,8 @@ const Canvas: React.FC<CanvasProps> = ({
     }
   }, []);
 
+  if (!seatingPlan) return null;
+
   return (
     <div
       ref={containerRef}
@@ -103,7 +105,7 @@ const Canvas: React.FC<CanvasProps> = ({
         position={stagePosition}
       >
         <BackgroundLayer
-          backgroundImage={seatingPlan.backgroundImage}
+          backgroundImage={seatingPlan?.backgroundImage}
           stageSize={{
             width: dimensions.width,
             height: dimensions.height,
@@ -111,7 +113,7 @@ const Canvas: React.FC<CanvasProps> = ({
         />
         <ShapeLayer seatingPlan={seatingPlan} />
 
-        {seatingPlan.mode === 'seat' ? (
+        {seatingPlan?.mode === 'seat' ? (
           <RowLayer
             availableSeats={availableSeats}
             seatingPlan={seatingPlan}

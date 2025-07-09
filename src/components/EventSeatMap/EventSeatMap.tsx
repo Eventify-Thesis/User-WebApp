@@ -9,6 +9,7 @@ import Canvas from './components/Canvas';
 import './EventSeatMap.css';
 import { useGetSeatingPlanDetail } from '@/queries/useSeatingPlanQueries';
 import { Loading } from '../common/Loading/Loading';
+import { SeatLegend } from './components/SeatLegend';
 const { Content } = Layout;
 
 interface SeatAvailability {
@@ -105,20 +106,24 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
 
   const handleSeatSelect = (seat: any) => {
     if (!availableSeats?.has(seat.uuid)) return;
-    setSelectedSeats((prev) => {
-      if (prev.includes(seat)) {
-        return prev.filter((s) => s !== seat);
-      } else {
-        return [...prev, seat];
-      }
-    });
+    const updatedSeats = selectedSeats.includes(seat)
+      ? selectedSeats.filter((s: any) => s !== seat)
+      : [...selectedSeats, seat];
+    setSelectedSeats(updatedSeats);
   };
+
+  const isSeatMode = seatingPlan?.mode == 'seat';
+
   return (
     <Layout style={{ height: '100%', width: '100%' }}>
       {isLoadingPlan && !availableSeats ? (
         <Spin />
-      ) : seatingPlan && availableSeats && availableSeats.size > 0 ? (
-        <Content className="seat-map-content">
+      ) : (seatingPlan &&
+          isSeatMode &&
+          availableSeats &&
+          availableSeats.size > 0) ||
+        !isSeatMode ? (
+        <Content className="seat-map-content" style={{ position: 'relative' }}>
           <div className="zoom-controls">
             <Space direction="vertical" size="small">
               <Button
@@ -139,7 +144,6 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
             </Space>
           </div>
           <Canvas
-            availableSeats={availableSeats}
             seatingPlan={seatingPlan}
             scale={scale}
             onSeatSelect={handleSeatSelect}
@@ -147,6 +151,9 @@ const EventSeatMap: React.FC<EventSeatMapProps> = ({
             availableSeats={availableSeats}
             onSelectSection={onSelectSection}
           />
+          {seatingPlan && isSeatMode && (
+            <SeatLegend categories={seatingPlan.categories || []} />
+          )}
         </Content>
       ) : (
         <Loading />

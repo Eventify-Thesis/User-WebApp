@@ -58,21 +58,43 @@ export const getSeatStyles = (
   seat: any,
   isSelected: boolean,
   isAvailable: boolean,
+  categories: Category[] = [],
 ) => {
   let fillColor = CONSTANTS.STYLE.DEFAULT.FILL;
   let strokeColor = CONSTANTS.STYLE.DEFAULT.STROKE;
+  let strokeWidth = 2;
+
+  // Apply category color if seat has a category
+  const category = seat.category
+    ? categories.find((c) => c.name === seat.category)
+    : null;
+  const categoryColor = category?.color;
 
   if (!isAvailable) {
-    fillColor = CONSTANTS.STYLE.UNAVAILABLE.FILL;
-    strokeColor = CONSTANTS.STYLE.UNAVAILABLE.STROKE;
+    // Booked/unavailable seats - use the booked style for better visual distinction
+    fillColor = CONSTANTS.STYLE.BOOKED.FILL;
+    strokeColor = CONSTANTS.STYLE.BOOKED.STROKE;
+    strokeWidth = 3;
   } else if (isSelected) {
+    // Selected seats
     fillColor = CONSTANTS.STYLE.SELECTED.FILL;
     strokeColor = CONSTANTS.STYLE.SELECTED.STROKE;
+    strokeWidth = 3;
+  } else if (categoryColor) {
+    // Available seats with category color
+    fillColor = categoryColor;
+    strokeColor = categoryColor;
+    strokeWidth = 2;
+  } else {
+    // Default available seats
+    fillColor = CONSTANTS.STYLE.DEFAULT.FILL;
+    strokeColor = CONSTANTS.STYLE.DEFAULT.STROKE;
+    strokeWidth = 2;
   }
 
   return {
     fill: fillColor,
     stroke: strokeColor,
-    strokeWidth: 2,
+    strokeWidth: strokeWidth,
   };
 };

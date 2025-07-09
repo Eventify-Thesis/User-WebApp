@@ -1,7 +1,8 @@
 import React from 'react';
-import { Layer, Circle, Text, Group, Rect } from 'react-konva';
+import { Layer, Circle, Text, Group, Line } from 'react-konva';
 import { getSeatStyles } from '../utils/styleUtils';
 import { CONSTANTS } from '../constants';
+import { Seat, Zone, Row } from '../../../types';
 
 interface RowLayerProps {
   seatingPlan: any;
@@ -17,20 +18,90 @@ export const RowLayer: React.FC<RowLayerProps> = ({
   availableSeats,
 }) => {
   const handleSeatClick = (seat: any) => {
-    onSeatSelect(seat);
+    // Only allow selection of available seats
+    if (availableSeats.has(seat.uuid)) {
+      onSeatSelect(seat);
+    }
+  };
+
+  const renderSeatWithIndicator = (
+    seat: any,
+    isSelected: boolean,
+    isAvailable: boolean,
+  ) => {
+    const seatStyles = getSeatStyles(
+      seat,
+      isSelected,
+      isAvailable,
+      seatingPlan.categories || [],
+    );
+    const radius = seat.radius || CONSTANTS.SEAT.RADIUS;
+
+    return (
+      <Group key={seat.uuid}>
+        {/* Main seat circle */}
+        <Circle
+          x={seat.position.x}
+          y={seat.position.y}
+          radius={radius}
+          {...seatStyles}
+          onClick={() => handleSeatClick(seat)}
+          onTap={() => handleSeatClick(seat)}
+          opacity={isAvailable ? 1 : 0.7}
+          listening={isAvailable}
+        />
+
+        {/* Seat number text */}
+        <Text
+          x={seat.position.x}
+          y={seat.position.y}
+          text={seat.number}
+          fontSize={10}
+          fill={isAvailable ? '#333' : '#666'}
+          align="center"
+          verticalAlign="middle"
+          offsetX={5}
+          offsetY={5}
+          listening={false}
+        />
+
+        {/* X mark for booked/unavailable seats */}
+        {!isAvailable && (
+          <Group>
+            <Line
+              points={[
+                seat.position.x - radius * 0.5,
+                seat.position.y - radius * 0.5,
+                seat.position.x + radius * 0.5,
+                seat.position.y + radius * 0.5,
+              ]}
+              stroke="#FFFFFF"
+              strokeWidth={3}
+              lineCap="round"
+              listening={false}
+            />
+            <Line
+              points={[
+                seat.position.x + radius * 0.5,
+                seat.position.y - radius * 0.5,
+                seat.position.x - radius * 0.5,
+                seat.position.y + radius * 0.5,
+              ]}
+              stroke="#FFFFFF"
+              strokeWidth={3}
+              lineCap="round"
+              listening={false}
+            />
+          </Group>
+        )}
+      </Group>
+    );
   };
 
   return (
     <Layer>
-      {seatingPlan.zones.flatMap((zone) =>
-        zone.rows.map((row) => {
-          const minX = Math.min(...row.seats.map((s) => s.position.x));
-          const maxX = Math.max(...row.seats.map((s) => s.position.x));
-          const minY = Math.min(...row.seats.map((s) => s.position.y));
-          const maxY = Math.max(...row.seats.map((s) => s.position.y));
-          const width = maxX - minX;
-          const height = maxY - minY;
-
+      {seatingPlan.zones.flatMap((zone: Zone) =>
+        zone.rows.map((row: Row) => {
           return (
             <Group key={row.uuid}>
               {/* Row Labels */}
@@ -57,6 +128,7 @@ export const RowLayer: React.FC<RowLayerProps> = ({
                           rotation={angle}
                           align="center"
                           verticalAlign="middle"
+                          listening={false}
                         />
                         <Text
                           x={lastSeat.position.x + 30}
@@ -67,6 +139,7 @@ export const RowLayer: React.FC<RowLayerProps> = ({
                           rotation={angle}
                           align="center"
                           verticalAlign="middle"
+                          listening={false}
                         />
                       </>
                     );
@@ -74,26 +147,14 @@ export const RowLayer: React.FC<RowLayerProps> = ({
                 </>
               )}
 
-              {row.seats.map((seat) => {
+              {/* Render seats with enhanced styling and indicators */}
+              {row.seats.map((seat: Seat) => {
                 const isSelected = selectedSeats.some(
                   (s) => s.uuid === seat.uuid,
                 );
                 const isAvailable = availableSeats.has(seat.uuid);
 
-                return (
-                  <React.Fragment key={seat.uuid}>
-                    <Circle
-                      x={seat.position.x}
-                      y={seat.position.y}
-                      radius={seat.radius || CONSTANTS.SEAT.RADIUS}
-                      {...getSeatStyles(seat, isSelected, isAvailable)}
-                      onClick={() => handleSeatClick(seat)}
-                      onTap={() => handleSeatClick(seat)}
-                      // listening={isAvailable}
-                      opacity={isAvailable ? 1 : 0.5}
-                    />
-                  </React.Fragment>
-                );
+                return renderSeatWithIndicator(seat, isSelected, isAvailable);
               })}
             </Group>
           );

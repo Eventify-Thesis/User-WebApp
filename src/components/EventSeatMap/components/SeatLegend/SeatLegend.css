@@ -1,0 +1,59 @@
+.seat-legend {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 180px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.legend-label {
+  font-size: 12px !important;
+  margin: 0 !important;
+  color: #333;
+}
+
+.legend-divider {
+  height: 1px;
+  background: #e8e8e8;
+  margin: 8px 0 4px 0;
+}
+
+.seat-legend .ant-card-head {
+  padding: 8px 12px;
+  min-height: auto;
+}
+
+.seat-legend .ant-card-head-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.seat-legend .ant-card-body {
+  padding: 12px;
+}
+
+.seat-legend .ant-space-item {
+  margin: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .seat-legend {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    top: auto;
+    min-width: 160px;
+  }
+}

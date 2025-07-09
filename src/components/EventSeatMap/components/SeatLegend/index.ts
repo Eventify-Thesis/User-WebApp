@@ -1,0 +1,1 @@
+export { SeatLegend } from './SeatLegend';

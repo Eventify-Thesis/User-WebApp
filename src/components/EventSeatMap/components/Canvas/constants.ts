@@ -12,16 +12,20 @@ export const CONSTANTS = {
   },
   STYLE: {
     SELECTED: {
-      FILL: 'green',
-      STROKE: 'green'
+      FILL: '#4CAF50',
+      STROKE: '#2E7D32',
     },
     DEFAULT: {
-      FILL: '#FFFFFF',
-      STROKE: '#CCCCCC',
+      FILL: '#E8F5E8',
+      STROKE: '#81C784',
     },
     UNAVAILABLE: {
-      FILL: 'red',
-      STROKE: '#999999',
+      FILL: '#FFCDD2',
+      STROKE: '#F44336',
+    },
+    BOOKED: {
+      FILL: '#FF5722',
+      STROKE: '#D32F2F',
     },
   },
 };

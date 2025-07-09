@@ -262,144 +262,24 @@ const EventDetailPage: React.FC = () => {
 
   const AdvertisingSection = () => (
     <Paper
-      p="lg"
+      p="md"
       radius="md"
-      style={{
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        position: 'relative',
-        overflow: 'hidden',
-      }}
+      style={{ height: '500px', background: 'rgba(255, 255, 255, 0.8)' }}
     >
-      {/* Background decoration */}
+      <Title order={3} mb="md">
+        Advertisement
+      </Title>
       <Box
         style={{
-          position: 'absolute',
-          top: '-50px',
-          right: '-50px',
-          width: '200px',
-          height: '200px',
-          borderRadius: '50%',
-          background: 'rgba(255, 255, 255, 0.1)',
-          zIndex: 1,
+          height: '300px',
+          background: '#f0f0f0',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
-      />
-      <Box
-        style={{
-          position: 'absolute',
-          bottom: '-30px',
-          left: '-30px',
-          width: '120px',
-          height: '120px',
-          borderRadius: '50%',
-          background: 'rgba(255, 255, 255, 0.1)',
-          zIndex: 1,
-        }}
-      />
-
-      <Stack gap="lg" style={{ position: 'relative', zIndex: 2 }}>
-        <Box>
-          <Title order={2} mb="xs" style={{ color: 'white' }}>
-            🎉 Why Choose Eventify?
-          </Title>
-          <Text c="rgba(255, 255, 255, 0.8)" size="sm">
-            The all-in-one platform for unforgettable events
-          </Text>
-        </Box>
-
-        <Stack gap="md">
-          <Group gap="sm">
-            <ActionIcon variant="filled" color="yellow" size="sm" radius="xl">
-              <IconSparkles size={14} />
-            </ActionIcon>
-            <Box>
-              <Text fw={600} size="sm">
-                Smart Event Discovery
-              </Text>
-              <Text c="rgba(255, 255, 255, 0.8)" size="xs">
-                AI-powered recommendations tailored to your interests
-              </Text>
-            </Box>
-          </Group>
-
-          <Group gap="sm">
-            <ActionIcon variant="filled" color="green" size="sm" radius="xl">
-              <IconHeart size={14} />
-            </ActionIcon>
-            <Box>
-              <Text fw={600} size="sm">
-                Seamless Booking
-              </Text>
-              <Text c="rgba(255, 255, 255, 0.8)" size="xs">
-                Quick and secure ticket purchasing with instant confirmation
-              </Text>
-            </Box>
-          </Group>
-
-          <Group gap="sm">
-            <ActionIcon variant="filled" color="blue" size="sm" radius="xl">
-              <IconUser size={14} />
-            </ActionIcon>
-            <Box>
-              <Text fw={600} size="sm">
-                Community Driven
-              </Text>
-              <Text c="rgba(255, 255, 255, 0.8)" size="xs">
-                Connect with like-minded event enthusiasts
-              </Text>
-            </Box>
-          </Group>
-        </Stack>
-
-        <Divider color="rgba(255, 255, 255, 0.3)" />
-
-        <Box>
-          <Group justify="center" gap="xl" mb="md">
-            <Box ta="center">
-              <Text fw={900} size="xl" c="yellow">
-                10K+
-              </Text>
-              <Text c="rgba(255, 255, 255, 0.8)" size="xs">
-                Events Hosted
-              </Text>
-            </Box>
-            <Box ta="center">
-              <Text fw={900} size="xl" c="yellow">
-                50K+
-              </Text>
-              <Text c="rgba(255, 255, 255, 0.8)" size="xs">
-                Happy Users
-              </Text>
-            </Box>
-            <Box ta="center">
-              <Text fw={900} size="xl" c="yellow">
-                1M+
-              </Text>
-              <Text c="rgba(255, 255, 255, 0.8)" size="xs">
-                Tickets Sold
-              </Text>
-            </Box>
-          </Group>
-        </Box>
-
-        <Button
-          variant="white"
-          color="dark"
-          size="md"
-          radius="xl"
-          fullWidth
-          style={{
-            fontWeight: 600,
-            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
-          }}
-        >
-          🚀 Create Your Event Today
-        </Button>
-
-        <Text ta="center" c="rgba(255, 255, 255, 0.7)" size="xs">
-          Join thousands of event organizers who trust Eventify
-        </Text>
-      </Stack>
+      >
+        <Text c="dimmed">Advertisement Space</Text>
+      </Box>
     </Paper>
   );
 
