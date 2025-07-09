@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Space, Typography } from 'antd';
-import { Circle, Stage, Layer } from 'react-konva';
+import { Circle, Stage, Layer, Line } from 'react-konva';
 import { Category } from '../../types';
 import { CONSTANTS } from '../Canvas/constants';
 import './SeatLegend.css';
@@ -37,10 +37,28 @@ const LegendItem: React.FC<LegendItemProps> = ({
         />
         {showX && (
           <>
-            <Circle x={13} y={13} radius={1.5} fill="#FFFFFF" />
-            <Circle x={27} y={27} radius={1.5} fill="#FFFFFF" />
-            <Circle x={27} y={13} radius={1.5} fill="#FFFFFF" />
-            <Circle x={13} y={27} radius={1.5} fill="#FFFFFF" />
+            <Line
+              points={[
+                20 - 15 * 0.5, // x1
+                20 - 15 * 0.5, // y1
+                20 + 15 * 0.5, // x2
+                20 + 15 * 0.5, // y2
+              ]}
+              stroke="#FFFFFF"
+              strokeWidth={2}
+              lineCap="round"
+            />
+            <Line
+              points={[
+                20 + 15 * 0.5, // x1
+                20 - 15 * 0.5, // y1
+                20 - 15 * 0.5, // x2
+                20 + 15 * 0.5, // y2
+              ]}
+              stroke="#FFFFFF"
+              strokeWidth={2}
+              lineCap="round"
+            />
           </>
         )}
       </Layer>

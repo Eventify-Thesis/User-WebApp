@@ -16,8 +16,8 @@ export const CONSTANTS = {
       STROKE: '#2E7D32',
     },
     DEFAULT: {
-      FILL: '#E8F5E8',
-      STROKE: '#81C784',
+      FILL: '#FFFFFF',
+      STROKE: '#CCCCCC',
     },
     UNAVAILABLE: {
       FILL: '#FFCDD2',
