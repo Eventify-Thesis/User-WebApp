@@ -100,8 +100,7 @@ const NoOrders = () => {
             maw={400}
             className="no-orders-description"
           >
-            You haven't purchased any event tickets yet. Start exploring amazing
-            events and create unforgettable memories!
+            {t('orderHistory.noOrdersDescription')}
           </Text>
 
           {/* Action Buttons */}
@@ -115,7 +114,7 @@ const NoOrders = () => {
               onClick={handleDiscoverEvents}
               className="primary-action-btn"
             >
-              Discover Events
+              {t('orderHistory.actions.discoverEvents')}
             </Button>
 
             <Button
@@ -127,7 +126,7 @@ const NoOrders = () => {
               onClick={handleBrowseCategories}
               className="secondary-action-btn"
             >
-              Browse Categories
+              {t('orderHistory.actions.browseCategories')}
             </Button>
           </Group>
 
@@ -144,7 +143,7 @@ const NoOrders = () => {
                 <IconCalendarEvent size={18} />
               </ThemeIcon>
               <Text size="xs" c="dimmed" fw={500}>
-                Live Events
+                {t('orderHistory.features.liveEvents')}
               </Text>
             </Box>
 
@@ -159,7 +158,7 @@ const NoOrders = () => {
                 <IconTicket size={18} />
               </ThemeIcon>
               <Text size="xs" c="dimmed" fw={500}>
-                Secure Booking
+                {t('orderHistory.features.secureBooking')}
               </Text>
             </Box>
 
@@ -174,7 +173,7 @@ const NoOrders = () => {
                 <IconStar size={18} />
               </ThemeIcon>
               <Text size="xs" c="dimmed" fw={500}>
-                Best Experiences
+                {t('orderHistory.features.bestExperiences')}
               </Text>
             </Box>
           </Group>

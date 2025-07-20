@@ -20,7 +20,7 @@ export const LanguagePicker: React.FC = () => {
             <ReactCountryFlag svg countryCode="GB" />
           </BaseSpace>
         </RadioBtn>
-        <RadioBtn value="vi">
+        <RadioBtn value="vn">
           <BaseSpace align="center">
             Tiếng Việt
             <ReactCountryFlag svg countryCode="VN" />

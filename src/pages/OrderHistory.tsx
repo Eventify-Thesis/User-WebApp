@@ -105,7 +105,7 @@ const OrderHistory = () => {
                 {t('orderHistory.title')}
               </Title>
               <Text c="dimmed" size="lg" mt="sm">
-                Track your event purchases and discover new experiences
+                {t('orderHistory.description')}
               </Text>
             </Box>
 
@@ -117,7 +117,7 @@ const OrderHistory = () => {
                 radius="xl"
                 leftSection={<IconStar size={16} />}
               >
-                {orders?.length || 0} Orders
+                {t('orderHistory.ordersCount', { count: orders?.length || 0 })}
               </Badge>
             </Group>
           </Group>
@@ -194,7 +194,7 @@ const OrderHistory = () => {
                     {t('orderHistory.recommended')}
                   </Title>
                   <Text c="dimmed" size="sm" mt={4}>
-                    Handpicked events based on your preferences
+                    {t('orderHistory.recommendedDescription')}
                   </Text>
                 </Box>
               </Group>
@@ -207,7 +207,7 @@ const OrderHistory = () => {
               radius="xl"
               leftSection={<IconTrendingUp size={14} />}
             >
-              Trending
+              {t('orderHistory.trending')}
             </Badge>
           </Group>
 

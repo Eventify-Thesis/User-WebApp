@@ -28,6 +28,7 @@ import {
   IconPhoto,
   IconX,
 } from '@tabler/icons-react';
+import { useTranslation } from 'react-i18next';
 import { useCreateIssueReport } from '@/mutations/useIssueReportMutations';
 import {
   IssueCategory,
@@ -46,6 +47,7 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
   onSuccess,
   onCancel,
 }) => {
+  const { t } = useTranslation();
   const createIssueReportMutation = useCreateIssueReport();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
@@ -59,8 +61,8 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
     },
     validate: {
       title: (value) =>
-        value.trim().length === 0 ? 'Title is required' : null,
-      category: (value) => (!value ? 'Category is required' : null),
+        value.trim().length === 0 ? t('issueReport.form.validation.titleRequired') : null,
+      category: (value) => (!value ? t('issueReport.form.validation.categoryRequired') : null),
     },
   });
 
@@ -110,7 +112,7 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
 
     const description = editor.getHTML();
     if (!description.trim() || description === '<p></p>') {
-      form.setFieldError('description', 'Description is required');
+      form.setFieldError('description', t('issueReport.form.validation.descriptionRequired'));
       return;
     }
 
@@ -153,10 +155,10 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
           <IconBug size={28} style={{ color: '#667eea' }} />
           <div>
             <Title order={2} style={{ color: '#1e293b', margin: 0 }}>
-              Report an Issue
+              {t('issueReport.title')}
             </Title>
             <Text size="sm" style={{ color: '#64748b', margin: 0 }}>
-              Help us improve by reporting bugs, issues, or feature requests
+              {t('issueReport.subtitle')}
             </Text>
           </div>
         </Group>
@@ -169,9 +171,7 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
           radius="lg"
         >
           <Text size="sm">
-            <strong>Before reporting:</strong> Please check if your issue has
-            already been reported. Provide as much detail as possible to help us
-            resolve it quickly.
+            <strong>{t('issueReport.beforeReporting')}</strong> {t('issueReport.reportingGuidance')}
           </Text>
         </Alert>
 
@@ -179,8 +179,8 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
           <Stack gap="md">
             {/* Title */}
             <TextInput
-              label="Issue Title"
-              placeholder="Brief summary of the issue"
+              label={t('issueReport.form.title')}
+              placeholder={t('issueReport.form.titlePlaceholder')}
               required
               size="md"
               {...form.getInputProps('title')}
@@ -193,8 +193,8 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
             {/* Category and Priority */}
             <Group grow>
               <Select
-                label="Category"
-                placeholder="Select issue type"
+                label={t('issueReport.form.category')}
+                placeholder={t('issueReport.form.categoryPlaceholder')}
                 data={categoryOptions}
                 required
                 size="md"
@@ -205,8 +205,8 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
                 }}
               />
               <Select
-                label="Priority"
-                placeholder="Select priority level"
+                label={t('issueReport.form.priority')}
+                placeholder={t('issueReport.form.priorityPlaceholder')}
                 data={priorityOptions}
                 size="md"
                 {...form.getInputProps('priority')}
@@ -220,14 +220,24 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
             {/* Description */}
             <div>
               <Text size="sm" fw={600} mb="xs" style={{ color: '#374151' }}>
-                Description *
+                {t('issueReport.form.description')} *
               </Text>
               <RichTextEditor
                 editor={editor}
                 styles={{
                   root: { borderRadius: '8px' },
                   toolbar: { borderRadius: '8px 8px 0 0' },
-                  content: { minHeight: '200px' },
+                  content: {
+                    minHeight: '200px',
+                    '&[contenteditable=true]': {
+                      '&:empty:before': {
+                        content: `'${t('issueReport.form.descriptionPlaceholder')}'`,
+                        color: '#9ca3af',
+                        position: 'absolute',
+                        pointerEvents: 'none',
+                      },
+                    },
+                  },
                 }}
               >
                 <RichTextEditor.Toolbar sticky stickyOffset={60}>
@@ -262,11 +272,11 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
             {/* Image Upload */}
             <div>
               <Text size="sm" fw={600} mb="xs" style={{ color: '#374151' }}>
-                Attach Evidence Images (optional)
+                {t('issueReport.form.images')}
               </Text>
               <FileInput
                 label=""
-                placeholder="Click to select images or drag and drop"
+                placeholder={t('issueReport.form.imagesPlaceholder')}
                 leftSection={<IconPhoto size={16} />}
                 multiple
                 accept="image/*"
@@ -283,7 +293,7 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
               />
               {uploadingImages.length > 0 && (
                 <Text size="xs" c="blue" mt="xs">
-                  Uploading {uploadingImages.length} image(s)...
+                  {t('issueReport.form.uploadingImages', { count: uploadingImages.length })}
                 </Text>
               )}
 
@@ -291,7 +301,7 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
               {uploadedImages.length > 0 && (
                 <div style={{ marginTop: '12px' }}>
                   <Text size="sm" fw={500} mb="xs" style={{ color: '#374151' }}>
-                    Uploaded Images ({uploadedImages.length})
+                    {t('issueReport.form.uploadedImages', { count: uploadedImages.length })}
                   </Text>
                   <SimpleGrid cols={3} spacing="sm">
                     {uploadedImages.map((url, index) => (
@@ -332,7 +342,7 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
                   onClick={onCancel}
                   disabled={isSubmitting}
                 >
-                  Cancel
+                  {t('issueReport.form.cancel')}
                 </Button>
               )}
               <Button
@@ -353,7 +363,7 @@ export const IssueReportForm: React.FC<IssueReportFormProps> = ({
                   border: 'none',
                 }}
               >
-                Submit Report
+                {t('issueReport.form.submit')}
               </Button>
             </Group>
           </Stack>

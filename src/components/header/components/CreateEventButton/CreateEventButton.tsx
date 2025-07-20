@@ -4,9 +4,11 @@ import { useAppSelector } from '@/hooks/reduxHooks';
 import { BASE_COLORS } from '@/styles/themes/constants';
 import { BaseButton as BaseButton } from '@/components/common/BaseButton/BaseButton';
 import { Icon } from '@iconify/react';
+import { useTranslation } from 'react-i18next';
 
 export const CreateEventButton: React.FC = (props) => {
   const theme = useAppSelector((state) => state.theme.theme);
+  const { t } = useTranslation();
 
   return (
     <Button
@@ -22,7 +24,7 @@ export const CreateEventButton: React.FC = (props) => {
       $isDark={theme === 'dark'}
       {...props}
     >
-      Create event
+      {t('header.createEvent')}
     </Button>
   );
 };

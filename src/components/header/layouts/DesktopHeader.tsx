@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { HeaderSearch } from '../components/HeaderSearch/HeaderSearch';
 import { SettingsDropdown } from '../components/settingsDropdown/SettingsDropdown';
 import * as S from '../Header.styles';
@@ -12,6 +13,7 @@ import './DesktopHeader.css';
 interface DesktopHeaderProps {}
 
 export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
+  const { t } = useTranslation();
   const [isLargeScreen, setIsLargeScreen] = useState(window.innerWidth > 1050);
   const [
     supportModalOpened,
@@ -37,7 +39,7 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
     if (!plannerBaseUrl) {
       console.error('VITE_PLANNER_BASE_URL is not configured');
       // Fallback: show an alert or handle the error gracefully
-      alert('Event creation is currently unavailable. Please contact support.');
+      alert(t('header.eventCreationUnavailable'));
       return;
     }
 
@@ -48,9 +50,7 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
       window.open(targetUrl, '_blank', 'noopener,noreferrer');
     } catch (error) {
       console.error('Failed to navigate to create event page:', error);
-      alert(
-        'Failed to navigate to event creation. Please try again or contact support.',
-      );
+      alert(t('header.eventCreationFailed'));
     }
   };
 
@@ -80,28 +80,28 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = ({}) => {
           </Box>
 
           <Flex className="nav-items" align="center" gap="md">
-            <Tooltip label="Tickets" position="bottom" disabled={isLargeScreen}>
+            <Tooltip label={t('header.tickets')} position="bottom" disabled={isLargeScreen}>
               <Box className="nav-item" onClick={() => navigate('/tickets')}>
                 <S.NavIcon icon="ion:ticket-outline" />
-                <span className="nav-text">Tickets</span>
+                <span className="nav-text">{t('header.tickets')}</span>
               </Box>
             </Tooltip>
 
             <Tooltip
-              label="Interested"
+              label={t('header.interested')}
               position="bottom"
               disabled={isLargeScreen}
             >
               <Box className="nav-item" onClick={() => navigate('/interested')}>
                 <S.NavIcon icon="teenyicons:star-outline" />
-                <span className="nav-text">Interested</span>
+                <span className="nav-text">{t('header.interested')}</span>
               </Box>
             </Tooltip>
 
-            <Tooltip label="Support" position="bottom" disabled={isLargeScreen}>
+            <Tooltip label={t('header.support')} position="bottom" disabled={isLargeScreen}>
               <Box className="nav-item" onClick={openSupportModal}>
                 <S.NavIcon icon="heroicons:question-mark-circle-20-solid" />
-                <span className="nav-text">Support</span>
+                <span className="nav-text">{t('header.support')}</span>
               </Box>
             </Tooltip>
 

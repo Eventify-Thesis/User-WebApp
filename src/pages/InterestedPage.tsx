@@ -140,7 +140,7 @@ export default function InterestedPage() {
                 {t('interested.title')}
               </Title>
               <Text c="dimmed" size="lg" mt="sm">
-                Discover and manage your favorite events
+                {t('interested.description')}
               </Text>
             </Box>
 
@@ -152,7 +152,7 @@ export default function InterestedPage() {
                 radius="xl"
                 leftSection={<IconBookmark size={16} />}
               >
-                {filteredEvents.length} Saved
+                {t('interested.saved', { count: filteredEvents.length })}
               </Badge>
             </Group>
           </Group>
@@ -228,7 +228,7 @@ export default function InterestedPage() {
               {t('interested.noInterested')}
             </Title>
             <Text c="rgba(255, 255, 255, 0.8)" size="sm">
-              Start exploring events and save your favorites to see them here
+              {t('interested.noInterestedDescription')}
             </Text>
           </Paper>
         )}
@@ -254,7 +254,7 @@ export default function InterestedPage() {
                     {t('orderHistory.recommended')}
                   </Title>
                   <Text c="dimmed" size="sm" mt={4}>
-                    Discover more events you might love
+                    {t('interested.recommendedDescription')}
                   </Text>
                 </Box>
               </Group>
@@ -267,7 +267,7 @@ export default function InterestedPage() {
               radius="xl"
               leftSection={<IconTrendingUp size={14} />}
             >
-              Trending
+              {t('orderHistory.recommended')}
             </Badge>
           </Group>
 

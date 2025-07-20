@@ -35,22 +35,50 @@
   },
   "interested": {
     "title": "Favourited Events",
+    "description": "Discover and manage your favorite events",
     "searchPlaceholder": "Search for an event...",
-    "noInterested": "You have no favourited events yet."
+    "noInterested": "You have no favourited events yet.",
+    "noInterestedDescription": "Start exploring events and save your favorites to see them here",
+    "recommended": "Recommended for you",
+    "recommendedDescription": "Discover more events you might love",
+    "saved": "{{count}} Saved"
   },
   "orderHistory": {
     "title": "Purchased Tickets",
-    "noOrders": "You have no orders yet",
+    "description": "Track your event purchases and discover new experiences",
+    "noOrders": "No Orders Yet",
+    "noOrdersDescription": "You haven't purchased any event tickets yet. Start exploring amazing events and create unforgettable memories!",
+    "actions": {
+      "discoverEvents": "Discover Events",
+      "browseCategories": "Browse Categories"
+    },
+    "features": {
+      "liveEvents": "Live Events",
+      "secureBooking": "Secure Booking",
+      "bestExperiences": "Best Experiences"
+    },
     "loading": "🔄 Loading tickets...",
     "error": "Unable to load tickets. Please try again.",
     "noTickets": "No tickets available",
     "recommended": "You may also like",
+    "recommendedDescription": "Handpicked events based on your preferences",
+    "ordersCount": "{{count}} Orders",
+    "trending": "Trending",
     "all": "All",
     "finished": "Finished",
     "processing": "Processing",
     "canceled": "Cancelled",
     "upcoming": "Upcoming",
     "past": "Past"
+  },
+  "error":{
+    "loadingEvents": "Error when loading event...",
+    "loadingQuiz": "Error when loading quiz...",
+    "quizNotFound": "Quiz not found",
+    "playing": "Playing",
+    "submitQuiz": "Submit Quiz",
+    "nextQuestion": "Next Question",
+    "questionInfo": "Question {{current}} of {{total}}"
   },
   "quiz": {
     "invalidShowId": "Invalid show ID",
@@ -240,6 +268,33 @@
     "inputHere": "input here",
     "libraries": "Libraries",
     "solutions": "Solutions"
+  },
+  "issueReport": {
+    "title": "Report an Issue",
+    "subtitle": "Help us improve by reporting bugs, issues, or feature requests",
+    "beforeReporting": "Before reporting:",
+    "reportingGuidance": "Please check if your issue has already been reported. Provide as much detail as possible to help us resolve it quickly.",
+    "form": {
+      "title": "Issue Title",
+      "titlePlaceholder": "Brief summary of the issue",
+      "category": "Category",
+      "categoryPlaceholder": "Select issue type",
+      "priority": "Priority",
+      "priorityPlaceholder": "Select priority level",
+      "description": "Description",
+      "descriptionPlaceholder": "Describe the issue in detail...",
+      "images": "Attach Evidence Images (optional)",
+      "imagesPlaceholder": "Click to select images or drag and drop",
+      "uploadingImages": "Uploading {{count}} image(s)...",
+      "uploadedImages": "Uploaded Images ({{count}})",
+      "cancel": "Cancel",
+      "submit": "Submit Report",
+      "validation": {
+        "titleRequired": "Title is required",
+        "categoryRequired": "Category is required",
+        "descriptionRequired": "Description is required"
+      }
+    }
   },
   "breadcrumbs": {
     "antd": "Ant Design",
@@ -685,6 +740,12 @@
     }
   },
   "header": {
+    "createEvent": "Create Event",
+    "tickets": "Tickets",
+    "interested": "Interested",
+    "support": "Support",
+    "eventCreationUnavailable": "Event creation is currently unavailable. Please contact support.",
+    "eventCreationFailed": "Failed to navigate to event creation. Please try again or contact support.",
     "changeLanguage": "Change language",
     "changeTheme": "Change theme",
     "darkTheme": "Dark",

@@ -16,6 +16,9 @@
   "searchBar": {
     "browseByCategory": "Khám phá theo Thể loại",
     "browseByLocation": "Khám phá theo Thành phố",
+    "from": "Từ",
+    "noDate": "Chưa có ngày",
+    "noPrice": "Chưa có giá",
     "music": "Âm nhạc",
     "theaterArts": "Sân khấu & Nghệ thuật",
     "sports": "Thể thao",
@@ -27,49 +30,171 @@
     "recommendations": "Gợi ý dành cho bạn",
     "viewMore": "Xem thêm sự kiện"
   },
+  "searchResult": {
+    "noAvailableEvents": "Không có sự kiện nào khả dụng!"
+  },
   "interested": {
     "title": "Sự kiện yêu thích",
+    "description": "Khám phá và lưu sự kiện yêu thích của bạn để xem ở đây",
     "searchPlaceholder": "Tìm kiếm sự kiện...",
-    "noInterested": "Bạn chưa có sự kiện yêu thích nào."
+    "noInterested": "Bạn chưa có sự kiện yêu thích nào.",
+    "noInterestedDescription": "Khám phá sự kiện và lưu sự kiện yêu thích của bạn để xem ở đây",
+    "recommended": "Gợi ý dành cho bạn",
+    "recommendedDescription": "Khám phá sự kiện và lưu sự kiện yêu thích của bạn để xem ở đây",
+    "saved": "Đã lưu {{count}} sự kiện"
   },
   "orderHistory": {
     "title": "Vé đã mua",
-    "loading": "🔄 Đang tải vé...",
+    "description": "Theo dõi các giao dịch mua vé và khám phá trải nghiệm mới",
+    "noOrders": "Chưa có đơn hàng nào",
+    "noOrdersDescription": "Bạn chưa mua vé sự kiện nào. Hãy khám phá các sự kiện tuyệt vời và tạo nên những kỷ niệm đáng nhớ!",
+    "actions": {
+      "discoverEvents": "Khám phá sự kiện",
+      "browseCategories": "Duyệt danh mục"
+    },
+    "features": {
+      "liveEvents": "Sự kiện trực tiếp",
+      "secureBooking": "Đặt vé an toàn",
+      "bestExperiences": "Trải nghiệm tuyệt vời"
+    },
+    "loading": " Đang tải vé...",
     "error": "Không thể tải vé. Vui lòng thử lại.",
     "noTickets": "Không có vé nào",
-    "recommended": "Có thể bạn cũng thích",
+    "recommended": "Có thể bạn sẽ thích",
+    "recommendedDescription": "Các sự kiện được chọn lọc dựa trên sở thích của bạn",
+    "ordersCount": "{{count}} Đơn hàng",
+    "trending": "Xu hướng",
     "all": "Tất cả",
-    "finished": "Hoàn thành",
+    "finished": "Đã kết thúc",
     "processing": "Đang xử lý",
     "canceled": "Đã hủy",
     "upcoming": "Sắp diễn ra",
     "past": "Đã kết thúc"
   },
+  "error": {
+    "loadingEvents": "Xảy ra lỗi khi tải sự kiện",
+    "loadingQuiz": "Xảy ra lỗi khi tải câu hỏi",
+    "quizNotFound": "Không tìm thấy câu hỏi",
+    "playing": "Đang chơi",
+    "submitQuiz": "Nộp bài",
+    "nextQuestion": "Câu hỏi tiếp theo",
+    "questionInfo": "Câu hỏi {{current}} trên {{total}}"
+  },
+  "quiz": {
+    "invalidShowId": "ID sự kiện không hợp lệ",
+    "loadingQuiz": "Đang tải câu hỏi...",
+    "quizNotFound": "Không tìm thấy câu hỏi",
+    "playing": "Đang chơi",
+    "submitQuiz": "Nộp bài",
+    "nextQuestion": "Câu hỏi tiếp theo",
+    "questionInfo": "Câu hỏi {{current}} trên {{total}}"
+  },
+  "quizResult": {
+    "invalidQuizId": "ID câu hỏi không hợp lệ",
+    "loadingLeaderboard": "Đang tải bảng xếp hạng...",
+    "couldNotLoadLeaderboard": "Không thể tải bảng xếp hạng.",
+    "notEnoughData": "Không đủ dữ liệu để hiển thị bảng xếp hạng.",
+    "quizResults": "Kết quả câu hỏi",
+    "correctOutOf": "{{correct}} trên {{total}}",
+    "correctSlashTotal": "{{correct}}/{{total}}"
+  },
   "ticketSection": {
+    "tickets": "Vé",
+    "venue": "Địa điểm",
+    "description": "Mô tả",
+    "scanQRCode": "Quét mã QR",
+    "scanInstructions": "Trình mã QR này cho nhân viên kiểm tra để xác nhận",
     "ticketType": "Loại vé",
     "area": "Khu vực",
     "row": "Hàng",
     "seat": "Ghế",
     "time": "Thời gian",
-    "qrPrompt": "Nhấn vào để xem mã QR",
+    "qrPrompt": "Chạm để xem mã QR",
     "eTicket": "Vé điện tử",
-    "physicalTicket": "Vé cứng"
+    "physicalTicket": "Vé giấy"
   },
   "orderSection": {
     "order": "Đơn hàng",
-    "orderDate": "Ngày đặt hàng",
+    "orderDate": "Ngày đặt",
     "paymentMethod": "Phương thức thanh toán",
-    "orderStatus": "Tình trạng đơn hàng",
+    "orderStatus": "Trạng thái đơn hàng",
     "buyerInfo": "Thông tin người mua",
     "name": "Tên",
     "email": "Email",
     "phone": "Số điện thoại",
     "address": "Địa chỉ",
-    "orderSummary": "Thông tin đơn hàng",
-    "ticketType": "Loại vé",
-    "quantity": "Số lượng",
+    "orderSummary": "Tóm tắt đơn hàng",
+    "subtotal": "Tạm tính",
+    "discount": "Giảm giá",
     "totalPrice": "Thành tiền",
     "totalAmount": "Tổng tiền"
+  },
+  "eventDetailPage": {
+    "buyTicket": "Mua vé",
+    "priceFrom": "Giá từ",
+    "organizer": "Nhà tổ chức",
+    "description": "Mô tả",
+    "tickets": "Vé",
+    "ticketInfo": "Thông tin vé",
+    "showMore": "Xem thêm",
+    "showLess": "Ẩn bớt",
+    "venue": "Địa điểm",
+    "date": "Ngày",
+    "time": "Giờ",
+    "price": "Giá",
+    "available": "Còn hàng",
+    "soldOut": "Hết vé",
+    "quantity": "Số lượng",
+    "addToCart": "Thêm vào giỏ",
+    "selectTickets": "Chọn vé"
+  },
+  "checkout": {
+    "finishOrderIn": "Hoàn tất đơn hàng trong",
+    "chooseTicket": "Chọn vé",
+    "payment": "Thanh toán",
+    "total": "Tổng cộng",
+    "questionnaire": "Bảng câu hỏi",
+    "questionnaireForm": "Mẫu câu hỏi",
+    "orderInformation": "Thông tin đơn hàng",
+    "chooseTicketAgain": "Chọn lại vé",
+    "pleaseFill": "Vui lòng điền vào mẫu câu hỏi để tiếp tục",
+    "temporaryCalculate": "Tính tạm tính",
+    "ticketType": "Loại vé",
+    "quantity": "Số lượng",
+    "continue": "Tiếp tục",
+    "leaveConfirmation": "Rời khỏi trang thanh toán?"
+  },
+  "homePage": {
+    "title": "Sự kiện",
+    "popularEvents": "Khám phá sự kiện nổi bật",
+    "onlineEvents": "Khám phá sự kiện trực tuyến tốt nhất",
+    "latestEvents": "Sự kiện mới nhất",
+    "seeMore": "Xem thêm",
+    "from": "Từ",
+    "free": "MIỄN PHÍ",
+    "entertainment": "Giải trí",
+    "education": "Giáo dục & Kinh doanh",
+    "cultural": "Văn hóa & Nghệ thuật",
+    "sport": "Thể thao & Thể hình",
+    "technology": "Công nghệ & Đổi mới",
+    "travel": "Du lịch & Phiêu lưu",
+    "upcomingEvents": "Sự kiện sắp diễn ra",
+    "exploreCategories": "Khám phá danh mục",
+    "thisWeekend": "Cuối tuần này",
+    "thisMonth": "Tháng này",
+    "viewMore": "Xem thêm",
+    "popularEventsThisMonth": "Sự kiện nổi bật tháng này",
+    "popularEventsThisWeek": "Sự kiện nổi bật tuần này",
+    "explore": "Khám phá và tìm kiếm",
+    "locationSection": {
+      "title": "Khám phá sự kiện nổi bật",
+      "locations": {
+        "hcm": "Thành phố Hồ Chí Minh",
+        "hanoi": "Hà Nội",
+        "dalat": "Đà Lạt",
+        "other": "Địa điểm khác"
+      }
+    }
   },
   "filters": {
     "location": "Vị trí",
@@ -133,6 +258,33 @@
     "inputHere": "input here",
     "libraries": "Libraries",
     "solutions": "Solutions"
+  },
+  "issueReport": {
+    "title": "Báo cáo sự cố",
+    "subtitle": "Giúp chúng tôi cải thiện bằng cách báo cáo lỗi, sự cố hoặc yêu cầu tính năng mới",
+    "beforeReporting": "Trước khi báo cáo:",
+    "reportingGuidance": "Vui lòng kiểm tra xem sự cố của bạn đã được báo cáo chưa. Cung cấp càng nhiều chi tiết càng tốt để chúng tôi có thể giải quyết nhanh chóng.",
+    "form": {
+      "title": "Tiêu đề sự cố",
+      "titlePlaceholder": "Tóm tắt ngắn gọn về sự cố",
+      "category": "Danh mục",
+      "categoryPlaceholder": "Chọn loại sự cố",
+      "priority": "Độ ưu tiên",
+      "priorityPlaceholder": "Chọn mức độ ưu tiên",
+      "description": "Mô tả",
+      "descriptionPlaceholder": "Mô tả chi tiết sự cố...",
+      "images": "Đính kèm hình ảnh (tùy chọn)",
+      "imagesPlaceholder": "Nhấn để chọn hình ảnh hoặc kéo thả vào đây",
+      "uploadingImages": "Đang tải lên {{count}} ảnh...",
+      "uploadedImages": "Ảnh đã tải lên ({{count}})",
+      "cancel": "Hủy",
+      "submit": "Gửi báo cáo",
+      "validation": {
+        "titleRequired": "Vui lòng nhập tiêu đề",
+        "categoryRequired": "Vui lòng chọn danh mục",
+        "descriptionRequired": "Vui lòng nhập mô tả"
+      }
+    }
   },
   "breadcrumbs": {
     "antd": "Ant Design",
@@ -574,11 +726,17 @@
     }
   },
   "header": {
-    "changeLanguage": "Change language",
-    "changeTheme": "Change theme",
-    "darkTheme": "Dark",
-    "lightTheme": "Light",
-    "logout": "Logout",
+    "createEvent": "Tạo sự kiện",
+    "tickets": "Vé của tôi",
+    "interested": "Yêu thích",
+    "support": "Hỗ trợ",
+    "eventCreationUnavailable": "Tính năng tạo sự kiện hiện không khả dụng. Vui lòng liên hệ bộ phận hỗ trợ.",
+    "eventCreationFailed": "Không thể chuyển đến trang tạo sự kiện. Vui lòng thử lại hoặc liên hệ bộ phận hỗ trợ.",
+    "changeLanguage": "Thay đổi ngôn ngữ",
+    "changeTheme": "Thay đổi giao diện",
+    "darkTheme": "Tối",
+    "lightTheme": "Sáng",
+    "logout": "Đăng xuất",
     "nightMode": {
       "from": "From",
       "title": "Nightmode",
@@ -594,7 +752,7 @@
       "successPayment": "Your payment was successfully made",
       "viewAll": "View all"
     },
-    "search": "Search"
+    "search": "Tìm kiếm"
   },
   "inputs": {
     "basic": "Basic input",
