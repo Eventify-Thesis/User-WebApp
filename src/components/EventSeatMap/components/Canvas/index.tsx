@@ -1,5 +1,5 @@
 import React, { useRef, useCallback, useEffect, useState } from 'react';
-import { Stage } from 'react-konva';
+import { Stage, Layer } from 'react-konva';
 import { SeatingPlan } from '../../types/index';
 import { ShapeLayer } from './components/ShapeLayer';
 import { RowLayer } from './components/RowLayer';
@@ -111,21 +111,24 @@ const Canvas: React.FC<CanvasProps> = ({
             height: dimensions.height,
           }}
         />
-        <ShapeLayer seatingPlan={seatingPlan} />
 
-        {seatingPlan?.mode === 'seat' ? (
-          <RowLayer
-            availableSeats={availableSeats}
-            seatingPlan={seatingPlan}
-            onSeatSelect={onSeatSelect}
-            selectedSeats={selectedSeats}
-          />
-        ) : (
-          <SectionLayer
-            seatingPlan={seatingPlan}
-            onSelectSection={onSelectSection}
-          />
-        )}
+        <Layer>
+          <ShapeLayer seatingPlan={seatingPlan} />
+          
+          {seatingPlan?.mode === 'seat' ? (
+            <RowLayer
+              availableSeats={availableSeats}
+              seatingPlan={seatingPlan}
+              onSeatSelect={onSeatSelect}
+              selectedSeats={selectedSeats}
+            />
+          ) : (
+            <SectionLayer
+              seatingPlan={seatingPlan}
+              onSelectSection={onSelectSection}
+            />
+          )}
+        </Layer>
       </Stage>
     </div>
   );

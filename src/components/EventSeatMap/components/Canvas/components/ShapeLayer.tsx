@@ -98,7 +98,7 @@ const ShapeText = memo(({ text, shape }: ShapeTextProps) => {
 
 export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
   return (
-    <Layer>
+    <>
       {seatingPlan.zones.flatMap((zone) =>
         zone.areas.map((area) => {
           const isSelected = false; // Not implementing selection in user app
@@ -165,9 +165,9 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
                     y={area.position.y}
                     radiusX={area.size?.width ? area.size.width / 2 : 0}
                     radiusY={area.size?.height ? area.size.height / 2 : 0}
-                    fill={'white'}
-                    stroke={'white'}
-                    strokeWidth={1}
+                    fill={shapeStyles.fill}
+                    stroke={shapeStyles.stroke}
+                    strokeWidth={shapeStyles.strokeWidth}
                   />
                   <ShapeText text={area.text} shape={area} />
                 </Group>
@@ -179,9 +179,9 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
                     id={area.uuid}
                     points={area.points ? area.points.flatMap(p => [p.x, p.y]) : []}
                     closed={true}
-                    fill={'white'}
-                    stroke={'white'}
-                    strokeWidth={1}
+                    fill={shapeStyles.fill}
+                    stroke={shapeStyles.stroke}
+                    strokeWidth={shapeStyles.strokeWidth}
                   />
                   <ShapeText text={area.text} shape={area} />
                 </Group>
@@ -197,7 +197,7 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
                     text={area.text.text || ''}
                     fontSize={area.fontSize || 16}
                     fontFamily={area.fontFamily || 'Arial'}
-                    fill={'white'}
+                    fill={area.fill || shapeStyles.fill}
                   />
                 </Group>
               );
@@ -206,7 +206,7 @@ export const ShapeLayer = memo(({ seatingPlan }: ShapeLayerProps) => {
           }
         }),
       )}
-    </Layer>
+    </>
   );
 });
 

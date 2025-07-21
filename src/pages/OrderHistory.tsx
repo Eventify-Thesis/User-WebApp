@@ -161,7 +161,7 @@ const OrderHistory = () => {
                     date={new Date(order.createdAt).toLocaleDateString()}
                     title={order.event.eventName}
                     status={order.status}
-                    OrderType="STRIPE"
+                    OrderType={order.paymentProvider || 'STRIPE'}
                     startTime={order.show.startTime}
                     endTime={order.show.endTime}
                     location={order.event.venueName}

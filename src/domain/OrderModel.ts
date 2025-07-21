@@ -45,6 +45,17 @@ export interface OrderModel {
 
   stripeCustomerId: string;
 
+  // New payment provider fields
+  paymentProvider: string;
+
+  paymentProviderTransactionId?: string;
+
+  paymentProviderMetadata?: string;
+
+  paymentRedirectUrl?: string;
+
+  paymentQrCode?: string;
+
   paidAt: Date;
 
   items: OrderItemModel[];

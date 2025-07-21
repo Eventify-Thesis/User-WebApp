@@ -94,6 +94,24 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
 
   const statusConfig = getStatusConfig(status);
 
+  // Format payment method display name
+  const getPaymentMethodDisplay = (orderType: string) => {
+    switch (orderType?.toLowerCase()) {
+      case 'zalopay':
+        return 'ZaloPay';
+      case 'momo':
+        return 'MoMo';
+      case 'payoo':
+        return 'Payoo';
+      case 'stripe':
+        return 'Stripe';
+      default:
+        return orderType || 'Payment';
+    }
+  };
+
+  const paymentMethodDisplay = getPaymentMethodDisplay(OrderType);
+
   return (
     <Card className="compact-order-card" onClick={onClick} radius="lg" p={0}>
       {/* Status Badge - positioned at top right of entire card */}
@@ -149,7 +167,7 @@ const OrderInfo: React.FC<OrderInfoProps> = ({
 
               <Group gap="xs" mb="sm">
                 <Badge variant="light" size="xs" radius="sm" color="yellow">
-                  {OrderType}
+                  {paymentMethodDisplay}
                 </Badge>
               </Group>
             </Box>

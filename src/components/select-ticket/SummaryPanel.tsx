@@ -101,14 +101,14 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         style={{
           height: '48px',
           fontSize: '16px',
-          background: 'var(--primary-color)', 
-          color: 'black', 
+          background: 'var(--primary-color)',
+          color: 'black',
           fontWeight: 600,
           border: 'none',
         }}
       >
         {hasSelections
-          ? `Continue • ${totalPrice} Dong`
+          ? `Continue • ${new Intl.NumberFormat('vi-VN').format(totalPrice)} ₫`
           : 'Please choose ticket'}
       </Button>
     </div>
@@ -152,7 +152,10 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
         />
 
         {/* Ticket Types */}
-        <Title level={5} style={{ color: '#212529', marginTop: 0, fontWeight: 600 }}>
+        <Title
+          level={5}
+          style={{ color: '#212529', marginTop: 0, fontWeight: 600 }}
+        >
           Available Tickets
         </Title>
         <Space direction="vertical" style={{ width: '100%' }} size="middle">
@@ -168,7 +171,13 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
               }}
             >
               <div>
-                <Text style={{ color: styles.textColor, fontSize: '16px', fontWeight: 500 }}>
+                <Text
+                  style={{
+                    color: styles.textColor,
+                    fontSize: '16px',
+                    fontWeight: 500,
+                  }}
+                >
                   {ticket.name}
                 </Text>
                 {ticket.description && (
@@ -239,7 +248,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             {totalTickets} {totalTickets === 1 ? 'ticket' : 'tickets'}
           </Text>
           <Title level={4} style={{ margin: 0, color: styles.textColor }}>
-            ${totalPrice.toFixed(2)}
+            {new Intl.NumberFormat('vi-VN').format(totalPrice)} ₫
           </Title>
         </div>
         <Button
@@ -252,7 +261,7 @@ const SummaryPanel: React.FC<SummaryPanelProps> = ({
             fontSize: '16px',
             background: styles.buttonColor,
             border: 'none',
-            color: 'white !important'
+            color: 'white !important',
           }}
         >
           {hasSelections ? 'Continue' : 'Please choose ticket'}

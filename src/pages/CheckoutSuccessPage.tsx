@@ -5,6 +5,7 @@ import { Elements } from '@stripe/react-stripe-js';
 import { Result, Spin, Button, Typography, Space } from 'antd';
 import { IeOutlined, LoadingOutlined } from '@ant-design/icons';
 import { IconShoppingCartCheck, IconGift } from '@tabler/icons-react';
+import { bookingClient } from '@/api/booking.client';
 
 const { Text } = Typography;
 
@@ -12,6 +13,8 @@ const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY!);
 
 interface OrderType {
   type: 'free' | 'paid';
+  paymentMethod: 'stripe' | 'zalopay' | 'momo' | 'payoo' | 'free';
+  paymentMethodName: string;
   status: 'loading' | 'success' | 'error';
   error?: string;
 }
@@ -22,6 +25,8 @@ const CheckoutSuccessContent: React.FC = () => {
   const [searchParams] = useSearchParams();
   const [orderInfo, setOrderInfo] = useState<OrderType>({
     type: 'paid',
+    paymentMethod: 'stripe',
+    paymentMethodName: 'Stripe',
     status: 'loading',
   });
 
@@ -29,13 +34,65 @@ const CheckoutSuccessContent: React.FC = () => {
     const clientSecret = searchParams.get('payment_intent_client_secret');
     const paymentIntentStatus = searchParams.get('redirect_status');
     const isFreeOrder = searchParams.get('free') === 'true';
+    const paymentMethod = searchParams.get('payment_method') || 'stripe';
+    const paymentMethodName =
+      searchParams.get('payment_method_name') || 'Stripe';
 
     // Check if this is a free order
-    if (isFreeOrder || (!clientSecret && !paymentIntentStatus)) {
+    if (
+      isFreeOrder ||
+      (!clientSecret && !paymentIntentStatus && !paymentMethod)
+    ) {
       setOrderInfo({
         type: 'free',
+        paymentMethod: 'free',
+        paymentMethodName: 'Free',
         status: 'success',
       });
+      return;
+    }
+
+    // Handle Vietnamese payment methods
+    if (paymentMethod !== 'stripe') {
+      // Call completion API for Vietnamese payments
+      const handleVietnamesePaymentCompletion = async () => {
+        try {
+          const paymentIntentId = searchParams.get('payment_intent_id');
+          const amount = searchParams.get('amount');
+          const transactionId = searchParams.get('transaction_id');
+
+          if (!paymentIntentId || !orderId || !amount) {
+            throw new Error('Missing payment completion parameters');
+          }
+
+          await bookingClient.completeVietnamesePayment({
+            orderId: Number(orderId),
+            paymentIntentId,
+            paymentProvider: paymentMethod,
+            amount: Number(amount),
+            transactionId: transactionId || undefined,
+          });
+
+          setOrderInfo({
+            type: 'paid',
+            paymentMethod: paymentMethod as 'zalopay' | 'momo' | 'payoo',
+            paymentMethodName: paymentMethodName,
+            status: 'success',
+          });
+        } catch (error) {
+          console.error('Failed to complete Vietnamese payment:', error);
+          setOrderInfo({
+            type: 'paid',
+            paymentMethod: paymentMethod as 'zalopay' | 'momo' | 'payoo',
+            paymentMethodName: paymentMethodName,
+            status: 'error',
+            error:
+              'Failed to complete payment verification. Please contact support.',
+          });
+        }
+      };
+
+      handleVietnamesePaymentCompletion();
       return;
     }
 
@@ -43,6 +100,8 @@ const CheckoutSuccessContent: React.FC = () => {
     if (!clientSecret) {
       setOrderInfo({
         type: 'paid',
+        paymentMethod: 'stripe',
+        paymentMethodName: 'Stripe',
         status: 'error',
         error: 'Payment verification failed. Please contact support.',
       });
@@ -54,18 +113,24 @@ const CheckoutSuccessContent: React.FC = () => {
       case 'succeeded':
         setOrderInfo({
           type: 'paid',
+          paymentMethod: 'stripe',
+          paymentMethodName: 'Stripe',
           status: 'success',
         });
         break;
       case 'processing':
         setOrderInfo({
           type: 'paid',
+          paymentMethod: 'stripe',
+          paymentMethodName: 'Stripe',
           status: 'loading',
         });
         break;
       case 'requires_payment_method':
         setOrderInfo({
           type: 'paid',
+          paymentMethod: 'stripe',
+          paymentMethodName: 'Stripe',
           status: 'error',
           error: 'Payment failed. Please try another payment method.',
         });
@@ -73,6 +138,8 @@ const CheckoutSuccessContent: React.FC = () => {
       default:
         setOrderInfo({
           type: 'paid',
+          paymentMethod: 'stripe',
+          paymentMethodName: 'Stripe',
           status: 'error',
           error: `Unexpected payment status: ${paymentIntentStatus}`,
         });
@@ -123,6 +190,9 @@ const CheckoutSuccessContent: React.FC = () => {
 
   // Success state - different messages for free vs paid orders
   const isFreeOrder = orderInfo.type === 'free';
+  const isVietnamesePayment = ['zalopay', 'momo', 'payoo'].includes(
+    orderInfo.paymentMethod,
+  );
 
   return (
     <Result
@@ -146,7 +216,7 @@ const CheckoutSuccessContent: React.FC = () => {
           >
             {isFreeOrder
               ? `Thank you for registering! Your free tickets for order #${orderId} have been confirmed.`
-              : `Thank you for your purchase! Your order #${orderId} has been confirmed.`}
+              : `Thank you for your purchase! Your payment via ${orderInfo.paymentMethodName} for order #${orderId} has been confirmed.`}
           </Text>
           <Text
             style={{
@@ -165,6 +235,16 @@ const CheckoutSuccessContent: React.FC = () => {
               }}
             >
               🎉 This event was free - no payment required!
+            </Text>
+          )}
+          {isVietnamesePayment && (
+            <Text
+              style={{
+                color: '#52c41a',
+                fontWeight: 'bold',
+              }}
+            >
+              ✅ Payment completed via {orderInfo.paymentMethodName}
             </Text>
           )}
         </Space>

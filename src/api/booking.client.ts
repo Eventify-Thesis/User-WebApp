@@ -101,4 +101,29 @@ export const bookingClient = {
     });
     return response.data.data;
   },
+
+  initiateVietnamesePayment: async (data: {
+    paymentIntentId: string;
+    paymentProvider: string;
+    amount: number;
+    currency: string;
+    orderId?: string;
+  }) => {
+    const response = await httpApi.post('/bookings/initiate-payment', data);
+    return response.data.data;
+  },
+
+  completeVietnamesePayment: async (data: {
+    orderId: number;
+    paymentIntentId: string;
+    paymentProvider: string;
+    amount: number;
+    transactionId?: string;
+  }) => {
+    const response = await httpApi.post(
+      '/bookings/complete-vietnamese-payment',
+      data,
+    );
+    return response.data.data;
+  },
 };

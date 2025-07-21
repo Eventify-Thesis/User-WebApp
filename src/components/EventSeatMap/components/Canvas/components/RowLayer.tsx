@@ -99,7 +99,7 @@ export const RowLayer: React.FC<RowLayerProps> = ({
   };
 
   return (
-    <Layer>
+    <>
       {seatingPlan.zones.flatMap((zone: Zone) =>
         zone.rows.map((row: Row) => {
           return (
@@ -160,7 +160,7 @@ export const RowLayer: React.FC<RowLayerProps> = ({
           );
         }),
       )}
-    </Layer>
+    </>
   );
 };
 

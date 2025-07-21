@@ -258,11 +258,20 @@ const CheckoutPage: React.FC = () => {
 
   const onContinue = handleQuestionnaireSubmit; // your existing function
 
+  // Don't render if booking status is not available
+  if (!bookingStatus?.result) {
+    return (
+      <Center h="100vh">
+        <Loader />
+      </Center>
+    );
+  }
+
   // now build the context payload
   const ctx: CheckoutContext = {
     event: event!,
     show: show!,
-    bookingStatus: bookingStatus!.result,
+    bookingStatus: bookingStatus.result,
     form,
     onContinue,
   };
@@ -289,14 +298,12 @@ const CheckoutPage: React.FC = () => {
               <Outlet context={ctx} />
             </Box>
             <Box style={{ width: '95%' }}>
-              {bookingStatus?.result && (
-                <TicketInfo
-                  bookingCode={bookingCode}
-                  bookingStatus={bookingStatus.result}
-                  currentStep={step}
-                  onContinue={handleQuestionnaireSubmit}
-                />
-              )}
+              <TicketInfo
+                bookingCode={bookingCode}
+                bookingStatus={bookingStatus.result}
+                currentStep={step}
+                onContinue={handleQuestionnaireSubmit}
+              />
             </Box>
           </Stack>
         ) : (
@@ -305,14 +312,12 @@ const CheckoutPage: React.FC = () => {
               <Outlet context={ctx} />
             </Box>
             <Box w={350} style={{ flexShrink: 0 }}>
-              {bookingStatus?.result && (
-                <TicketInfo
-                  bookingCode={bookingCode}
-                  bookingStatus={bookingStatus.result}
-                  currentStep={step}
-                  onContinue={handleQuestionnaireSubmit}
-                />
-              )}
+              <TicketInfo
+                bookingCode={bookingCode}
+                bookingStatus={bookingStatus.result}
+                currentStep={step}
+                onContinue={handleQuestionnaireSubmit}
+              />
             </Box>
           </Group>
         )}

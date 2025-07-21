@@ -114,6 +114,8 @@
     "physicalTicket": "Physical ticket"
   },
   "orderSection": {
+    "total": "Total",
+    "price": "Price",
     "order": "Order",
     "orderDate": "Order Date",
     "paymentMethod": "Payment Method",

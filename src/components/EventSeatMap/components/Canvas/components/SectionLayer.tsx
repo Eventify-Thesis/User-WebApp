@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Group, Rect, Circle, Line, Text, Layer, Ellipse } from 'react-konva';
+import { Group, Rect, Circle, Line, Text, Ellipse } from 'react-konva';
 import {
   SeatingPlan,
   Selection,
@@ -108,7 +108,7 @@ const SectionText = memo(({ text, section }: SectionTextProps) => {
 export const SectionLayer = memo(
   ({ seatingPlan, onSelectSection }: SectionLayerProps) => {
     return (
-      <Layer>
+      <>
         {seatingPlan.zones.flatMap((zone) =>
           zone.sections.map((section) => {
             const commonProps = {
@@ -191,7 +191,7 @@ export const SectionLayer = memo(
             }
           }),
         )}
-      </Layer>
+      </>
     );
   },
 );
