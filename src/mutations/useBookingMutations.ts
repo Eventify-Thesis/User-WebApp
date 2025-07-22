@@ -69,10 +69,35 @@ export const useBookingMutations = () => {
     },
   });
 
+  const completeVietnamesePaymentMutation = useMutation({
+    mutationFn: (data: {
+      orderId: number;
+      paymentIntentId: string;
+      paymentProvider: string;
+      amount: number;
+      transactionId?: string;
+    }) => {
+      return bookingClient.completeVietnamesePayment(data);
+    },
+    onSuccess: () => {
+      notification.success({
+        message: 'Success',
+        description: 'Your payment has been confirmed!',
+      });
+    },
+    onError: (error: Error) => {
+      notification.error({
+        message: error.message,
+        description: 'Failed to complete Vietnamese payment. Please try again.',
+      });
+    },
+  });
+
   return {
     submitTicketInfo: submitTicketInfoMutation.mutateAsync,
     updateFormAnswer: updateFormAnswerMutation.mutateAsync,
     createPaymentIntent: createPaymentIntent.mutateAsync,
     completeFreeOrder: completeFreeOrderMutation.mutateAsync,
+    completeVietnamesePayment: completeVietnamesePaymentMutation.mutateAsync,
   };
 };

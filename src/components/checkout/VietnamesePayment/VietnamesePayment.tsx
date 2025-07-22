@@ -163,7 +163,14 @@ export const VietnamesePayment: React.FC<VietnamesePaymentProps> = ({
             getPaymentMethodName(),
           )}&payment_intent_id=${paymentIntent.id}&amount=${
             paymentIntent.amount
-          }`;
+          }&transaction_id=${response.transactionId || ''}`;
+
+          console.log('Redirecting to success page with URL:', returnUrl);
+          console.log('Payment intent data:', {
+            id: paymentIntent.id,
+            amount: paymentIntent.amount,
+            metadata: paymentIntent.metadata,
+          });
 
           setTimeout(() => {
             window.location.href = returnUrl;

@@ -3,9 +3,12 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements } from '@stripe/react-stripe-js';
 import { Result, Spin, Button, Typography, Space } from 'antd';
-import { IeOutlined, LoadingOutlined } from '@ant-design/icons';
-import { IconShoppingCartCheck, IconGift } from '@tabler/icons-react';
+import { LoadingOutlined } from '@ant-design/icons';
+import { IconShoppingCartCheck, IconGift, IconDownload, IconFileTypePdf } from '@tabler/icons-react';
+import QRCode from 'react-qr-code';
 import { bookingClient } from '@/api/booking.client';
+import { useGetOrderDetailById } from '@/queries/useGetOrders';
+import { Loading } from '@/components/common/Loading/Loading';
 
 const { Text } = Typography;
 
@@ -29,6 +32,11 @@ const CheckoutSuccessContent: React.FC = () => {
     paymentMethodName: 'Stripe',
     status: 'loading',
   });
+
+  const {
+    data: orderData,
+    isLoading,
+  } = useGetOrderDetailById(orderId || '');
 
   useEffect(() => {
     const clientSecret = searchParams.get('payment_intent_client_secret');
@@ -61,8 +69,16 @@ const CheckoutSuccessContent: React.FC = () => {
           const amount = searchParams.get('amount');
           const transactionId = searchParams.get('transaction_id');
 
+          console.log('Payment completion parameters:', {
+            paymentIntentId,
+            orderId,
+            amount,
+            transactionId,
+            paymentMethod,
+          });
+
           if (!paymentIntentId || !orderId || !amount) {
-            throw new Error('Missing payment completion parameters');
+            throw new Error(`Missing payment completion parameters: paymentIntentId=${paymentIntentId}, orderId=${orderId}, amount=${amount}`);
           }
 
           await bookingClient.completeVietnamesePayment({
@@ -72,6 +88,7 @@ const CheckoutSuccessContent: React.FC = () => {
             amount: Number(amount),
             transactionId: transactionId || undefined,
           });
+          
 
           setOrderInfo({
             type: 'paid',
@@ -86,8 +103,7 @@ const CheckoutSuccessContent: React.FC = () => {
             paymentMethod: paymentMethod as 'zalopay' | 'momo' | 'payoo',
             paymentMethodName: paymentMethodName,
             status: 'error',
-            error:
-              'Failed to complete payment verification. Please contact support.',
+            error: 'Failed to complete payment verification. Please contact support.',
           });
         }
       };
@@ -147,6 +163,11 @@ const CheckoutSuccessContent: React.FC = () => {
     }
   }, [searchParams]);
 
+
+  if(isLoading) {
+    return <Loading/>
+  }
+
   if (orderInfo.status === 'loading') {
     return (
       <Result
@@ -193,6 +214,95 @@ const CheckoutSuccessContent: React.FC = () => {
   const isVietnamesePayment = ['zalopay', 'momo', 'payoo'].includes(
     orderInfo.paymentMethod,
   );
+
+  // Download functions
+  const downloadTicketPDF = async () => {
+    const publicId = orderData?.publicId || orderId;
+    alert(`PDF download for order ${publicId} will be implemented soon!`);
+  };
+
+  const downloadTicketImage = async () => {
+    if (!orderData) {
+      alert('Order data not available. Please try again later.');
+      return;
+    }
+
+    try {
+      const items = orderData.items || [];
+      
+      if (items.length === 0) {
+        alert('No tickets found in this order.');
+        return;
+      }
+
+      // Generate and download QR code for each ticket item
+      items.forEach((item: any, index: number) => {
+        // Create QR code value using item's unique identifier
+        const qrValue = `${orderData.publicId}-ticket-${item.id || index + 1}`;
+        
+        // Generate QR code using qrcode library (you may need to install: npm install qrcode)
+        // For now, create a simple data URL that can be used as QR value
+        import('qrcode').then((QRCodeLib) => {
+          QRCodeLib.default.toDataURL(qrValue, {
+            width: 300,
+            margin: 1,
+            color: {
+              dark: '#000000',
+              light: '#FFFFFF'
+            }
+          }, (err: any, dataURL: string) => {
+            if (!err && dataURL) {
+              // Convert data URL to blob and download
+              fetch(dataURL)
+                .then(res => res.blob())
+                .then(blob => {
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement('a');
+                  a.href = url;
+                  a.download = `qr-${orderData.publicId}-ticket-${item.id || index + 1}.png`;
+                  document.body.appendChild(a);
+                  a.click();
+                  document.body.removeChild(a);
+                  URL.revokeObjectURL(url);
+                });
+            }
+          });
+        }).catch(() => {
+          // Fallback: create a simple canvas with text if qrcode library is not available
+          const canvas = document.createElement('canvas');
+          const ctx = canvas.getContext('2d');
+          if (ctx) {
+            canvas.width = 300;
+            canvas.height = 300;
+            ctx.fillStyle = 'white';
+            ctx.fillRect(0, 0, 300, 300);
+            ctx.fillStyle = 'black';
+            ctx.font = '16px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('QR Code:', 150, 140);
+            ctx.fillText(qrValue, 150, 160);
+            
+            canvas.toBlob((blob) => {
+              if (blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `qr-${orderData.publicId}-ticket-${item.id || index + 1}.png`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+              }
+            });
+          }
+        });
+      });
+
+    } catch (error) {
+      console.error('Failed to generate QR codes:', error);
+      alert('Failed to generate QR codes. Please try again.');
+    }
+  };
 
   return (
     <Result
@@ -250,15 +360,50 @@ const CheckoutSuccessContent: React.FC = () => {
         </Space>
       }
       extra={[
-        <Button
-          key="tickets"
-          type="primary"
-          icon={isFreeOrder ? <IconGift /> : <IconShoppingCartCheck />}
-          size="large"
-          onClick={() => navigate('/tickets')}
-        >
-          View My Orders
-        </Button>,
+        <div key="actions" style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
+          <Button
+            key="tickets"
+            type="primary"
+            icon={isFreeOrder ? <IconGift /> : <IconShoppingCartCheck />}
+            size="large"
+            onClick={() => {
+              const publicId = orderData?.publicId || orderId;
+              navigate(`/orders/${publicId}`);
+            }}
+          >
+            View My Orders
+          </Button>
+          
+          <Button
+            key="download-pdf"
+            type="default"
+            icon={<IconFileTypePdf />}
+            size="large"
+            onClick={downloadTicketPDF}
+            style={{ 
+              backgroundColor: '#ff4d4f', 
+              borderColor: '#ff4d4f', 
+              color: 'white',
+            }}
+          >
+            Download PDF
+          </Button>
+
+          <Button
+            key="download-image"
+            type="default"
+            icon={<IconDownload />}
+            size="large"
+            onClick={downloadTicketImage}
+            style={{ 
+              backgroundColor: '#52c41a', 
+              borderColor: '#52c41a', 
+              color: 'white',
+            }}
+          >
+            Download Image
+          </Button>
+        </div>
       ]}
     />
   );

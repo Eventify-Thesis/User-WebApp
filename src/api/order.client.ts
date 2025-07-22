@@ -15,4 +15,9 @@ export const orderClient = {
     const response = await httpApi.get<any>(`/orders/${orderId}`);
     return response.data.data;
   },
+
+  getOrderDetailById: async (orderId: IdParam): Promise<OrderModel | null> => {
+    const response = await httpApi.get<any>(`/orders/detail/${orderId}`);
+    return response.data.data;
+  },
 };

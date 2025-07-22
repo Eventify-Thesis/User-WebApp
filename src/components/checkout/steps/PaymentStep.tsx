@@ -92,10 +92,10 @@ export const PaymentStep: React.FC = () => {
           bookingStatus.orderId
         }/success?payment_method=${paymentMethod}&payment_method_name=${encodeURIComponent(
           paymentMethodName,
-        )}`,
+        )}&payment_intent_id=${result.id || paymentIntent?.id || ''}&amount=${result.amount || paymentIntent?.amount || 0}&transaction_id=${result.transactionId || ''}`,
       );
     },
-    [navigate, bookingStatus?.orderId, selectedMethod],
+    [navigate, bookingStatus?.orderId, selectedMethod, paymentIntent],
   );
 
   // Handler for payment error (for VietnamesePayment)

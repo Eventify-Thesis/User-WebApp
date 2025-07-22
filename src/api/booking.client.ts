@@ -1,4 +1,5 @@
 import { httpApi } from '@/api/http.api';
+import { OrderModel } from '@/domain/OrderModel';
 
 export interface ItemInfo {
   quantity: number;
@@ -119,11 +120,12 @@ export const bookingClient = {
     paymentProvider: string;
     amount: number;
     transactionId?: string;
-  }) => {
+  }): Promise<any> => {
     const response = await httpApi.post(
       '/bookings/complete-vietnamese-payment',
       data,
     );
     return response.data.data;
   },
+
 };

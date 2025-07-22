@@ -20,6 +20,7 @@ import {
   IconClock,
   IconScan,
   IconAlertCircle,
+  IconDownload,
 } from '@tabler/icons-react';
 import '@mantine/carousel/styles.css';
 import QRCode from 'react-qr-code';
@@ -41,6 +42,33 @@ const TicketSection: React.FC<TicketSectionProps> = ({ order }) => {
   const handleClose = () => {
     setIsModalVisible(false);
     setSelectedQR(null);
+  };
+
+  const downloadQRCode = () => {
+    if (!selectedQR) return;
+    
+    const svg = document.getElementById('qr-code-svg');
+    if (!svg) return;
+
+    const svgData = new XMLSerializer().serializeToString(svg);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    
+    canvas.width = 400;
+    canvas.height = 400;
+    
+    img.onload = () => {
+      ctx?.drawImage(img, 0, 0, 400, 400);
+      const pngFile = canvas.toDataURL('image/png');
+      
+      const downloadLink = document.createElement('a');
+      downloadLink.download = `ticket-qr-${order.publicId}.png`;
+      downloadLink.href = pngFile;
+      downloadLink.click();
+    };
+    
+    img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
   };
 
   const { event } = order;
@@ -182,6 +210,7 @@ const TicketSection: React.FC<TicketSectionProps> = ({ order }) => {
           <Paper withBorder p="xl" style={{ background: '#fff' }}>
             {selectedQR && (
               <QRCode
+                id="qr-code-svg"
                 value={selectedQR}
                 size={200}
                 style={{ height: 'auto', maxWidth: '100%', width: '100%' }}
@@ -194,9 +223,19 @@ const TicketSection: React.FC<TicketSectionProps> = ({ order }) => {
             <Text size="sm">{t('ticketSection.scanInstructions')}</Text>
           </Group>
 
-          <Button variant="subtle" color="gray" onClick={handleClose} fullWidth>
-            {t('common.close')}
-          </Button>
+          <Group justify="center" grow>
+            <Button 
+              variant="filled" 
+              color="blue" 
+              leftSection={<IconDownload size={16} />}
+              onClick={downloadQRCode}
+            >
+              Download QR Code
+            </Button>
+            <Button variant="subtle" color="gray" onClick={handleClose}>
+              {t('common.close')}
+            </Button>
+          </Group>
         </Stack>
       </Modal>
     </Box>

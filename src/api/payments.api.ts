@@ -99,7 +99,7 @@ export const getAvailablePaymentMethods = async (): Promise<
       name: 'Payoo',
       description: 'Pay via bank transfer or POS',
       type: 'payoo',
-      enabled: isDevelopment ? false : true, // Disable in dev until sandbox is available
+      enabled: true, // Enable Payoo for development testing
     },
   ];
 };
