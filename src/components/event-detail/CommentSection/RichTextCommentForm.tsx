@@ -10,7 +10,6 @@ import {
   Paper,
   ActionIcon,
   Tooltip,
-  FileInput,
   LoadingOverlay,
 } from '@mantine/core';
 import {
@@ -24,12 +23,13 @@ import { useEditor } from '@tiptap/react';
 import { RichTextEditor } from '@mantine/tiptap';
 import StarterKit from '@tiptap/starter-kit';
 import { Link } from '@tiptap/extension-link';
+import { Image } from '@tiptap/extension-image';
 import {
   useCreateComment,
   useUpdateComment,
 } from '@/mutations/useCommentMutations';
 import { useUser } from '@clerk/clerk-react';
-import { httpApi } from '@/api/http.api';
+import { uploadFile } from '@/services/fileUpload.service';
 
 interface RichTextCommentFormProps {
   eventId: string;
@@ -62,6 +62,7 @@ export const RichTextCommentForm: React.FC<RichTextCommentFormProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(isEditing || !!initialContent);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [isImageUploadClicked, setIsImageUploadClicked] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const editor = useEditor({
@@ -77,59 +78,55 @@ export const RichTextCommentForm: React.FC<RichTextCommentFormProps> = ({
         },
         openOnClick: false,
       }),
+      Image.configure({
+        HTMLAttributes: {
+          class: 'comment-image',
+        },
+      }),
     ],
     content: initialContent,
     onFocus: () => setIsFocused(true),
     onBlur: () => setIsFocused(false),
   });
 
+  // Reset the image upload flag after a delay to handle file dialog cancellation
+  React.useEffect(() => {
+    if (isImageUploadClicked) {
+      const timer = setTimeout(() => {
+        setIsImageUploadClicked(false);
+      }, 3000); // Reset after 3 seconds if no file is selected
+      
+      return () => clearTimeout(timer);
+    }
+  }, [isImageUploadClicked]);
+
   const handleImageUpload = async (file: File | null) => {
-    if (!file) return;
+    if (!file) {
+      setIsImageUploadClicked(false);
+      return;
+    }
 
     setIsUploadingImage(true);
+    setIsImageUploadClicked(false);
     setError(null);
 
     try {
       // Keep editor focused and form visible during upload
       editor?.commands.focus();
 
-      // Get signed URL for upload
-      const signedUrlResponse = await httpApi.get(
-        '/media/signedUrlForPuttingObject',
-        {
-          params: {
-            fileName: file.name,
-            contentType: file.type,
-            isPublic: true,
-            folder: 'comment-images',
-          },
-        },
-      );
+      // Upload file using the service
+      const publicUrl = await uploadFile(file);
 
-      const { url, key } = signedUrlResponse.data;
-
-      // Upload file to S3
-      await fetch(url, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': file.type,
-        },
-        body: file,
-      });
-
-      // Get the public URL
-      const imageUrl = `https://${
-        import.meta.env.VITE_AWS_PUBLIC_BUCKET_NAME
-      }.s3.amazonaws.com/${key}`;
-
-      // Insert image as HTML and maintain focus
+      // Insert image using TipTap Image node and maintain focus
       if (editor) {
         editor
           .chain()
           .focus()
-          .insertContent(
-            `<img src="${imageUrl}" alt="Uploaded image" style="max-width: 100%; height: auto; border-radius: 8px; margin: 8px 0;" />`,
-          )
+          .setImage({ 
+            src: publicUrl, 
+            alt: 'Uploaded image',
+            title: 'Uploaded image'
+          })
           .run();
       }
 
@@ -295,9 +292,10 @@ export const RichTextCommentForm: React.FC<RichTextCommentFormProps> = ({
                   }}
                   onFocus={() => setIsFocused(true)}
                   onBlur={(e) => {
-                    // Don't collapse if clicking on toolbar or during upload
+                    // Don't collapse if clicking on toolbar, during upload, or image upload was just clicked
                     if (
                       !isUploadingImage &&
+                      !isImageUploadClicked &&
                       !e.relatedTarget?.closest(
                         '.mantine-RichTextEditor-toolbar',
                       )
@@ -349,6 +347,7 @@ export const RichTextCommentForm: React.FC<RichTextCommentFormProps> = ({
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
+                            setIsImageUploadClicked(true);
                             fileInputRef.current?.click();
                             // Keep the editor focused
                             setTimeout(() => {

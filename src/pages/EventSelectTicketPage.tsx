@@ -209,7 +209,7 @@ const EventSelectTicketPage: React.FC = () => {
         background: '#f8f9fa',
       }}
     >
-      <PageTitle>{t('eventSelectTicketPage.title')}</PageTitle>
+      <PageTitle>Select Your Tickets</PageTitle>
 
       <Modal
         opened={sectionModalOpen}

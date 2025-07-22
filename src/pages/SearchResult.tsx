@@ -22,6 +22,7 @@ import { CustomMarker } from '@/components/search-result/CustomMarker';
 import { GridEventCard } from '@/components/search-result/GridEventCard';
 import { GoogleMapsProvider } from '@/components/providers/GoogleMapsProvider';
 import React from 'react';
+import { slugify } from '@/utils/utils';
 
 function useQueryParam(key: string) {
   const { search } = useLocation();
@@ -428,7 +429,8 @@ function SearchResults() {
                     }}
                     onClick={() => {
                       // Navigate to event detail page
-                      navigate(`/${event.url}-${event.id}`);
+                      const sanitizedEventName = slugify(event.eventName);
+                      navigate(`/${sanitizedEventName}-${event.id}`);
                     }}
                   />
                 ))}
@@ -620,7 +622,10 @@ function SearchResults() {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      navigate(`/${selectedEvent.url}-${selectedEvent.id}`);
+                      const sanitizedEventName = slugify(
+                        selectedEvent.eventName,
+                      );
+                      navigate(`/${sanitizedEventName}-${selectedEvent.id}`);
                     }}
                     style={{
                       background: '#2563eb',

@@ -238,3 +238,19 @@ export const formatOptionString = (inputString: string): string => {
 
   return formattedString;
 };
+
+/**
+ * Converts a string to a URL-friendly slug:
+ * - Converts to lowercase
+ * - Removes accents (Vietnamese and other Unicode)
+ * - Replaces non-alphanumeric characters with dashes
+ * - Trims leading/trailing dashes
+ */
+export function slugify(str: string): string {
+  return str
+    .normalize('NFD') // split accented characters into base + diacritics
+    .replace(/\p{Diacritic}/gu, '') // remove diacritics
+    .replace(/[^\p{L}\p{N}]+/gu, '-') // replace non-letter/number with dash
+    .replace(/^-+|-+$/g, '') // trim leading/trailing dashes
+    .toLowerCase();
+}

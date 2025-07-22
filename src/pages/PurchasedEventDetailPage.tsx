@@ -15,6 +15,9 @@ import {
   Stack,
   useMantineTheme,
   Loader,
+  Group,
+  ActionIcon,
+  Button,
 } from '@mantine/core';
 import { IconCalendar } from '@tabler/icons-react';
 import './EventDetailPage.css';
@@ -46,26 +49,120 @@ const PurchasedEventDetailPage: React.FC = () => {
     return <Loader />;
   }
 
-  const AdvertisingSection = () => (
+  const FuturisticPromoSection = () => (
     <Paper
-      p="md"
-      radius="md"
-      style={{ height: '500px', background: 'rgba(255, 255, 255, 0.8)' }}
+      p="xl"
+      radius="xl"
+      style={{
+        height: '500px',
+        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        position: 'relative',
+        overflow: 'hidden',
+      }}
     >
-      <Title order={3} mb="md">
-        Advertisement
-      </Title>
       <Box
         style={{
-          height: '300px',
-          background: '#f0f0f0',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          background: 'radial-gradient(circle at 30% 20%, rgba(120, 119, 198, 0.3) 0%, transparent 50%)',
         }}
-      >
-        <Text c="dimmed">Advertisement Space</Text>
-      </Box>
+      />
+      
+      <Stack gap="xl" style={{ position: 'relative', zIndex: 1, height: '100%' }}>
+        <Group align="center" gap="md">
+          <ActionIcon
+            size="xl"
+            radius="xl"
+            variant="filled"
+            style={{
+              background: 'linear-gradient(45deg, #00d4ff, #00a8cc)',
+              boxShadow: '0 0 20px rgba(0, 212, 255, 0.3)',
+            }}
+          >
+            <IconCalendar size={24} />
+          </ActionIcon>
+          <Title order={2} c="white" fw={700}>
+            Eventify Pro
+          </Title>
+        </Group>
+
+        <Box
+          style={{
+            flex: 1,
+            background: 'rgba(255, 255, 255, 0.1)',
+            borderRadius: '16px',
+            padding: '24px',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255, 255, 255, 0.2)',
+          }}
+        >
+          <Stack gap="lg">
+            <Text c="white" fw={600} size="lg">
+              Next-Gen Event Management
+            </Text>
+
+            <Text c="rgba(255, 255, 255, 0.9)" size="sm" lh={1.6}>
+              Create, manage, and scale your events with cutting-edge tools designed for the future of entertainment.
+            </Text>
+
+            <Stack gap="sm">
+              <Group gap="xs">
+                <Box
+                  w={8}
+                  h={8}
+                  style={{
+                    background: '#00ff88',
+                    borderRadius: '50%',
+                    boxShadow: '0 0 10px rgba(0, 255, 136, 0.5)',
+                  }}
+                />
+                <Text c="white" size="sm">Smart Analytics</Text>
+              </Group>
+              <Group gap="xs">
+                <Box
+                  w={8}
+                  h={8}
+                  style={{
+                    background: '#ff6b6b',
+                    borderRadius: '50%',
+                    boxShadow: '0 0 10px rgba(255, 107, 107, 0.5)',
+                  }}
+                />
+                <Text c="white" size="sm">Real-time Tracking</Text>
+              </Group>
+              <Group gap="xs">
+                <Box
+                  w={8}
+                  h={8}
+                  style={{
+                    background: '#ffd93d',
+                    borderRadius: '50%',
+                    boxShadow: '0 0 10px rgba(255, 217, 61, 0.5)',
+                  }}
+                />
+                <Text c="white" size="sm">Seamless Integration</Text>
+              </Group>
+            </Stack>
+          </Stack>
+        </Box>
+
+        <Button
+          fullWidth
+          size="lg"
+          variant="filled"
+          style={{
+            background: 'linear-gradient(45deg, #00d4ff, #00a8cc)',
+            boxShadow: '0 4px 20px rgba(0, 212, 255, 0.3)',
+            border: 'none',
+            fontWeight: 600,
+          }}
+        >
+          Start Your Journey
+        </Button>
+      </Stack>
     </Paper>
   );
 
@@ -153,7 +250,7 @@ const PurchasedEventDetailPage: React.FC = () => {
           </Box>
         </Box>
         <Box style={{ width: '400px', flexShrink: 0 }}>
-          <AdvertisingSection />
+          <FuturisticPromoSection />
         </Box>
       </Box>
     </BaseRow>

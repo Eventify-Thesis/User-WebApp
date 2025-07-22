@@ -7,6 +7,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from 'react-slick';
 import './CategoryEventSection.css';
+import { slugify } from '@/utils/utils';
 
 interface Props {
   title: string;
@@ -48,7 +49,8 @@ const CategoryEventSection: React.FC<Props> = ({ title, events, userId }) => {
     if (event.url) {
       navigate(`${event.url}-${event.id}`);
     } else {
-      navigate(`${event.eventName}-${event.id}`);
+      const sanitizedEventName = slugify(event.eventName);
+      navigate(`/${sanitizedEventName}-${event.id}`);     
     }
   };
 

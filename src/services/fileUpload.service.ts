@@ -8,6 +8,7 @@ export const uploadFile = async (file: File): Promise<string> => {
       fileName: file.name,
       contentType: file.type,
       isPublic: true,
+      folder: 'user/comments',
     });
 
     // Extract the public URL from the signed URL
