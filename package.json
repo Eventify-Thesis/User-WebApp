@@ -37,6 +37,7 @@
     "@stripe/stripe-js": "^7.1.0",
     "@tabler/icons-react": "^3.31.0",
     "@tailwindcss/vite": "^4.0.6",
+    "@tiptap/extension-image": "^3.0.7",
     "@tiptap/extension-link": "^2.25.0",
     "@tiptap/starter-kit": "^2.25.0",
     "@types/qrcode": "^1.5.5",
