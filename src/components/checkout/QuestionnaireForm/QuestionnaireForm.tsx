@@ -1,6 +1,7 @@
 import { useResponsive } from '@/hooks/useResponsive';
 import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useUser } from '@clerk/clerk-react';
 import { useGetEventQuestions } from '@/queries/useGetEventQuestions';
 import { Spin } from 'antd';
 import { useGetFormAnswers } from '@/queries/useGetFormAnswers';
@@ -64,6 +65,7 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
 }) => {
   const { isTablet, isDesktop } = useResponsive();
   const { t } = useTranslation();
+  const { user } = useUser();
 
   const {
     data: questions,
@@ -181,9 +183,9 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
 
         form.setValues({
           order: {
-            first_name: order?.first_name || '',
-            last_name: order?.last_name || '',
-            email: order?.email || '',
+            first_name: order?.first_name || user?.firstName || '',
+            last_name: order?.last_name || user?.lastName || '',
+            email: order?.email || user?.primaryEmailAddress?.emailAddress || '',
             address: order?.address || {},
             questions: order?.questions || formOrderQuestions,
           },
@@ -207,12 +209,15 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
           attendees: attendees,
           order: {
             ...form.values.order,
+            first_name: user?.firstName || '',
+            last_name: user?.lastName || '',
+            email: user?.primaryEmailAddress?.emailAddress || '',
             questions: formOrderQuestions,
           },
         });
       }
     }
-  }, [isQuestionsLoading, isFormAnswersLoading, isQuestionsError, formAnswers]);
+  }, [isQuestionsLoading, isFormAnswersLoading, isQuestionsError, formAnswers, user]);
 
   if (isQuestionsLoading || isFormAnswersLoading) {
     return <Spin />;

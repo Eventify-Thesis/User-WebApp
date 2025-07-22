@@ -228,20 +228,18 @@ const CheckoutSuccessContent: React.FC = () => {
     }
 
     try {
-      const items = orderData.items || [];
+      const attendees = orderData.attendees || [];
       
-      if (items.length === 0) {
+      if (attendees.length === 0) {
         alert('No tickets found in this order.');
         return;
       }
 
       // Generate and download QR code for each ticket item
-      items.forEach((item: any, index: number) => {
+      attendees.forEach((item: any, index: number) => {
         // Create QR code value using item's unique identifier
-        const qrValue = `${orderData.publicId}-ticket-${item.id || index + 1}`;
+        const qrValue = `${item.publicId}`;
         
-        // Generate QR code using qrcode library (you may need to install: npm install qrcode)
-        // For now, create a simple data URL that can be used as QR value
         import('qrcode').then((QRCodeLib) => {
           QRCodeLib.default.toDataURL(qrValue, {
             width: 300,
@@ -259,7 +257,7 @@ const CheckoutSuccessContent: React.FC = () => {
                   const url = URL.createObjectURL(blob);
                   const a = document.createElement('a');
                   a.href = url;
-                  a.download = `qr-${orderData.publicId}-ticket-${item.id || index + 1}.png`;
+                  a.download = `qr-${orderData.publicId}-ticket-${item.publicId || index + 1}.png`;
                   document.body.appendChild(a);
                   a.click();
                   document.body.removeChild(a);
