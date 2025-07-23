@@ -218,7 +218,11 @@ export const ModernEventFilters = ({
 
   const handleDateChange = (type: 'start' | 'end', value: string) => {
     if (!value) return;
-    const newDate = dayjs(value);
+    
+    // Use the browser's native date parsing instead of dayjs with strict format
+    const newDate = dayjs(new Date(value));
+    if (!newDate.isValid()) return;
+    
     if (type === 'start') {
       setSelectedDates([newDate, selectedDates[1]]);
     } else {
@@ -450,7 +454,15 @@ export const ModernEventFilters = ({
                 label="Start Date"
                 type="date"
                 value={selectedDates[0]?.format('YYYY-MM-DD') || ''}
-                onChange={(e) => handleDateChange('start', e.target.value)}
+                onChange={(e) => {
+                  // Update the date immediately on change
+                  if (e.target.value) {
+                    const newDate = dayjs(new Date(e.target.value));
+                    if (newDate.isValid()) {
+                      setSelectedDates([newDate, selectedDates[1]]);
+                    }
+                  }
+                }}
                 size="sm"
                 radius="lg"
               />
@@ -458,7 +470,15 @@ export const ModernEventFilters = ({
                 label="End Date"
                 type="date"
                 value={selectedDates[1]?.format('YYYY-MM-DD') || ''}
-                onChange={(e) => handleDateChange('end', e.target.value)}
+                onChange={(e) => {
+                  // Update the date immediately on change
+                  if (e.target.value) {
+                    const newDate = dayjs(new Date(e.target.value));
+                    if (newDate.isValid()) {
+                      setSelectedDates([selectedDates[0], newDate]);
+                    }
+                  }
+                }}
                 size="sm"
                 radius="lg"
               />

@@ -160,7 +160,23 @@
     "thisMonth": "This month",
     "apply": "Apply",
     "startDate": "Start date",
-    "endDate": "End date"
+    "endDate": "End date",
+    "searchPlaceholder": "Search events...",
+    "advancedFilters": "Advanced Filters",
+    "allCategories": "All Categories",
+    "selectCategories": "Select categories...",
+    "customDateRange": "Custom Date Range",
+    "selectLocation": "Select location...",
+    "enterCustomLocation": "Enter custom location",
+    "clearAll": "Clear All",
+    "applyFilters": "Apply Filters",
+    "datePresets": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "thisWeek": "This Week",
+      "weekend": "Weekend"
+    },
+    "otherLocation": "Other Location"
   },
   "homePage": {
     "title": "Eventify",
