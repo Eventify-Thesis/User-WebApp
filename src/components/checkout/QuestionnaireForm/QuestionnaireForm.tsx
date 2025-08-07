@@ -366,14 +366,17 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
           </Button>
         </Card>
 
+
         {orderItems?.map((orderItem) => {
           const ticket = ticketTypes?.find(
             (ticket) => ticket.id === orderItem.id,
           );
 
+
           if (!ticket) {
             return;
           }
+
 
           return (
             <div key={orderItem.ticket_id + orderItem.id}>
@@ -382,7 +385,7 @@ export const QuestionnaireForm: React.FC<QuestionnaireFormProps> = ({
                 const attendeeInputs = (
                   <Card key={`${orderItem.id} ${index}`}>
                     <h4 style={subheadingStyles}>
-                      {t`Attendee`} {index + 1} {t`Details`}
+                      {t`Attendee`} {attendeeIndex + 1} {t`Details`}
                     </h4>
                     <div
                       style={{

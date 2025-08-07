@@ -1,3 +1,4 @@
+import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { OrderModel } from '@/domain/OrderModel';
 import {
@@ -28,6 +29,35 @@ interface OrderSectionProps {
 
 const OrderSection: React.FC<OrderSectionProps> = ({ order }) => {
   const { t } = useTranslation();
+
+  // Group items by name and calculate totals
+  const groupedItems = React.useMemo(() => {
+    const groups: Record<string, {
+      name: string;
+      totalQuantity: number;
+      totalPrice: number;
+      singlePrice: number;
+      items: typeof order.items;
+    }> = {};
+
+    order.items.forEach((item) => {
+      const key = item.name;
+      if (!groups[key]) {
+        groups[key] = {
+          name: item.name,
+          totalQuantity: 0,
+          totalPrice: 0,
+          singlePrice: Number(item.price) / item.quantity, // Calculate single item price
+          items: [],
+        };
+      }
+      groups[key].totalQuantity += item.quantity;
+      groups[key].totalPrice += Number(item.price);
+      groups[key].items.push(item);
+    });
+
+    return Object.values(groups);
+  }, [order.items]);
 
   return (
     <Stack gap="xl">
@@ -135,25 +165,30 @@ const OrderSection: React.FC<OrderSectionProps> = ({ order }) => {
               </tr>
             </thead>
             <tbody>
-              {order.items.map((item) => (
-                <tr key={item.id}>
+              {groupedItems.map((group, index) => (
+                <tr key={`${group.name}-${index}`}>
                   <td>
-                    <Group gap="xs">
-                      <IconTicket
-                        size={16}
-                        style={{ color: 'var(--mantine-color-blue-6)' }}
-                      />
-                      <Text>{item.name}</Text>
-                    </Group>
+                    <Stack gap={4}>
+                      <Group gap="xs">
+                        <IconTicket
+                          size={16}
+                          style={{ color: 'var(--mantine-color-blue-6)' }}
+                        />
+                        <Text>{group.name}</Text>
+                      </Group>
+                      <Text size="xs" c="dimmed" pl={20}>
+                        {group.singlePrice.toLocaleString()} đ per ticket
+                      </Text>
+                    </Stack>
                   </td>
                   <td>
                     <Badge variant="light" color="blue" size="sm">
-                      {item.quantity}
+                      {group.totalQuantity}
                     </Badge>
                   </td>
                   <td style={{ textAlign: 'right' }}>
                     <Text fw={500}>
-                      {Number(item.price).toLocaleString()} đ
+                      {group.totalPrice.toLocaleString()} đ
                     </Text>
                   </td>
                 </tr>
